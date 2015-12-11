@@ -51,9 +51,10 @@ int main()
     {
         fgets(tmp, maxLen - 1, file);
         deleteNewLineSymbol(tmp);
-        String *line = getNewString(tmp, strlen(tmp));
+        String *line = getNewString(tmp);
         if (findInMap(map, line))
             fout << tmp << "\n";
+        delete line;
     }
     fclose(file);
     fout.close();
