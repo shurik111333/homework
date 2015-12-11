@@ -42,6 +42,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+#Qt
+.pro
+
 #MS Visual Studio trash
 *.sdf
 *.sln
