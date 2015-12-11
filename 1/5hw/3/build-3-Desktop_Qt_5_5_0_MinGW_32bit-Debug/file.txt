@@ -1,0 +1,14 @@
+//prosto comment 1
+/*dhgf // comment vnutro commenta */
+/*bol'shoy comment //ne nado vivodit'
+sdgf//i eto tozhe ne nado
+dff*/ "//comment vnutri stroki" // comment2
+fsdf"ff//ne nado vivodit'
+123"fdgfjgh" //nado vivesti3
+"fdsuhu//fgh"fgk/ne_comment
+/*comment do konca fayla
+//commetn vnutri bol'shogo
+dfghjgjhdjfghgjfdgfdjghdf
+32454trefg*/
+//comment4
+//comment5
