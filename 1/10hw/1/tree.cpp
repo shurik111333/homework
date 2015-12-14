@@ -52,6 +52,8 @@ Tree *merge(Tree *treeLeft, Tree *treeRight)
 
 void getCodes(TreeNode *node, char **codes, char *currentCode, int length)
 {
+    if (node == nullptr)
+        return;
     currentCode[length++] = node->code + '0';
     if (node->isLetter)
     {
@@ -71,6 +73,8 @@ char **getCodes(Tree *tree)
     {
         codes[i] = nullptr;
     }
+    if (tree == nullptr)
+        return codes;
     char *currentCode = new char[tree->root->height];
     int length = 0;
     getCodes(tree->root->left, codes, currentCode, length);
@@ -110,6 +114,8 @@ void writeTree(TreeNode *node, std::ostream &out)
 
 void writeTree(Tree *tree, std::ostream &out)
 {
+    if (tree == nullptr)
+        return;
     writeTree(tree->root, out);
 }
 
@@ -210,6 +216,7 @@ void deleteTree(TreeNode *node)
 
 void deleteTree(Tree *tree)
 {
-    deleteTree(tree->root);
+    if (tree != nullptr)
+        deleteTree(tree->root);
     delete tree;
 }

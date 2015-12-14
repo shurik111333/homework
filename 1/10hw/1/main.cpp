@@ -43,6 +43,7 @@ int main()
     FILE *input = getFileToRead();
     int countChar[charLen] = {};
     char c = getc(input);
+    countChar['\0' - CHAR_MIN] = -1;
     while (!feof(input))
     {
         countChar[c - CHAR_MIN]++;
@@ -51,11 +52,13 @@ int main()
     PriorityQueue *queue = getNewQueue();
     for (int i = 0; i < charLen; i++)
     {
-        if (countChar[i] > 0)
+        if (countChar[i] != 0)
         {
             push(queue, getNewTree(i + CHAR_MIN, countChar[i]));
         }
     }
+    if (size(queue) != 2)
+        deleteTree(pop(queue));
     while (size(queue) > 1)
     {
         Tree *tree1 = pop(queue);

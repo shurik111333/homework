@@ -93,6 +93,8 @@ int size(Heap *heap)
 
 Tree *getMin(Heap *heap)
 {
+    if (size(heap) == 0)
+        return nullptr;
     swap(heap->heap[0], heap->heap[--heap->count]);
     heapify(1, heap);
     return heap->heap[heap->count];
