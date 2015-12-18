@@ -26,7 +26,6 @@ int main()
 	int n = 0;
 	int m = 0;
 	fin >> n >> m;
-	int **array = new int*[n];
 	int *minRow = new int[n];
 	int *maxColumn = new int[m];
 	for (int i = 0; i < n; i++)
@@ -37,22 +36,17 @@ int main()
 	{
 		maxColumn[i] = INT_MIN;
 	}
+	int a = 0;
 	for (int i = 0; i < n; i++)
 	{
-		array[i] = new int[m];
 		for (int j = 0; j < m; j++)
 		{
-			fin >> array[i][j];
-			minRow[i] = min(minRow[i], array[i][j]);
-			maxColumn[j] = max(maxColumn[j], array[i][j]);
+			fin >> a;
+			minRow[i] = min(minRow[i], a);
+			maxColumn[j] = max(maxColumn[j], a);
 		}
 	}
 	fin.close();
-	for (int i = 0; i < n; i++)
-	{
-		delete[] array[i];
-	}
-	delete[] array;
 	cout << "Седловые точки:" << endl;
 	int count = 0;
 	for (int i = 0; i < n; i++)
