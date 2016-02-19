@@ -20,8 +20,6 @@ struct Phonebook
 
 };
 
-const char *def = "st";
-
 void addPhoneNumber(Phonebook *book, char *name, char *phone)
 {
     char *newName = name;
