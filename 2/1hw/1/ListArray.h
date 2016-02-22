@@ -17,6 +17,8 @@ public:
 	
 	int operator [](const int index) const;
 	
+	int length() const;
+	
 private:
 	int size;
 	int count;

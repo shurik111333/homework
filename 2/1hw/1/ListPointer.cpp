@@ -3,6 +3,7 @@
 
 ListPointer::ListPointer()
 {
+	count = 0;
 	tail = new ListElement(INT_MAX, nullptr, nullptr);
 	head = new ListElement(INT_MAX, nullptr, tail);
 	tail->setPrev(head);
@@ -24,6 +25,7 @@ void ListPointer::insert(int value, int index)
 	ListElement *newNode = new ListElement(value, node->getPrev(), node);
 	node->getPrev()->setNext(newNode);
 	node->setPrev(newNode);
+	count++;
 }
 
 bool ListPointer::isTail(ListElement *element) const
@@ -43,6 +45,7 @@ bool ListPointer::remove(int value)
 		ListElement *node = current->getNext();
 		current->setNext(node->getNext());
 		delete node;
+		count--;
 		return true;
 	}
 	else
@@ -74,6 +77,11 @@ ListPointer::ListElement *ListPointer::getElementById(int index) const
 		current = current->getNext();
 	}
 	return current;
+}
+
+int ListPointer::length() const
+{
+	return count;
 }
 
 //ListPointer::ListElement-------------------------------------------------------

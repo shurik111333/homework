@@ -17,6 +17,8 @@ public:
 	
 	int operator [](const int index) const;
 	
+	int length() const;
+	
 private:
 	class ListElement
 	{
@@ -42,6 +44,7 @@ private:
 	
 	bool isTail(ListElement *element) const;
 	
+	int count;
 	ListElement *head;
 	ListElement *tail;
 };

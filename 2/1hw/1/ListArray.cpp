@@ -64,3 +64,8 @@ void ListArray::increaseList()
 	size *= 2;
 	array = newArray;
 }
+
+int ListArray::length() const
+{
+	return count;
+}

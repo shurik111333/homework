@@ -10,5 +10,7 @@ public:
 	
 	int virtual findElementId(T value) const = 0;
 	
+	int virtual length() const = 0;
+	
 	T virtual operator [](const int index) const = 0;
 };
