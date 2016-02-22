@@ -1,6 +1,6 @@
 #pragma once
 
-#include "istack.h"
+#include "IStack.h"
 
 template <typename T>
 class StackPointer : public IStack<T>

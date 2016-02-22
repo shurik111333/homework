@@ -1,5 +1,7 @@
 #pragma once
 
+#include "IStack.h"
+
 template <typename T>
 class StackArray : public IStack<T>
 {
