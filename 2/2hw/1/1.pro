@@ -4,9 +4,13 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    QSort.cpp
+    QSort.cpp \
+    HeapSort.cpp \
+    BubbleSort.cpp
 
 HEADERS += \
     ISort.h \
-    QSort.h
+    QSort.h \
+    HeapSort.h \
+    BubbleSort.h
 

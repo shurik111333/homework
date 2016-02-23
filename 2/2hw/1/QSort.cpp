@@ -1,16 +1,15 @@
 #include "QSort.h"
+#include <algorithm>
 
 QSort::QSort()
 {}
 
-void swap(int &a, int &b)
+void QSort::sort(int *array, int length)
 {
-	int tmp = a;
-	a = b;
-	b = tmp;
+	qSort(array, 0, length - 1);
 }
 
-void QSort::sort(int *array, int left, int right)
+void QSort::qSort(int *array, int left, int right)
 {
 	int i = left;
 	int j = right;
@@ -23,13 +22,13 @@ void QSort::sort(int *array, int left, int right)
 			j--;
 		if (i <= j)
 		{
-			swap(array[i], array[j]);
+			std::swap(array[i], array[j]);
 			i++;
 			j--;
 		}
 	}
 	if (i < right)
-		sort(array, i, right);
+		qSort(array, i, right);
 	if (j > left)
-		sort(array, left, j);
+		qSort(array, left, j);
 }

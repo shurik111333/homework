@@ -7,6 +7,9 @@ class QSort : public ISort
 public:
 	QSort();
 	
-	void sort(int *array, int left, int right);
+	void sort(int *array, int length);
+	
+private:
+	void qSort(int *array, int left, int right);
 };
 
