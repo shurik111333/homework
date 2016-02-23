@@ -13,4 +13,7 @@ public:
 	int virtual length() const = 0;
 	
 	T virtual operator [](const int index) const = 0;
+	
+	virtual ~IList()
+	{}
 };
