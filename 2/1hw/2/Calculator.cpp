@@ -27,7 +27,10 @@ double Calculator::calculate(string expression)
 				{
 					Operator *op = operators.pop();
 					if (op->getPriority() == -1)
+					{
+						delete op;
 						break;
+					}
 					op->interpret();
 					delete op;
 				}
