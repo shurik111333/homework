@@ -6,6 +6,12 @@
 
 using namespace std;
 
+/**
+ * @brief Sort input array with sorter, print it in console and delete.
+ * @param sorter Object of sorter class with ISort interface
+ * @param array
+ * @param length
+ */
 void printSortedArray(ISort *sorter, int *array, int length)
 {
 	sorter->sort(array, length);
@@ -17,6 +23,12 @@ void printSortedArray(ISort *sorter, int *array, int length)
 	delete[] array;
 }
 
+/**
+ * @brief Copy input array
+ * @param array
+ * @param len
+ * @return Return pointer to copyied array
+ */
 int *copyArray(int *array, int len)
 {
 	int *newArray = new int[len];
