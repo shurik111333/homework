@@ -6,9 +6,20 @@
 
 using namespace std;
 
+/**
+ * @brief Static class for print array NxN in a spiral.
+ * Spiral split on the corners with equal sides,
+ * then each corner split on two sides, which is easy to print
+ */
 class PrintMatrix
 {
 public:
+	/**
+	 * @brief Print array in a spiral with IPrint interface
+	 * @param inputArray
+	 * @param n
+	 * @param printer
+	 */
 	static void print(int **inputArray, int n, IPrint *printer)
 	{
 		init(inputArray, n, printer);
@@ -16,7 +27,7 @@ public:
 	}
 	
 private:
-	
+
 	static double pi;
 	static int currentLine;
 	static int currentRow;
@@ -51,6 +62,9 @@ private:
 		}
 	}
 	
+	/**
+	 * @brief Print side of the corner
+	 */
 	static void goToNextTurn()
 	{
 		for (int i = 0; i < step; i++)
@@ -61,6 +75,9 @@ private:
 		}
 	}
 	
+	/**
+	 * @brief Print current corner with equal sides in spiral
+	 */
 	static void writeCurrentStep()
 	{
 		goToNextTurn();

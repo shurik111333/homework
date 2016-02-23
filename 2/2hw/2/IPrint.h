@@ -1,5 +1,8 @@
 #pragma once
 
+/**
+ * @brief Interface for print number with space
+ */
 class IPrint
 {
 public:
