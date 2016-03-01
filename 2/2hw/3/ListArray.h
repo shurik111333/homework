@@ -18,11 +18,11 @@ public:
 	
 	int operator [](const int index) const;
 	
-	int count() const;
+	int getCount() const;
 	
 private:
 	int size;
-	int _count;
+	int count;
 	int *array;
 	static const int minSize = 5;
 	

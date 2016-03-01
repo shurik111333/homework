@@ -3,7 +3,7 @@
 ListArray::ListArray(int size)
 {
 	this->size = size;
-	_count = 0;
+	count = 0;
 	array = new int[size];
 }
 
@@ -14,14 +14,14 @@ ListArray::~ListArray()
 
 void ListArray::insert(int value, int index)
 {
-	if (count() == size)
+	if (getCount() == size)
 		increaseList();
-	for (int i = count(); i > index; i--)
+	for (int i = getCount(); i > index; i--)
 	{
 		array[i] = array[i - 1];
 	}
 	array[index] = value;
-	_count++;
+	count++;
 }
 
 bool ListArray::remove(int value)
@@ -29,23 +29,23 @@ bool ListArray::remove(int value)
 	int index = findElementId(value);
 	if (index == -1)
 		return false;
-	for (int j = index + 1; j < count(); j++)
+	for (int j = index + 1; j < getCount(); j++)
 	{
 		array[j - 1] = array[j];
 	}
-	_count--;
+	count--;
 	return true;
 }
 
 int ListArray::findElementId(int value) const
 {
 	int i = 0;
-	for (i = 0; i < count(); i++)
+	for (i = 0; i < getCount(); i++)
 	{
 		if (array[i] == value)
 			break;
 	}
-	return i == count() ? -1 : i;
+	return i == getCount() ? -1 : i;
 }
 
 int ListArray::operator [](const int index) const
@@ -56,7 +56,7 @@ int ListArray::operator [](const int index) const
 void ListArray::increaseList()
 {
 	int *newArray = new int[size * 2];
-	for (int i = 0; i < count(); i++)
+	for (int i = 0; i < getCount(); i++)
 	{
 		newArray[i] = array[i];
 	}
@@ -65,7 +65,7 @@ void ListArray::increaseList()
 	array = newArray;
 }
 
-int ListArray::count() const
+int ListArray::getCount() const
 {
-	return _count;
+	return count;
 }

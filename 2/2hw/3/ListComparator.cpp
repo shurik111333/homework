@@ -2,10 +2,10 @@
 
 bool ListComparator::operator <(const ListComparator &structure) const
 {
-	return this->count() < structure.count();
+	return this->getCount() < structure.getCount();
 }
 
 bool ListComparator::operator ==(const ListComparator &structure) const
 {
-	return this->count() == structure.count();
+	return this->getCount() == structure.getCount();
 }
