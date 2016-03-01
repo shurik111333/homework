@@ -8,36 +8,36 @@ class StackPointer : public IStack<T>
 public:
 	StackPointer()
 	{
-		this->top = nullptr;
+		top = nullptr;
 	}
 	~StackPointer()
 	{
-		while (this->top)
+		while (top)
 		{
-			this->pop();
+			pop();
 		}
 	}
 	void push(T value)
 	{
-		StackElement *newElement = new StackElement(value, this->top);
-		this->top = newElement;
+		StackElement *newElement = new StackElement(value, top);
+		top = newElement;
 	}
 	T pop()
 	{
-		StackElement *elementForDelete = this->top;
-		this->top = this->top->getNext();
+		StackElement *elementForDelete = top;
+		top = top->getNext();
 		int result = elementForDelete->getValue();
 		delete elementForDelete;
 		return result;
 	}
 	T getTop() const
 	{
-		return this->top->getValue();
+		return top->getValue();
 	}
 	
 	bool isEmpty() const
 	{
-		return this->top == nullptr;
+		return top == nullptr;
 	}
 	
 private:
@@ -51,11 +51,11 @@ private:
 		}
 		T getValue() const
 		{
-			return this->value;
+			return value;
 		}
 		StackElement *getNext() const
 		{
-			return this->next;
+			return next;
 		}
 	private:
 		T value;

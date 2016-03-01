@@ -9,8 +9,8 @@ public:
 	StackArray(int size = defaultSize)
 	{
 		this->size = size;
-		this->array = new T[this->size];
-		this->top = 0;
+		array = new T[size];
+		top = 0;
 	}
 	
 	~StackArray()
@@ -58,5 +58,4 @@ private:
 		delete[] array;
 		array = newArray;
 	}
-	
 };
