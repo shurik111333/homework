@@ -7,11 +7,11 @@ using namespace std;
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	cout << "Программа вычисляет арифметические выражения с целыми числами." << endl;
-	cout << "Введите выражение:" << endl;
+	cout << "This programm calculate arithmetic exressions with integer numbers." << endl;
+	cout << "Enter expression:" << endl;
 	string expr;
 	getline(cin,expr);
-	cout << "Результат: " << Calculator::calculate(expr) << endl;
+	cout << "Result: " << Calculator::calculate(expr) << endl;
 	return 0;
 }
 
