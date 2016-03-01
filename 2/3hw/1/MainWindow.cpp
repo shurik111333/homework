@@ -6,8 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
-	QObject::connect(ui->horizontalSlider, &ui->horizontalSlider->valueChanged,
-	                 ui->progressBar, &ui->progressBar->setValue);
+	QObject::connect(ui->horizontalSlider, &QSlider::valueChanged,
+	                 ui->progressBar, &QProgressBar::setValue);
 }
 
 MainWindow::~MainWindow()
