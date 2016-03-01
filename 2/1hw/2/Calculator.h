@@ -2,7 +2,6 @@
 
 #include <string>
 #include "IStack.h"
-#include "StackArray.h"
 
 using namespace std;
 

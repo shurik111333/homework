@@ -1,4 +1,5 @@
 #include "Calculator.h"
+#include "StackArray.h"
 
 double Calculator::calculate(string expression)
 {
