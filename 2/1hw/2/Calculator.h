@@ -8,9 +8,6 @@ using namespace std;
 class Calculator
 {
 public:
-	static double calculate(string expression);
-	
-private:
 	class Operator
 	{
 	public:
@@ -23,6 +20,9 @@ private:
 		{}
 	};
 	
+	static double calculate(string expression, IStack<double> &result, IStack<Operator*> &operators);
+	
+private:
 	class Add : public Operator
 	{
 	public:

@@ -1,17 +1,28 @@
 #include <iostream>
 #include <string>
 #include "Calculator.h"
+#include "IStack.h"
+#include "StackArray.h"
+#include "StackPointer.h"
 
 using namespace std;
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
 	cout << "This programm calculate arithmetic exressions with integer numbers." << endl;
 	cout << "Enter expression:" << endl;
 	string expr;
-	getline(cin,expr);
-	cout << "Result: " << Calculator::calculate(expr) << endl;
+	getline(cin, expr);
+	IStack<double> *result = new StackArray<double>();
+	IStack<Calculator::Operator*> *operators = new StackArray<Calculator::Operator*>();
+	cout << "Result (use StackArray): " << Calculator::calculate(expr, *result, *operators) << endl;
+	delete result;
+	delete operators;
+	result = new StackPointer<double>();
+	operators = new StackPointer<Calculator::Operator*>();
+	cout << "Result (use StackPointer): " << Calculator::calculate(expr, *result, *operators) << endl;
+	delete result;
+	delete operators;
 	return 0;
 }
 

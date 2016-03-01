@@ -1,10 +1,7 @@
 #include "Calculator.h"
-#include "StackArray.h"
 
-double Calculator::calculate(string expression)
+double Calculator::calculate(string expression, IStack<double> &result, IStack<Operator*> &operators)
 {
-	StackArray<double> result;
-	StackArray<Operator*> operators;
 	Lexer expr(expression);
 	int value = 0;
 	Lexer::Token currentToken = expr.getNextToken(value);
