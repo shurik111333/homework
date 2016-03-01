@@ -18,7 +18,6 @@ private:
 		IStack<double> *data;
 		
 		virtual int getPriority() const = 0;
-		
 		virtual void interpret() = 0;
 		
 		virtual ~Operator()
@@ -31,7 +30,6 @@ private:
 		Add(IStack<double> *data);
 		
 		int getPriority() const;
-		
 		void interpret();
 	};
 	
@@ -41,7 +39,6 @@ private:
 		Subtract(IStack<double> *data);
 		
 		int getPriority() const;
-		
 		void interpret();
 	};
 	
@@ -51,7 +48,6 @@ private:
 		Multiply(IStack<double> *data);
 		
 		int getPriority() const;
-		
 		void interpret();
 	};
 	
@@ -61,7 +57,6 @@ private:
 		Division(IStack<double> *data);
 		
 		int getPriority() const;
-		
 		void interpret();
 	};
 	
@@ -69,7 +64,6 @@ private:
 	{
 	public:
 		int getPriority() const;
-		
 		void interpret();
 	};
 	
@@ -89,7 +83,6 @@ private:
 		};
 		
 		Lexer(string expression);
-		
 		Token getNextToken(int &value);
 		
 	private:
@@ -97,7 +90,6 @@ private:
 		int position;
 		
 		void skipSpaces();
-		
 		int getNumber();
 	};
 	

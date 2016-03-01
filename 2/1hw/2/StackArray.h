@@ -44,7 +44,6 @@ private:
 	T *array;
 	int size;
 	int top;
-	
 	const static int defaultSize = 10;
 	
 	void increaseStack()

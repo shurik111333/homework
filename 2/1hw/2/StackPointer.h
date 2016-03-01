@@ -24,7 +24,6 @@ public:
 	}
 	T pop()
 	{
-		
 		StackElement *elementForDelete = this->top;
 		this->top = this->top->getNext();
 		int result = elementForDelete->getValue();
