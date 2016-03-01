@@ -1,8 +1,9 @@
 #pragma once
 
 #include "IList.h"
+#include "ListComparator.h"
 
-class ListArray : public IList<int>
+class ListArray : public IList<int>, public ListComparator
 {
 public:
 	ListArray(int size = minSize);
