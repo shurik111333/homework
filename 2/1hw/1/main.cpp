@@ -21,25 +21,25 @@ void printList(IList<int> &list)
 		cout << list[i] << " ";
 	}
 	cout << endl;
-	cout << "Длина списка: " << list.length() << endl;
+	cout << "Length: " << list.length() << endl;
 }
 
 void testRemoveFromEmptyList(IList<int> &list)
 {
-	cout << "Удаление элемента из пустого списка: ";
+	cout << "Removing from empty list: ";
 	printResult(!list.remove(0));
 }
 
 void testFindInEmptyList(IList<int> &list)
 {
-	cout << "Поиск в пустом списке: ";
+	cout << "Searching in empty list: ";
 	printResult(list.findElementId(0) == -1);
 }
 
 void testAddFindRemoveElements(IList<int> &list)
 {
 	int test[] = {0, 3, 2, 7, 9, 1, 8};
-	cout << "Проверка добавления и поиска элементов на массиве: {" << test[0];
+	cout << "Checking add and search elements with array: {" << test[0];
 	int count = sizeof(test) / sizeof(test[0]);
 	for (int i = 1; i < count; i++)
 	{
@@ -50,7 +50,7 @@ void testAddFindRemoveElements(IList<int> &list)
 	{
 		list.insert(test[i], i);
 	}
-	cout << "Все элементы добавлены: ";
+	cout << "All elements was added: ";
 	printList(list);
 	
 	bool result = true;
@@ -58,20 +58,20 @@ void testAddFindRemoveElements(IList<int> &list)
 	{
 		result &= (list[i] == test[i]) && (list[list.findElementId(test[i])] == test[i]);
 	}
-	cout << "Проверка поиска элемента по индексу или значению: ";
+	cout << "Checking searching element by index and value: ";
 	printResult(result);
-	cout << "Поиск и удаление несуществующего элемента: ";
+	cout << "Searching and removing nonexistent element: ";
 	printResult((list.findElementId(15) == -1) && !list.remove(15));
-	cout << "Удаление первого элемента: ";
+	cout << "Removing first element: ";
 	printResult(list.remove(list[0]));
 	printList(list);
-	cout << "Удаление элемента из середины списка: ";
+	cout << "Removing element from the middle of list: ";
 	printResult(list.remove(list[list.length() / 2]));
 	printList(list);
-	cout << "Удаление последнего элемента: ";
+	cout << "Removing last element: ";
 	printResult(list.remove(list[list.length() - 1]));
 	printList(list);
-	cout << "Удаление всех элементов: ";
+	cout << "Removing all elements: ";
 	result = true;
 	while (list.length() > 0)
 		result &= list.remove(list[0]);
@@ -88,13 +88,12 @@ void testStart(IList<int> &list)
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
-	cout << "Тестирование ListPointer:" << endl;
+	cout << "Testing ListPointer:" << endl;
 	ListPointer list;
 	testStart(list);
 	cout << endl;
 	ListArray listArray;
-	cout << "Тестирование ListArray:" << endl;
+	cout << "Testing ListArray:" << endl;
 	testStart(listArray);
 	return 0;
 }
