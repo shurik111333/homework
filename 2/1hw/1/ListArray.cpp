@@ -1,11 +1,8 @@
 #include "ListArray.h"
 
 ListArray::ListArray()
-{
-	size = minSize;
-	count = 0;
-	array = new int[size];
-}
+    :size(minSize), count(0), array(new int[size])
+{}
 
 ListArray::~ListArray()
 {
