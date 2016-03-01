@@ -48,8 +48,7 @@ bool ListPointer::remove(int value)
 		count--;
 		return true;
 	}
-	else
-		return false;
+	return false;
 }
 
 int ListPointer::findElementId(int value) const
