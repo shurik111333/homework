@@ -41,11 +41,10 @@ int *copyArray(int *array, int len)
 
 int main()
 {
-	setlocale(LC_ALL, "rus");
-	cout << "¬ведите количество элементов в массиве" << endl;
+	cout << "Enter size of array:" << endl;
 	int len = 0;
 	cin >> len;
-	cout << "¬ведите массив" << endl;
+	cout << "Enter array:" << endl;
 	int *array = new int[len];
 	for (int i = 0; i < len; i++)
 	{
