@@ -105,14 +105,14 @@ IPrint *getPrintMethod()
 	int type = 0;
 	while (type != 1 && type != 2)
 	{
-		cout << "Выберите способ вывода:" << endl;
-		cout << "1 - вывод в консоль" << endl;
-		cout << "2 - вывод в файл" << endl;
+		cout << "Select output method:" << endl;
+		cout << "1 - console" << endl;
+		cout << "2 - file" << endl;
 		cin >> type;
 	}
 	if (type == 1)
 		return new PrintConsole();
-	cout << "Введите имя файла" << endl;
+	cout << "Enter file name:" << endl;
 	char fileName[maxLen] = {};
 	cin >> fileName;
 	return new PrintFile(fileName);
@@ -121,11 +121,11 @@ IPrint *getPrintMethod()
 int main()
 {
 	setlocale(LC_ALL, "rus");
-	cout << "Программа выводит элементы массива NxN в порядке обхода по спирали" << endl;
-	cout << "Введите нечетное числа N - размер массива" << endl;
+	cout << "This porgramm print array NxN in spiral order." << endl;
+	cout << "Enter odd number N - size of array:" << endl;
 	int n = 0;
 	cin >> n;
-	cout << "Введите массив" << endl;
+	cout << "Enter array:" << endl;
 	int **inputArray = new int*[n];
 	for (int i = 0; i < n; i++)
 	{
