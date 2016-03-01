@@ -18,7 +18,7 @@ private:
 	int size;
 	int count;
 	int *array;
-	const int minSize = 5;
+	const static int minSize = 5;
 	
 	void increaseList();
 };
