@@ -11,10 +11,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = 3
 TEMPLATE = app
 
+CONFIG += c++11
 
 SOURCES += main.cpp\
-        MainWindow.cpp
+        MainWindow.cpp \
+    Calculator.cpp \
+    Lexer.cpp
 
-HEADERS  += MainWindow.h
+HEADERS  += MainWindow.h \
+    Calculator.h \
+    IStack.h \
+    StackArray.h
 
-FORMS    += MainWindow.ui
+FORMS    += MainWindow.ui 
+
+DISTFILES +=
