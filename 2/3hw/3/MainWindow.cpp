@@ -5,6 +5,7 @@
 #include <QChar>
 #include <cctype>
 #include <QStringList>
+#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -167,10 +168,11 @@ void MainWindow::printPoint()
 		case State::digitPoint:
 			return;
 		case State::error:
+		case State::result:
+			ui->result->setText("");
 		case State::operation:
 		case State::function:
 		case State::openBracket:
-		case State::result:
 			ui->result->insert("0");
 		default:
 			ui->result->insert(".");
