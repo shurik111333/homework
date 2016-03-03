@@ -111,8 +111,14 @@ void MainWindow::printOperation(const QString &value)
 		}
 		case State::result:
 		{
-			QStringList result = ui->result->text().split(' ');
-			ui->result->setText(result.last().append(operatorWithSpaces(value)));
+			QString result = ui->result->text().split(' ').last();
+			ui->result->setText("");
+			if (result[0] == '-')
+			{
+				ui->result->insert("0 - ");
+				result.remove(0, 1);
+			}
+			ui->result->insert(result.append(operatorWithSpaces(value)));
 			break;
 		}
 	}
