@@ -13,6 +13,7 @@ public:
 	T pop();
 	T getTop() const;
 	bool isEmpty() const;
+	void clear();
 	
 private:
 	int size;
@@ -58,6 +59,12 @@ template <typename T>
 bool StackArray<T>::isEmpty() const
 {
 	return top == 0;
+}
+
+template <typename T>
+void StackArray<T>::clear()
+{
+	top = 0;
 }
 
 template <typename T>

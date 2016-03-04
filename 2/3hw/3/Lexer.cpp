@@ -21,7 +21,8 @@ Calculator::Lexer::Token Calculator::Lexer::getNextToken(double &value)
 	skipSpaces();
 	if (position >= expression.length())
 		return end;
-	if (isdigit(expression[position]))
+	//for negative numbers. need refactoring
+	if (isdigit(expression[position]) || (expression[position] == '-' && position < expression.length() - 1 && isdigit(expression[position + 1])))
 	{
 		value = getNumber();
 		return number;
@@ -45,6 +46,7 @@ double Calculator::Lexer::getNumber()
 {
 	double res = 0;
 	int start = position;
+	position++;
 	while (position < expression.length() && (isdigit(expression[position]) || expression[position] == '.'))
 	{
 		position++;

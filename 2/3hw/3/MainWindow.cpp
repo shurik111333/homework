@@ -1,7 +1,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include <QSignalMapper>
 #include "Calculator.h"
+#include "StackArray.h"
+#include <QSignalMapper>
 #include <QChar>
 #include <cctype>
 #include <QStringList>
@@ -11,14 +12,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     balance(0),
-    currentState(State::start)
+    tokens(new StackArray<Token>())
 {
 	ui->setupUi(this);
-	ui->result->setText("0");
+	clearOutput();
 	QSignalMapper *forPrint = new QSignalMapper(this);
 	for (QPushButton *button : this->findChildren<QPushButton*>())
 	{
-		if (button->text() == "clear")
+		if (button->text() == "clear" || button->text() == "<-")
 			continue;
 		QObject::connect(button, &QPushButton::pressed,
 		                 forPrint, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
@@ -27,7 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	QObject::connect(forPrint, static_cast<void(QSignalMapper::*)(const QString&)>(&QSignalMapper::mapped),
 	                 this, &MainWindow::print);
 	QObject::connect(ui->buttonClear, &QPushButton::pressed,
-	                 this, &MainWindow::clear);
+	                 this, &MainWindow::clearOutput);
+	QObject::connect(ui->buttonBackspace, &QPushButton::pressed,
+	                 this, &MainWindow::backspace);
 }
 
 bool isFunction(const QString &str)
@@ -91,98 +94,135 @@ void MainWindow::appendToResulOutput(QString str)
 MainWindow::~MainWindow()
 {
 	delete ui;
+	delete tokens;
 }
 
-void MainWindow::clear()
+void MainWindow::clearOutput()
 {
 	ui->result->setText("0");
-	currentState = State::start;
+	tokens->clear();
+	//currentState = State::start;
+	tokens->push(Token(State::start, 0));
 	balance = 0;
+}
+
+void MainWindow::backspace()
+{
+	if (tokens->getTop().state == State::start)
+		return;
+	removeLastSymbols(tokens->getTop().length);
+	tokens->pop();
+	if (tokens->getTop().state == State::start)
+		clearOutput();
+	
 }
 
 void MainWindow::printOperation(const QString &value)
 {
-	switch (currentState)
+	int len = 0;
+	switch (tokens->getTop().state)
 	{
 		case State::error:
+		case State::openBracket:
 			return;
 		case State::function:
 			appendToResulOutput("(");
+			len++;
 			balance++;
-		case State::openBracket:
 		case State::digitPoint:
 			appendToResulOutput("0");
+			len++;
 		case State::start:
 		case State::digitInteger:
 		case State::digitFraction:
 		case State::closeBracket:
 			appendToResulOutput(" " + value + " ");
+			len += value.length() + 2;
 			break;
 		case State::operation:
 			{
 				removeLastSymbols(3);
-				appendToResulOutput(operatorForPrint(value));
+				QString forPrint = operatorForPrint(value);
+				appendToResulOutput(forPrint);
+				len += forPrint.length();
 				break;
 			}
 		case State::result:
 			{
 				QString result = ui->result->text().split(' ').last();
-				ui->result->setText("");
+				/*ui->result->setText("");
 				if (result[0] == '-')
 				{
 					ui->result->insert("0 - ");
 					result.remove(0, 1);
-				}
-				appendToResulOutput(result.append(operatorForPrint(value)));
+				}*/
+				clearOutput();
+				ui->result->setText(result.append(operatorForPrint(value)));
+				len = ui->result->text().length();
 				break;
 			}
 	}
-	currentState = State::operation;
+	//currentState = State::operation;
+	tokens->push(Token(State::operation, len));
 }
 
 void MainWindow::printFunction(const QString &value)
 {
-	switch (currentState)
+	int len = 0;
+	switch (tokens->getTop().state)
 	{
 		case State::start:
 		case State::error:
 		case State::result:
+			clearOutput();
 			ui->result->setText(value + " ");
+			len = ui->result->text().length();
 			break;
 		case State::operation:
 		case State::openBracket:
 		case State::function:
-			appendToResulOutput(operatorForPrint(value));
-			break;
+			{
+				QString forPrint = operatorForPrint(value);
+				appendToResulOutput(forPrint);
+				len = forPrint.length();
+				break;
+			}
 		default:
 			return;
 	}
-	currentState = State::function;
+	//currentState = State::function;
+	tokens->push(Token(State::function, len));
 }
 
 void MainWindow::printNumber(const QString &value)
 {
-	switch (currentState)
+	int len = value.length();
+	switch (tokens->getTop().state)
 	{
 		case State::start:
 		case State::error:
 		case State::result:
+			clearOutput();
 			ui->result->setText(value);
-			currentState = State::digitInteger;
+			//currentState = State::digitInteger;
+			tokens->push(Token(State::digitInteger, len));
 			break;
 		default:
-			if (currentState == State::digitPoint || currentState == State::digitFraction)
-				currentState = State::digitFraction;
-			else
-				currentState = State::digitInteger;
 			appendToResulOutput(value);
+			if (tokens->getTop().state == State::digitPoint || tokens->getTop().state == State::digitFraction)
+				//currentState = State::digitFraction;
+				tokens->push(Token(State::digitFraction, len));
+			else
+				//currentState = State::digitInteger;
+				tokens->push(Token(State::digitInteger, len));
 			break;
 	}
 }
 
 void MainWindow::printPoint()
 {
-	switch (currentState)
+	int len = 0;
+	switch (tokens->getTop().state)
 	{
 		case State::closeBracket:
 		case State::digitFraction:
@@ -190,21 +230,26 @@ void MainWindow::printPoint()
 			return;
 		case State::error:
 		case State::result:
+			clearOutput();
 			ui->result->setText("");
 		case State::operation:
 		case State::function:
 		case State::openBracket:
 			appendToResulOutput("0");
+			len++;
 		default:
 			appendToResulOutput(".");
+			len++;
 			break;
 	}
-	currentState = State::digitPoint;
+	//currentState = State::digitPoint;
+	tokens->push(Token(State::digitPoint, len));
 }
 
 void MainWindow::printOpenBracket()
 {
-	switch (currentState)
+	int len = 0;
+	switch (tokens->getTop().state)
 	{
 		case State::closeBracket:
 		case State::digitFraction:
@@ -214,38 +259,47 @@ void MainWindow::printOpenBracket()
 		case State::error:
 		case State::result:
 		case State::start:
+			clearOutput();
 			ui->result->setText("");
 		default:
 			appendToResulOutput("(");
+			len++;
 			balance++;
 			break;
 	}
-	currentState = State::openBracket;
+	//currentState = State::openBracket;
+	tokens->push(Token(State::openBracket, len));
 }
 
 void MainWindow::printCloseBracket()
 {
 	if (balance == 0)
 		return;
-	switch (currentState)
+	int len = 0;
+	switch (tokens->getTop().state)
 	{
 		case State::digitPoint:
 			appendToResulOutput("0");
+			len++;
 		case State::closeBracket:
 		case State::digitFraction:
 		case State::digitInteger:
 			appendToResulOutput(")");
+			len++;
 			balance--;
 			break;
 		default:
 			return;
 	}
-	currentState = State::closeBracket;
+	//currentState = State::closeBracket;
+	tokens->push(Token(State::closeBracket, len));
 }
 
 void MainWindow::printResult()
 {
-	switch (currentState)
+	int len = 0;
+	State state;
+	switch (tokens->getTop().state)
 	{
 		case State::error:
 		case State::function:
@@ -256,21 +310,26 @@ void MainWindow::printResult()
 			return;
 		default:
 			for (int i = 0; i < balance; i++)
+			{
 				appendToResulOutput(")");
+				tokens->push(Token(State::closeBracket, 1));
+			}
 			balance = 0;
 			QString forPrint;
 			try
 			{
 				double result = Calculator::calculate(ui->result->text().toStdString());
 				forPrint = QString::number(result);
-				currentState = State::result;
+				state = State::result;
 			}
 			catch (QString message)
 			{
 				forPrint = message;
-				currentState = State::error;
+				state = State::error;
 			}
 			appendToResulOutput(" = " + forPrint);
+			len += forPrint.length() + 3;
+			tokens->push(Token(state, len));
 			break;
 	}
 }

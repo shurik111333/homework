@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include "IStack.h"
 
 namespace Ui {
 	class MainWindow;
@@ -15,8 +16,8 @@ public:
 	~MainWindow();
 	
 public slots:
-	void clear();
-	
+	void clearOutput();
+	void backspace();
 	void print(const QString &value);
 	
 private:
@@ -46,6 +47,21 @@ private:
 		result,
 		error
 	};
-	State currentState;
+	
+	struct Token
+	{
+		State state;
+		int length;
+		
+		Token()
+		    :state(State::start), length(0)
+		{}
+		
+		Token(State state, int length)
+		    :state(state), length(length)
+		{}
+	};
+	
+	IStack<Token> *tokens;
 };
 
