@@ -3,7 +3,7 @@
 #include "IList.h"
 #include "ListComparator.h"
 
-class ListArray : public IList<int>, public ListComparator
+class ListArray : public IList<int>
 {
 public:
 	ListArray(int size = minSize);

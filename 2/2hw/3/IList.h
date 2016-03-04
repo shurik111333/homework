@@ -7,7 +7,7 @@ template <typename T>
 /**
  * @brief ADT List.
  */
-class IList
+class IList : public ListComparator
 {
 public: 
 	void virtual insert(T value, int index) = 0;
