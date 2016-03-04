@@ -23,6 +23,8 @@ private:
 	Ui::MainWindow *ui;
 	int balance;
 	
+	void removeLastSymbols(int n);
+	void appendToResulOutput(QString str);
 	void printOperation(const QString &value);
 	void printFunction(const QString &value);
 	void printNumber(const QString &value);

@@ -1,6 +1,7 @@
 #include "Calculator.h"
 #include "StackArray.h"
 #include <cmath>
+#include <QString>
 
 double Calculator::calculate(string expression)
 {
@@ -144,6 +145,8 @@ Calculator::Division::Division(IStack<double> *data)
 void Calculator::Division::interpret()
 {
 	double num1 = data->pop();
+	if (num1 == 0)
+		throw QString("Division by zero!");
 	double num2 = data->pop();
 	data->push(num2 / num1);
 }
@@ -167,6 +170,8 @@ Calculator::Sqrt::Sqrt(IStack<double> *data)
 void Calculator::Sqrt::interpret()
 {
 	double num = data->pop();
+	if (num < 0)
+		throw QString("Sqrt from negative number!");
 	data->push(sqrt(num));
 }
 

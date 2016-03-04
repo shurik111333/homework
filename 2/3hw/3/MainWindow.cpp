@@ -10,8 +10,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    currentState(State::start),
-    balance(0)
+    balance(0),
+    currentState(State::start)
 {
 	ui->setupUi(this);
 	ui->result->setText("0");
@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 		forPrint->setMapping(button, button->text());
 	}
 	QObject::connect(forPrint, static_cast<void(QSignalMapper::*)(const QString&)>(&QSignalMapper::mapped),
-	        this, &MainWindow::print);
+	                 this, &MainWindow::print);
 	QObject::connect(ui->buttonClear, &QPushButton::pressed,
 	                 this, &MainWindow::clear);
 }
@@ -35,7 +35,7 @@ bool isFunction(const QString &str)
 	return (str == "sqrt");
 }
 
-QString operatorWithSpaces(const QString &value)
+QString operatorForPrint(const QString &value)
 {
 	return QString(" " + value + " ");
 }
@@ -73,6 +73,21 @@ void MainWindow::print(const QString &value)
 	}
 }
 
+void MainWindow::removeLastSymbols(int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		ui->result->setCursorPosition(ui->result->text().length());
+		ui->result->backspace();
+	}
+}
+
+void MainWindow::appendToResulOutput(QString str)
+{
+	ui->result->setCursorPosition(ui->result->text().length());
+	ui->result->insert(str);
+}
+
 MainWindow::~MainWindow()
 {
 	delete ui;
@@ -92,35 +107,35 @@ void MainWindow::printOperation(const QString &value)
 		case State::error:
 			return;
 		case State::function:
-			ui->result->insert("(");
+			appendToResulOutput("(");
+			balance++;
 		case State::openBracket:
 		case State::digitPoint:
-			ui->result->insert("0");
+			appendToResulOutput("0");
 		case State::start:
 		case State::digitInteger:
 		case State::digitFraction:
 		case State::closeBracket:
-			ui->result->insert(" " + value + " ");
+			appendToResulOutput(" " + value + " ");
 			break;
 		case State::operation:
-		{
-			QString expr = ui->result->text();
-			expr.remove(expr.length() - 3, 3);
-			ui->result->setText(expr.append(operatorWithSpaces(value)));
-			break;
-		}
-		case State::result:
-		{
-			QString result = ui->result->text().split(' ').last();
-			ui->result->setText("");
-			if (result[0] == '-')
 			{
-				ui->result->insert("0 - ");
-				result.remove(0, 1);
+				removeLastSymbols(3);
+				appendToResulOutput(operatorForPrint(value));
+				break;
 			}
-			ui->result->insert(result.append(operatorWithSpaces(value)));
-			break;
-		}
+		case State::result:
+			{
+				QString result = ui->result->text().split(' ').last();
+				ui->result->setText("");
+				if (result[0] == '-')
+				{
+					ui->result->insert("0 - ");
+					result.remove(0, 1);
+				}
+				appendToResulOutput(result.append(operatorForPrint(value)));
+				break;
+			}
 	}
 	currentState = State::operation;
 }
@@ -137,7 +152,7 @@ void MainWindow::printFunction(const QString &value)
 		case State::operation:
 		case State::openBracket:
 		case State::function:
-			ui->result->insert(operatorWithSpaces(value));
+			appendToResulOutput(operatorForPrint(value));
 			break;
 		default:
 			return;
@@ -160,7 +175,7 @@ void MainWindow::printNumber(const QString &value)
 				currentState = State::digitFraction;
 			else
 				currentState = State::digitInteger;
-			ui->result->insert(value);
+			appendToResulOutput(value);
 			break;
 	}
 }
@@ -179,9 +194,9 @@ void MainWindow::printPoint()
 		case State::operation:
 		case State::function:
 		case State::openBracket:
-			ui->result->insert("0");
+			appendToResulOutput("0");
 		default:
-			ui->result->insert(".");
+			appendToResulOutput(".");
 			break;
 	}
 	currentState = State::digitPoint;
@@ -201,7 +216,7 @@ void MainWindow::printOpenBracket()
 		case State::start:
 			ui->result->setText("");
 		default:
-			ui->result->insert("(");
+			appendToResulOutput("(");
 			balance++;
 			break;
 	}
@@ -215,11 +230,11 @@ void MainWindow::printCloseBracket()
 	switch (currentState)
 	{
 		case State::digitPoint:
-			ui->result->insert("0");
+			appendToResulOutput("0");
 		case State::closeBracket:
 		case State::digitFraction:
 		case State::digitInteger:
-			ui->result->insert(")");
+			appendToResulOutput(")");
 			balance--;
 			break;
 		default:
@@ -241,11 +256,21 @@ void MainWindow::printResult()
 			return;
 		default:
 			for (int i = 0; i < balance; i++)
-				ui->result->insert(")");
+				appendToResulOutput(")");
 			balance = 0;
-			double result = Calculator::calculate(ui->result->text().toStdString());
-			ui->result->insert(" = " + QString::number(result));
+			QString forPrint;
+			try
+			{
+				double result = Calculator::calculate(ui->result->text().toStdString());
+				forPrint = QString::number(result);
+				currentState = State::result;
+			}
+			catch (QString message)
+			{
+				forPrint = message;
+				currentState = State::error;
+			}
+			appendToResulOutput(" = " + forPrint);
 			break;
 	}
-	currentState = State::result;
 }
