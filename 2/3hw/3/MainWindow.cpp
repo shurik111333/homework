@@ -101,7 +101,6 @@ void MainWindow::clearOutput()
 {
 	ui->result->setText("0");
 	tokens->clear();
-	//currentState = State::start;
 	tokens->push(Token(State::start, 0));
 	balance = 0;
 }
@@ -120,6 +119,7 @@ void MainWindow::backspace()
 void MainWindow::printOperation(const QString &value)
 {
 	int len = 0;
+	QString forPrint;
 	switch (tokens->getTop().state)
 	{
 		case State::error:
@@ -140,35 +140,25 @@ void MainWindow::printOperation(const QString &value)
 			len += value.length() + 2;
 			break;
 		case State::operation:
-			{
-				removeLastSymbols(3);
-				QString forPrint = operatorForPrint(value);
-				appendToResulOutput(forPrint);
-				len += forPrint.length();
-				break;
-			}
+			removeLastSymbols(3);
+			forPrint = operatorForPrint(value);
+			appendToResulOutput(forPrint);
+			len += forPrint.length();
+			break;
 		case State::result:
-			{
-				QString result = ui->result->text().split(' ').last();
-				/*ui->result->setText("");
-				if (result[0] == '-')
-				{
-					ui->result->insert("0 - ");
-					result.remove(0, 1);
-				}*/
-				clearOutput();
-				ui->result->setText(result.append(operatorForPrint(value)));
-				len = ui->result->text().length();
-				break;
-			}
+			forPrint = ui->result->text().split(' ').last();
+			clearOutput();
+			ui->result->setText(forPrint.append(operatorForPrint(value)));
+			len = ui->result->text().length();
+			break;
 	}
-	//currentState = State::operation;
 	tokens->push(Token(State::operation, len));
 }
 
 void MainWindow::printFunction(const QString &value)
 {
 	int len = 0;
+	QString forPrint;
 	switch (tokens->getTop().state)
 	{
 		case State::start:
@@ -181,16 +171,13 @@ void MainWindow::printFunction(const QString &value)
 		case State::operation:
 		case State::openBracket:
 		case State::function:
-			{
-				QString forPrint = operatorForPrint(value);
+				forPrint = operatorForPrint(value);
 				appendToResulOutput(forPrint);
 				len = forPrint.length();
 				break;
-			}
 		default:
 			return;
 	}
-	//currentState = State::function;
 	tokens->push(Token(State::function, len));
 }
 
@@ -204,16 +191,13 @@ void MainWindow::printNumber(const QString &value)
 		case State::result:
 			clearOutput();
 			ui->result->setText(value);
-			//currentState = State::digitInteger;
 			tokens->push(Token(State::digitInteger, len));
 			break;
 		default:
 			appendToResulOutput(value);
 			if (tokens->getTop().state == State::digitPoint || tokens->getTop().state == State::digitFraction)
-				//currentState = State::digitFraction;
 				tokens->push(Token(State::digitFraction, len));
 			else
-				//currentState = State::digitInteger;
 				tokens->push(Token(State::digitInteger, len));
 			break;
 	}
@@ -242,7 +226,6 @@ void MainWindow::printPoint()
 			len++;
 			break;
 	}
-	//currentState = State::digitPoint;
 	tokens->push(Token(State::digitPoint, len));
 }
 
@@ -267,7 +250,6 @@ void MainWindow::printOpenBracket()
 			balance++;
 			break;
 	}
-	//currentState = State::openBracket;
 	tokens->push(Token(State::openBracket, len));
 }
 
@@ -291,7 +273,6 @@ void MainWindow::printCloseBracket()
 		default:
 			return;
 	}
-	//currentState = State::closeBracket;
 	tokens->push(Token(State::closeBracket, len));
 }
 
@@ -306,7 +287,6 @@ void MainWindow::printResult()
 		case State::openBracket:
 		case State::operation:
 		case State::result:
-		case State::start:
 			return;
 		default:
 			for (int i = 0; i < balance; i++)

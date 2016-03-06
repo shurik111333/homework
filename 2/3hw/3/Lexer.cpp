@@ -21,25 +21,26 @@ Calculator::Lexer::Token Calculator::Lexer::getNextToken(double &value)
 	skipSpaces();
 	if (position >= expression.length())
 		return end;
-	//for negative numbers. need refactoring
-	if (isdigit(expression[position]) || (expression[position] == '-' && position < expression.length() - 1 && isdigit(expression[position + 1])))
+	if (isNumber())
 	{
 		value = getNumber();
 		return number;
 	}
 	if (isOperation(expression[position]) || isBracket(expression[position]))
 		return (Token)expression[position++];
-	else
-	{
-		position += 4;
-		return sqrt;
-	}
+	return getFunction();
 }
 
 void Calculator::Lexer::skipSpaces()
 {
 	while (expression[position] == ' ')
 		position++;
+}
+
+bool Calculator::Lexer::isNumber()
+{
+	return isdigit(expression[position]) || 
+	        (expression[position] == '-' && (position < expression.length() - 1) && isdigit(expression[position + 1]));
 }
 
 double Calculator::Lexer::getNumber()

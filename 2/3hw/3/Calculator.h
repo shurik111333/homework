@@ -95,6 +95,7 @@ private:
 		int position;
 		
 		void skipSpaces();
+		bool isNumber();
 		double getNumber();
 		Token getFunction(string name);
 		Token getFunction();
