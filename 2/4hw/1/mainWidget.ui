@@ -101,7 +101,11 @@
     </widget>
    </item>
    <item row="4" column="0" colspan="2">
-    <widget class="QTextEdit" name="textInformation"/>
+    <widget class="QTextEdit" name="textInformation">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item row="2" column="1">
     <widget class="QPushButton" name="buttonSettings">
