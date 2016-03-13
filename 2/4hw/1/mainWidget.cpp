@@ -22,7 +22,6 @@ Widget::Widget(QWidget *parent) :
 	                 this, &Widget::updateInformation);
 	QObject::connect(settingsWidget, &SettingsWidget::newSettings,
 	                 this, &Widget::setNewSettings);
-	
 }
 
 Widget::~Widget()

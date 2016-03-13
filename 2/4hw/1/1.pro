@@ -15,10 +15,15 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         mainWidget.cpp \
-    settingsWidget.cpp
+    settingsWidget.cpp \
+    hashmap.cpp \
+    polyhash.cpp
 
 HEADERS  += mainWidget.h \
-    settingsWidget.h
+    settingsWidget.h \
+    hashmap.h \
+    ihash.h \
+    polyhash.h
 
 FORMS    += mainWidget.ui \
     settingsWidget.ui
