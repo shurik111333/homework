@@ -1,10 +1,14 @@
 #include "polyhash.h"
 
-PolyHash::PolyHash()
-    :module(defaultModule), multiplier(defaultMultiplier)
+PolyHash::PolyHash():
+    module(defaultModule),
+    multiplier(defaultMultiplier)
 {}
 
-unsigned int PolyHash::getHash(QString &str) const
+PolyHash::~PolyHash()
+{}
+
+unsigned int PolyHash::getHash(const QString &str) const
 {
 	unsigned long long result = 0;
 	for (int i = 0; i < str.length(); i++)

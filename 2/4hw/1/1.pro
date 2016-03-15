@@ -17,13 +17,17 @@ SOURCES += main.cpp\
         mainWidget.cpp \
     settingsWidget.cpp \
     hashmap.cpp \
-    polyhash.cpp
+    polyhash.cpp \
+    settings.cpp \
+    linearhash.cpp
 
 HEADERS  += mainWidget.h \
     settingsWidget.h \
     hashmap.h \
     ihash.h \
-    polyhash.h
+    polyhash.h \
+    settings.h \
+    linearhash.h
 
 FORMS    += mainWidget.ui \
     settingsWidget.ui
