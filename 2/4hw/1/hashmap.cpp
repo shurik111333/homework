@@ -1,5 +1,7 @@
 #include "hashmap.h"
 
+const double HashMap::_maxLoadFactor = 3;
+
 HashMap::HashMap(IHash *hash)
     : _size(_minSize),
       _countElements(0),
@@ -8,11 +10,13 @@ HashMap::HashMap(IHash *hash)
       _averageLengthOfChain(0),
       _hash(hash)
 {
-	array = new QList<Element>*[_size];
-	for (int i = 0; i < _size; i++)
-	{
-		array[i] = new QList<Element>();
-	}
+	array = getNewMap(_size);
+}
+
+HashMap::~HashMap()
+{
+	delete _hash;
+	removeMap(array, _size);
 }
 
 int HashMap::occupiedCount()
@@ -59,6 +63,56 @@ void HashMap::replace(const QString &key, int oldValue, int newValue)
 {
 	remove(key, oldValue);
 	insert(key, newValue);
+}
+
+void HashMap::setHashFunction(IHash *newHash)
+{
+	QList<Element> elements;
+	for (int i = 0; i < _size; i++)
+	{
+		elements.append(*array[i]);
+		array[i]->clear();
+	}
+	_hash = newHash;
+	for (auto el : elements)
+	{
+		insert(el.key, el.value);
+	}
+}
+
+QList<HashMap::Element> **HashMap::getNewMap(int size)
+{
+	QList<Element> **res = new QList<Element>*[size];
+	for (int i = 0; i < size; i++)
+	{
+		res[i] = new QList<Element>();
+	}
+	return res;
+}
+
+void HashMap::removeMap(QList<HashMap::Element> **&map, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		delete map[i];
+	}
+	delete[] map;
+}
+
+void HashMap::increase()
+{
+	QList<Element> **oldMap = array;
+	int oldSize = _size;
+	_size *= _factorSize;
+	array = getNewMap(_size);
+	for (int i = 0; i < oldSize; i++)
+	{
+		for (Element el : *array[i])
+		{
+			insert(el.key, el.value);
+		}
+	}
+	removeMap(oldMap, oldSize);
 }
 
 void HashMap::updateInformation(int index, HashMap::Action action)
