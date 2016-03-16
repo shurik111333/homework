@@ -7,29 +7,40 @@
 #include <QString>
 #include <QVector>
 #include <QObject>
-#include <QHash>
+#include <QMap>
 #include <QStringList>
 
 class Settings
 {
 public:
-	Settings(IHash *hash);
+	Settings();
 	~Settings();
 
+	static void init(const QString &hashName);
 	static int countCheckBox();
 	static QStringList getHashNames();
 	static QStringList getCheckBoxNames();
-
+	static QString getInformation();
+	static void setCheckInformationState(const QString &state, bool value);
+	static void setHash(const QString &name);
+	static bool getCheckInformationState(const QString &box);
+	static QString getCurrentHash();
 
 public slots:
 	void changeState(const QString &name);
 	void changeHash(const QString &hash);
 
 private:
-	HashMap map;
-	IHash *currentHash;
-	static const QHash<QString, IHash*> hash;
-	static QHash<QString, bool> checkBoxes;
+	static HashMap *map;
+	static QString currentHash;
+	static const QMap<QString, IHash*> hash;
+	static QMap<QString, bool> checkBoxes;
+	static const QString numberElements;
+	static const QString numberEmpty;
+	static const QString loadFactor;
+	static const QString averageChainLength;
+	static const QString maximalChainLength;
 
-	IHash *getHash(const QString &hashName);
+	static IHash *getHash(const QString &hashName);
+	static QString getInformation(const QString &information);
 };

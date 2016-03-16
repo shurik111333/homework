@@ -1,27 +1,42 @@
 #include "settings.h"
 
-const QHash<QString, IHash*> Settings::hash
+const QString Settings::numberElements = "Number of elements";
+const QString Settings::numberEmpty = "Number of empty spaces";
+const QString Settings::loadFactor = "Load factor";
+const QString Settings::averageChainLength = "Average length of chain";
+const QString Settings::maximalChainLength = "Maximal length of chain";
+
+const QMap<QString, IHash*> Settings::hash
 {
 	{"Polynominal", new PolyHash()},
 	{"Linear", new LinearHash()}
 };
 
-QHash<QString, bool> Settings::checkBoxes
+QMap<QString, bool> Settings::checkBoxes
 {
-	{"Number of elements", true},
-	{"Number of empty spaces", true},
-	{"Load factor", true},
-	{"Average length of chain", true},
-	{"Maximal length of chain", true}
+	{Settings::numberElements, true},
+	{Settings::numberEmpty, true},
+	{Settings::loadFactor, true},
+	{Settings::averageChainLength, true},
+	{Settings::maximalChainLength, true}
+
 };
 
-Settings::Settings(IHash *hash):
-    currentHash(hash)
+QString Settings::currentHash = "";
+HashMap *Settings::map = nullptr;
+
+Settings::Settings()
 {}
 
 Settings::~Settings()
 {
-	delete currentHash;
+	//	delete currentHash;
+}
+
+void Settings::init(const QString &hashName)
+{
+	currentHash = hashName;
+	map = new HashMap(getHash(currentHash));
 }
 
 int Settings::countCheckBox()
@@ -39,19 +54,68 @@ QStringList Settings::getCheckBoxNames()
 	return checkBoxes.keys();
 }
 
+QString Settings::getInformation()
+{
+	QString information("Hash function: ");
+	information.append(currentHash).append("\n");
+	for (QString s : checkBoxes.keys())
+	{
+		if (checkBoxes[s])
+			information.append(s).append(": ").append(getInformation(s)).append("\n");
+	}
+	return information;
+}
+
+void Settings::setCheckInformationState(const QString &state, bool value)
+{
+	checkBoxes[state] = value;
+}
+
+void Settings::setHash(const QString &name)
+{
+	if (currentHash != name)
+	{
+		currentHash = name;
+		map->setHashFunction(hash[name]);
+	}
+}
+
+bool Settings::getCheckInformationState(const QString &box)
+{
+	return checkBoxes[box];
+}
+
 void Settings::changeState(const QString &name)
 {
 	checkBoxes[name] = !checkBoxes[name];
-	/*bool value = checkBoxes[name];
-	checkBoxes.insert(name, !value);*/
 }
 
 void Settings::changeHash(const QString &hash)
 {
-	currentHash = getHash(hash);
+	currentHash = hash;
+}
+
+QString Settings::getCurrentHash()
+{
+	return currentHash;
 }
 
 IHash *Settings::getHash(const QString &hashName)
 {
 	return hash[hashName];
+}
+
+QString Settings::getInformation(const QString &information)
+{
+	if (information == numberElements)
+		return QString::number(map->count());
+	if (information == numberEmpty)
+		return QString::number(map->countEmpty());
+	if (information == loadFactor)
+		return QString::number(map->loadFactor());
+	if (information == averageChainLength)
+		return QString::number(map->averageLength());
+	if (information == maximalChainLength)
+		return QString::number(map->getMaxLength());
+	return QString();
 }
