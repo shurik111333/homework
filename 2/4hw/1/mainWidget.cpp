@@ -7,6 +7,7 @@ const QString Widget::successRemove = "Pair {key, value} was removed succesfully
 const QString Widget::successFind = "Done.";
 const QString Widget::nonIntegerValue = "Value must be an integer.";
 const QString Widget::findNothing = "No values was found.";
+const QString Widget::emptyKey = "Key is empty.";
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -49,6 +50,8 @@ int Widget::getValue()
 
 QString Widget::getKey()
 {
+	if (ui->lineKey->text().isEmpty())
+		throw emptyKey;
 	return ui->lineKey->text();
 }
 

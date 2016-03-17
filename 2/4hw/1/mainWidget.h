@@ -25,6 +25,7 @@ private:
 	static const QString successFind;
 	static const QString nonIntegerValue;
 	static const QString findNothing;
+	static const QString emptyKey;
 
 	int getValue();
 	QString getKey();
