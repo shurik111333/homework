@@ -2,8 +2,8 @@
 #include "ui_mainWidget.h"
 #include <QPalette>
 
-const QString Widget::successAdd = "Pair {key, value} was added succesfully.";
-const QString Widget::successRemove = "Pair {key, value} was removed succesfully.";
+const QString Widget::successAdd = "Pair {%0, %1} was added succesfully.";
+const QString Widget::successRemove = "Pair {%0, %1} was removed succesfully.";
 const QString Widget::successFind = "Done.";
 const QString Widget::nonIntegerValue = "Value must be an integer.";
 const QString Widget::findNothing = "No values was found.";
@@ -70,7 +70,7 @@ void Widget::addToMap()
 	try
 	{
 		settings->insert(getKey(), getValue());
-		successfulMessage(successAdd);
+		successfulMessage(successAdd.arg(getKey()).arg(getValue()));
 	}
 	catch (const QString &error)
 	{
@@ -83,7 +83,7 @@ void Widget::removeFromMap()
 	try
 	{
 		settings->remove(getKey(), getValue());
-		successfulMessage(successRemove);
+		successfulMessage(successRemove.arg(getKey()).arg(getValue()));
 	}
 	catch (const QString &error)
 	{
