@@ -5,6 +5,7 @@ const QString Settings::numberEmpty = "Number of empty spaces";
 const QString Settings::loadFactor = "Load factor";
 const QString Settings::averageChainLength = "Average length of chain";
 const QString Settings::maximalChainLength = "Maximal length of chain";
+const QString Settings::mapSize = "Size";
 
 const QMap<QString, IHash *> Settings::hash
 {
@@ -18,8 +19,8 @@ QMap<QString, bool> Settings::checkBoxes
 	{Settings::numberEmpty, true},
 	{Settings::loadFactor, true},
 	{Settings::averageChainLength, true},
-	{Settings::maximalChainLength, true}
-
+	{Settings::maximalChainLength, true},
+	{Settings::mapSize, true}
 };
 
 Settings::Settings()
@@ -119,5 +120,7 @@ QString Settings::getInformation(const QString &information)
 		return QString::number(map->averageLength());
 	if (information == maximalChainLength)
 		return QString::number(map->getMaxLength());
+	if (information == mapSize)
+		return QString::number(map->size());
 	return QString();
 }

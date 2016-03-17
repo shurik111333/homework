@@ -44,6 +44,7 @@ private:
 	static const QString loadFactor;
 	static const QString averageChainLength;
 	static const QString maximalChainLength;
+	static const QString mapSize;
 
 	static IHash *getHash(const QString &hashName);
 	QString getInformation(const QString &information);
