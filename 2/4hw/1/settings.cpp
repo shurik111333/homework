@@ -22,21 +22,15 @@ QMap<QString, bool> Settings::checkBoxes
 
 };
 
-QString Settings::currentHash = "";
-HashMap *Settings::map = nullptr;
-
 Settings::Settings()
-{}
+{
+	currentHash = hash.begin().key();
+	map = new HashMap(getHash(currentHash));
+}
 
 Settings::~Settings()
 {
-	//	delete currentHash;
-}
-
-void Settings::init(const QString &hashName)
-{
-	currentHash = hashName;
-	map = new HashMap(getHash(currentHash));
+	delete map;
 }
 
 int Settings::countCheckBox()
@@ -77,6 +71,7 @@ void Settings::setHash(const QString &name)
 	{
 		currentHash = name;
 		map->setHashFunction(hash[name]);
+		emit mapChanged();
 	}
 }
 
@@ -85,19 +80,26 @@ bool Settings::getCheckInformationState(const QString &box)
 	return checkBoxes[box];
 }
 
-void Settings::changeState(const QString &name)
-{
-	checkBoxes[name] = !checkBoxes[name];
-}
-
-void Settings::changeHash(const QString &hash)
-{
-	currentHash = hash;
-}
-
 QString Settings::getCurrentHash()
 {
 	return currentHash;
+}
+
+void Settings::insert(const QString &key, int value)
+{
+	map->insert(key, value);
+	emit mapChanged();
+}
+
+void Settings::remove(const QString &key, int value)
+{
+	map->remove(key, value);
+	emit mapChanged();
+}
+
+int Settings::find(const QString &key)
+{
+	return map->find(key);
 }
 
 IHash *Settings::getHash(const QString &hashName)

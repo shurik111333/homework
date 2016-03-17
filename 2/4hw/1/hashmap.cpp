@@ -1,13 +1,14 @@
 #include "hashmap.h"
 
 const double HashMap::_maxLoadFactor = 3;
+const QString HashMap::notFound = "Key was not found.";
+const QString HashMap::alreadyExist = "This key already exist.";
 
 HashMap::HashMap(IHash *hash)
     : _size(_minSize),
       _countElements(0),
       _maxChainIndex(-1),
       _emptySpaces(_size),
-      _averageLengthOfChain(0),
       _hash(hash)
 {
 	array = getNewMap(_size);
@@ -24,20 +25,6 @@ int HashMap::occupiedCount()
 	return _size - _emptySpaces;
 }
 
-/**
- * @brief HashMap::updateAverageLength Update average length after add or before remove
- * @param index Index of changing chain
- * @param action 1 or -1 for add and remove respectively
- */
-
-void HashMap::updateAverageLength(int index, int action)
-{
-	if (array[index]->size() == 1)
-		_averageLengthOfChain = (_averageLengthOfChain * (occupiedCount() - action) + action) / (occupiedCount());
-	else
-		_averageLengthOfChain = _averageLengthOfChain + action * 1.0 / occupiedCount();
-}
-
 int HashMap::getMaxLength() const
 {
 	int result = 0;
@@ -51,7 +38,12 @@ int HashMap::getMaxLength() const
 
 double HashMap::averageLength() const
 {
-	return _averageLengthOfChain;
+	double res = 0;
+	for (int i = 0; i < _size; i++)
+	{
+		res += array[i]->count();
+	}
+	return res / (size() - countEmpty());
 }
 
 int HashMap::countEmpty() const
@@ -71,13 +63,24 @@ void HashMap::setHashFunction(IHash *newHash)
 	for (int i = 0; i < _size; i++)
 	{
 		elements.append(*array[i]);
-		array[i]->clear();
 	}
+	clear();
 	_hash = newHash;
 	for (auto el : elements)
 	{
 		insert(el.key, el.value);
 	}
+}
+
+void HashMap::clear()
+{
+	for (int i = 0; i < _size; i++)
+	{
+		array[i]->clear();
+	}
+	_countElements = 0;
+	_maxChainIndex = -1;
+	_emptySpaces = _size;
 }
 
 QList<HashMap::Element> **HashMap::getNewMap(int size)
@@ -105,6 +108,7 @@ void HashMap::increase()
 	int oldSize = _size;
 	_size *= _factorSize;
 	array = getNewMap(_size);
+	clear();
 	for (int i = 0; i < oldSize; i++)
 	{
 		for (Element el : *array[i])
@@ -120,14 +124,13 @@ void HashMap::updateInformation(int index, HashMap::Action action)
 	_countElements += (int)action;
 	if (array[index]->size() == 1)
 		_emptySpaces -= (int)action;
-	updateAverageLength(index, (int)action);
 }
 
 void HashMap::insert(const QString &key, int value)
 {
 	int index = _hash->getHash(key) % _size;
 	if (array[index]->contains({key, value}))
-		throw QString("This pair of {key, value} already exist.");
+		throw alreadyExist;
 	array[index]->append({key, value});
 	updateInformation(index, Action::add);
 }
@@ -136,21 +139,22 @@ void HashMap::remove(const QString &key, int value)
 {
 	int index = _hash->getHash(key) % _size;
 	if (!array[index]->contains({key, value}))
-		throw QString("This par of {key, value} are not exist.");
+		throw notFound;
 	updateInformation(index, Action::remove);
 	array[index]->removeOne({key, value});
 }
 
-QList<int> *HashMap::find(const QString &key) const
+int HashMap::find(const QString &key) const
 {
-	QList<int> *result = new QList<int>();
 	int index = _hash->getHash(key) % _size;
 	for (auto element : *array[index])
 	{
 		if (element.key == key)
-			result->append(element.value);
+		{
+			return element.value;
+		}
 	}
-	return result;
+	throw notFound;
 }
 
 int HashMap::count() const

@@ -13,7 +13,7 @@ public:
 
 	void insert(const QString &key, int value);
 	void remove(const QString &key, int value);
-	QList<int> *find(const QString &key) const;
+	int find(const QString &key) const;
 	int count() const;
 	int size() const;
 	double loadFactor() const;
@@ -22,6 +22,7 @@ public:
 	int countEmpty() const;
 	void replace(const QString &key, int oldValue, int newValue);
 	void setHashFunction(IHash *newHash);
+	void clear();
 
 private:
 	static const int _minSize = 10;
@@ -29,10 +30,11 @@ private:
 	int _countElements;
 	int _maxChainIndex;
 	int _emptySpaces;
-	double _averageLengthOfChain;
 	IHash *_hash;
 	static const double _maxLoadFactor;
 	static const int _factorSize = 2;
+	static const QString notFound;
+	static const QString alreadyExist;
 
 	struct Element
 	{
@@ -41,7 +43,7 @@ private:
 
 		bool operator == (const Element &e)
 		{
-			return key == e.key && value == e.value;
+			return key == e.key;
 		}
 	};
 
@@ -56,6 +58,5 @@ private:
 	static void removeMap(QList<Element> **&map, int size);
 	void increase();
 	int occupiedCount();
-	void updateAverageLength(int index, int action);
 	void updateInformation(int index, Action action);
 };

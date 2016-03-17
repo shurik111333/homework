@@ -18,4 +18,23 @@ public:
 
 private:
 	Ui::Widget *ui;
+	Settings *settings;
+	SettingsWidget *settingsUi;
+	static const QString successAdd;
+	static const QString successRemove;
+	static const QString successFind;
+	static const QString nonIntegerValue;
+	static const QString findNothing;
+
+	int getValue();
+	QString getKey();
+	void successfulMessage(const QString &m);
+	void errorMessage(const QString &m);
+
+private slots:
+	void showSettings();
+	void updateInformation();
+	void addToMap();
+	void removeFromMap();
+	void findInMap();
 };
