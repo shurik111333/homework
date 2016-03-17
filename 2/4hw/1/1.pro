@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,7 +28,8 @@ HEADERS  += mainWidget.h \
     ihash.h \
     polyhash.h \
     settings.h \
-    linearhash.h
+    linearhash.h \
+    hashmaptests.h
 
 FORMS    += mainWidget.ui \
     settingsWidget.ui
