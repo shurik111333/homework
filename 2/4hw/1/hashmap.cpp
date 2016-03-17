@@ -42,7 +42,7 @@ double HashMap::averageLength() const
 	{
 		res += array[i]->count();
 	}
-	return res / (size() - countEmpty());
+	return res == 0 ? 0 :res / (size() - countEmpty());
 }
 
 int HashMap::countEmpty() const
@@ -80,6 +80,11 @@ void HashMap::clear()
 	_countElements = 0;
 	_maxChainIndex = -1;
 	_emptySpaces = _size;
+}
+
+void HashMap::removehash()
+{
+	delete _hash;
 }
 
 QList<HashMap::Element> **HashMap::getNewMap(int size)

@@ -23,6 +23,7 @@ public:
 	void replace(const QString &key, int oldValue, int newValue);
 	void setHashFunction(IHash *newHash);
 	void clear();
+	void removehash();
 
 private:
 	static const int _minSize = 10;
