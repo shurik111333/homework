@@ -37,7 +37,7 @@ signals:
 private:
 	HashMap *map;
 	QString currentHash;
-	static const QMap<QString, IHash*> hash;
+	static const QMap<QString, IHash *> hash;
 	static QMap<QString, bool> checkBoxes;
 	static const QString numberElements;
 	static const QString numberEmpty;

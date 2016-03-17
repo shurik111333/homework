@@ -6,7 +6,7 @@ const QString Settings::loadFactor = "Load factor";
 const QString Settings::averageChainLength = "Average length of chain";
 const QString Settings::maximalChainLength = "Maximal length of chain";
 
-const QMap<QString, IHash*> Settings::hash
+const QMap<QString, IHash *> Settings::hash
 {
 	{"Polynominal", new PolyHash()},
 	{"Linear", new LinearHash()}

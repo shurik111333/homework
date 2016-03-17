@@ -16,7 +16,6 @@ HashMap::HashMap(IHash *hash)
 
 HashMap::~HashMap()
 {
-	delete _hash;
 	removeMap(array, _size);
 }
 

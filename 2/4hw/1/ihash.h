@@ -5,8 +5,8 @@
 class IHash
 {
 public:
-	virtual unsigned int getHash(const QString &str) const = 0;
-
 	virtual ~IHash()
 	{}
+
+	virtual unsigned int getHash(const QString &str) const = 0;
 };
