@@ -3,6 +3,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include "hashmap.h"
+#include "linearhash.h"
 
 class HashmapTest : public QObject
 {
@@ -24,7 +25,6 @@ private slots:
 
 	void cleanup()
 	{
-		map->removehash();
 		delete map;
 	}
 
@@ -51,5 +51,52 @@ private slots:
 		QCOMPARE(map->find("key111"), 123);
 		map->remove("key111", 123);
 		QVERIFY_EXCEPTION_THROWN(map->find("key111"), QString);
+	}
+
+	void testAddElementsWithEqualKey()
+	{
+		map->insert("key1", 42);
+		QVERIFY_EXCEPTION_THROWN(map->insert("key1", 17), QString);
+	}
+
+	void testAddFewElements()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			map->insert(QString("key%0").arg(i), i);
+		}
+		QCOMPARE(map->count(), 5);
+		for (int i = 0; i < 5; i++)
+		{
+			QCOMPARE(map->find(QString("key%0").arg(i)), i);
+		}
+	}
+
+	void testAddFewElementsWithChangeHash()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			map->insert(QString("key%0").arg(i), i);
+		}
+		map->setHashFunction(QSharedPointer<IHash>(new LinearHash()));
+		QCOMPARE(map->count(), 5);
+		for (int i = 0; i < 5; i++)
+		{
+			QCOMPARE(map->find(QString("key%0").arg(i)), i);
+		}
+	}
+
+	void testAddAndClear()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			map->insert(QString("key%0").arg(i), i);
+		}
+		map->clear();
+		QCOMPARE(map->count(), 0);
+		for (int i = 0; i < 5; i++)
+		{
+			QVERIFY_EXCEPTION_THROWN(map->find(QString("key%0").arg(i)), QString);
+		}
 	}
 };
