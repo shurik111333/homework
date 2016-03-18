@@ -4,7 +4,7 @@ const double HashMap::_maxLoadFactor = 3;
 const QString HashMap::notFound = "Key was not found.";
 const QString HashMap::alreadyExist = "This key already exist.";
 
-HashMap::HashMap(IHash *hash)
+HashMap::HashMap(QSharedPointer<IHash> hash)
     : _size(_minSize),
       _countElements(0),
       _maxChainIndex(-1),
@@ -50,13 +50,7 @@ int HashMap::countEmpty() const
 	return _emptySpaces;
 }
 
-void HashMap::replace(const QString &key, int oldValue, int newValue)
-{
-	remove(key, oldValue);
-	insert(key, newValue);
-}
-
-void HashMap::setHashFunction(IHash *newHash)
+void HashMap::setHashFunction(QSharedPointer<IHash> newHash)
 {
 	QList<Element> elements;
 	for (int i = 0; i < _size; i++)
@@ -80,11 +74,6 @@ void HashMap::clear()
 	_countElements = 0;
 	_maxChainIndex = -1;
 	_emptySpaces = _size;
-}
-
-void HashMap::removehash()
-{
-	delete _hash;
 }
 
 QList<HashMap::Element> **HashMap::getNewMap(int size)
@@ -132,7 +121,7 @@ void HashMap::updateInformation(int index, HashMap::Action action)
 
 void HashMap::insert(const QString &key, int value)
 {
-	int index = _hash->getHash(key) % _size;
+	int index = _hash.data()->getHash(key) % _size;
 	if (array[index]->contains({key, value}))
 		throw alreadyExist;
 	array[index]->append({key, value});
@@ -141,7 +130,7 @@ void HashMap::insert(const QString &key, int value)
 
 void HashMap::remove(const QString &key, int value)
 {
-	int index = _hash->getHash(key) % _size;
+	int index = _hash.data()->getHash(key) % _size;
 	if (!array[index]->contains({key, value}))
 		throw notFound;
 	updateInformation(index, Action::remove);
@@ -150,7 +139,7 @@ void HashMap::remove(const QString &key, int value)
 
 int HashMap::find(const QString &key) const
 {
-	int index = _hash->getHash(key) % _size;
+	int index = _hash.data()->getHash(key) % _size;
 	for (auto element : *array[index])
 	{
 		if (element.key == key)

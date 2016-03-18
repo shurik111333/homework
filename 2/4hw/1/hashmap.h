@@ -4,11 +4,12 @@
 #include "polyhash.h"
 #include <QList>
 #include <QString>
+#include <QSharedPointer>
 
 class HashMap
 {
 public:
-	HashMap(IHash *hash = new PolyHash());
+	HashMap(QSharedPointer<IHash> hash = QSharedPointer<IHash>(new PolyHash()));
 	~HashMap();
 
 	void insert(const QString &key, int value);
@@ -20,10 +21,8 @@ public:
 	int getMaxLength() const;
 	double averageLength() const;
 	int countEmpty() const;
-	void replace(const QString &key, int oldValue, int newValue);
-	void setHashFunction(IHash *newHash);
+	void setHashFunction(QSharedPointer<IHash> newHash);
 	void clear();
-	void removehash();
 
 private:
 	static const int _minSize = 10;
@@ -31,7 +30,7 @@ private:
 	int _countElements;
 	int _maxChainIndex;
 	int _emptySpaces;
-	IHash *_hash;
+	QSharedPointer<IHash> _hash;
 	static const double _maxLoadFactor;
 	static const int _factorSize = 2;
 	static const QString notFound;

@@ -10,6 +10,7 @@
 #include <QMap>
 #include <QStringList>
 #include <QObject>
+#include <QSharedPointer>
 
 class Settings : public QObject
 {
@@ -37,7 +38,7 @@ signals:
 private:
 	HashMap *map;
 	QString currentHash;
-	static const QMap<QString, IHash *> hash;
+	static const QMap<QString, QSharedPointer<IHash>> hash;
 	static QMap<QString, bool> checkBoxes;
 	static const QString numberElements;
 	static const QString numberEmpty;
@@ -46,6 +47,6 @@ private:
 	static const QString maximalChainLength;
 	static const QString mapSize;
 
-	static IHash *getHash(const QString &hashName);
+	static QSharedPointer<IHash> getHash(const QString &hashName);
 	QString getInformation(const QString &information);
 };

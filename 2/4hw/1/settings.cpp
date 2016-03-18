@@ -7,10 +7,10 @@ const QString Settings::averageChainLength = "Average length of chain";
 const QString Settings::maximalChainLength = "Maximal length of chain";
 const QString Settings::mapSize = "Size";
 
-const QMap<QString, IHash *> Settings::hash
+const QMap<QString, QSharedPointer<IHash>> Settings::hash
 {
-	{"Polynominal", new PolyHash()},
-	{"Linear", new LinearHash()}
+	{"Polynominal", QSharedPointer<IHash>(new PolyHash)},
+	{"Linear", QSharedPointer<IHash>(new LinearHash())}
 };
 
 QMap<QString, bool> Settings::checkBoxes
@@ -71,7 +71,7 @@ void Settings::setHash(const QString &name)
 	if (currentHash != name)
 	{
 		currentHash = name;
-		map->setHashFunction(hash[name]);
+		map->setHashFunction(getHash(name));
 		emit mapChanged();
 	}
 }
@@ -103,7 +103,7 @@ int Settings::find(const QString &key)
 	return map->find(key);
 }
 
-IHash *Settings::getHash(const QString &hashName)
+QSharedPointer<IHash> Settings::getHash(const QString &hashName)
 {
 	return hash[hashName];
 }
