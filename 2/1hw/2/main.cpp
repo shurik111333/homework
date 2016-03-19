@@ -6,6 +6,7 @@
 #include "StackPointer.h"
 #include "stackarraytest.h"
 #include "stackpointertest.h"
+#include "calculatortest.h"
 
 using namespace std;
 
@@ -15,6 +16,9 @@ int main()
 	QTest::qExec(&testArray);
 	StackPointerTest testPointer;
 	QTest::qExec(&testPointer);
+
+	CalculatorTest calcTest;
+	QTest::qExec(&calcTest);
 
 	cout << "This programm calculate arithmetic exressions with integer numbers." << endl;
 	cout << "Enter expression:" << endl;

@@ -14,5 +14,6 @@ HEADERS += \
     StackArray.h \
     Calculator.h \
     stackarraytest.h \
-    stackpointertest.h
+    stackpointertest.h \
+    calculatortest.h
 
