@@ -2,6 +2,8 @@
 #include "ListPointer.h"
 #include "ListArray.h"
 #include "IList.h"
+#include "ListArrayTest.h"
+#include "ListPointerTest.h"
 
 using namespace std;
 
@@ -52,7 +54,7 @@ void testAddFindRemoveElements(IList<int> &list)
 	}
 	cout << "All elements was added: ";
 	printList(list);
-	
+
 	bool result = true;
 	for (int i = 0; i < count; i++)
 	{
@@ -88,6 +90,10 @@ void testStart(IList<int> &list)
 
 int main()
 {
+	ListArrayTest testArray;
+	ListPointerTest testPointer;
+	QTest::qExec(&testArray);
+	QTest::qExec(&testPointer);
 	cout << "Testing ListPointer:" << endl;
 	ListPointer list;
 	testStart(list);
