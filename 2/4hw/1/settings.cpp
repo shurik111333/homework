@@ -6,11 +6,13 @@ const QString Settings::loadFactor = "Load factor";
 const QString Settings::averageChainLength = "Average length of chain";
 const QString Settings::maximalChainLength = "Maximal length of chain";
 const QString Settings::mapSize = "Size";
+const QString Settings::polyHash = "Polynominal";
+const QString Settings::lineHash = "Linear";
 
 const QMap<QString, QSharedPointer<IHash>> Settings::hash
 {
-	{"Polynominal", QSharedPointer<IHash>(new PolyHash)},
-	{"Linear", QSharedPointer<IHash>(new LinearHash())}
+	{Settings::polyHash, QSharedPointer<IHash>(new PolyHash())},
+	{Settings::lineHash, QSharedPointer<IHash>(new LinearHash())}
 };
 
 QMap<QString, bool> Settings::checkBoxes
@@ -21,6 +23,16 @@ QMap<QString, bool> Settings::checkBoxes
 	{Settings::averageChainLength, true},
 	{Settings::maximalChainLength, true},
 	{Settings::mapSize, true}
+};
+
+const QMap<QString, Settings::CheckBoxKeys> Settings::checkBoxKeys
+{
+	{Settings::numberElements, Settings::CheckBoxKeys::numberElements},
+	{Settings::numberEmpty, Settings::CheckBoxKeys::numberEmpty},
+	{Settings::loadFactor, Settings::CheckBoxKeys::loadFactor},
+	{Settings::averageChainLength, Settings::CheckBoxKeys::averageChainLength},
+	{Settings::maximalChainLength, Settings::CheckBoxKeys::maximalChainLength},
+	{Settings::mapSize, Settings::CheckBoxKeys::mapSize}
 };
 
 Settings::Settings()
@@ -110,17 +122,22 @@ QSharedPointer<IHash> Settings::getHash(const QString &hashName)
 
 QString Settings::getInformation(const QString &information)
 {
-	if (information == numberElements)
-		return QString::number(map->count());
-	if (information == numberEmpty)
-		return QString::number(map->countEmpty());
-	if (information == loadFactor)
-		return QString::number(map->loadFactor());
-	if (information == averageChainLength)
-		return QString::number(map->averageLength());
-	if (information == maximalChainLength)
-		return QString::number(map->getMaxLength());
-	if (information == mapSize)
-		return QString::number(map->size());
-	return QString();
+	CheckBoxKeys key = checkBoxKeys[information];
+	switch (key)
+	{
+		case CheckBoxKeys::averageChainLength:
+			return QString::number(map->averageLength());
+		case CheckBoxKeys::loadFactor:
+			return QString::number(map->loadFactor());
+		case CheckBoxKeys::mapSize:
+			return QString::number(map->size());
+		case CheckBoxKeys::maximalChainLength:
+			return QString::number(map->getMaxLength());
+		case CheckBoxKeys::numberElements:
+			return QString::number(map->count());
+		case CheckBoxKeys::numberEmpty:
+			return QString::number(map->countEmpty());
+		default:
+			return QString();
+	}
 }

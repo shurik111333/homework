@@ -38,14 +38,30 @@ signals:
 private:
 	HashMap *map;
 	QString currentHash;
+
+	enum class CheckBoxKeys
+	{
+		numberElements,
+		numberEmpty,
+		loadFactor,
+		averageChainLength,
+		maximalChainLength,
+		mapSize
+	};
+
 	static const QMap<QString, QSharedPointer<IHash>> hash;
 	static QMap<QString, bool> checkBoxes;
+	static const QMap<QString, Settings::CheckBoxKeys> checkBoxKeys;
+
 	static const QString numberElements;
 	static const QString numberEmpty;
 	static const QString loadFactor;
 	static const QString averageChainLength;
 	static const QString maximalChainLength;
 	static const QString mapSize;
+
+	static const QString polyHash;
+	static const QString lineHash;
 
 	static QSharedPointer<IHash> getHash(const QString &hashName);
 	QString getInformation(const QString &information);
