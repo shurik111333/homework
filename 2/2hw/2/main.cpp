@@ -1,9 +1,11 @@
 #include <iostream>
 #include <cmath>
+#include <QtTest/QtTest>
 #include "IPrint.h"
 #include "PrintConsole.h"
 #include "PrintFile.h"
 #include "PrintMatrix.h"
+#include "PrintMatrixTest.h"
 
 using namespace std;
 
@@ -29,6 +31,9 @@ IPrint *getPrintMethod()
 
 int main()
 {
+	PrintMatrixTest test;
+	QTest::qExec(&test);
+
 	setlocale(LC_ALL, "rus");
 	cout << "This porgramm print array NxN in spiral order." << endl;
 	cout << "Enter odd number N - size of array:" << endl;
