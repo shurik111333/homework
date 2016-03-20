@@ -1,8 +1,10 @@
 #include <iostream>
+#include <QtTest/QtTest>
 #include "ISort.h"
 #include "QSort.h"
 #include "HeapSort.h"
 #include "BubbleSort.h"
+#include "ISortTest.h"
 
 using namespace std;
 
@@ -41,7 +43,7 @@ int *copyArray(int *array, int len)
 
 int main()
 {
-	cout << "Enter size of array:" << endl;
+/*	cout << "Enter size of array:" << endl;
 	int len = 0;
 	cin >> len;
 	cout << "Enter array:" << endl;
@@ -55,7 +57,28 @@ int main()
 	cout << "Heap sort: ";
 	printSortedArray(new HeapSort(), copyArray(array, len), len);
 	cout << "Bubble sort: ";
-	printSortedArray(new BubbleSort(), array, len);
+	printSortedArray(new BubbleSort(), array, len);*/
+	ISort *sorter;
+	cout << "Test Quick sort:\n";
+	sorter = new QSort();
+	ISortTest *test = new ISortTest(sorter);
+	QTest::qExec(test);
+	delete sorter;
+	delete test;
+
+	cout << "Test Heap sort:\n";
+	sorter = new HeapSort();
+	test = new ISortTest(sorter);
+	QTest::qExec(test);
+	delete sorter;
+	delete test;
+
+	cout << "Test Bubble sort:\n";
+	sorter = new BubbleSort();
+	test = new ISortTest(sorter);
+	QTest::qExec(test);
+	delete sorter;
+	delete test;
 	return 0;
 }
 
