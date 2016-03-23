@@ -12,6 +12,11 @@ SortedSet::~SortedSet()
 	delete[] array;
 }
 
+int SortedSet::getCount() const
+{
+	return count;
+}
+
 bool SortedSet::add(ListComparator *input)
 {
 	if (count == size)
@@ -82,6 +87,7 @@ void SortedSet::increaseArray()
 	}
 	delete[] array;
 	array = newArray;
+	size *= 2;
 }
 
 int SortedSet::find(ListComparator *input) const
