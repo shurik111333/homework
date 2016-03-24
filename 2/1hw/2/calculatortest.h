@@ -2,7 +2,7 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
-#include <Calculator.h>
+#include "Calculator.h"
 #include "StackArray.h"
 
 class CalculatorTest : public QObject

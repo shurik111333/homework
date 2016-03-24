@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,8 +22,9 @@ SOURCES += main.cpp\
 HEADERS  += MainWindow.h \
     Calculator.h \
     IStack.h \
-    StackArray.h
+    StackArray.h \
+    calculatortest.h
 
-FORMS    += MainWindow.ui 
+FORMS    += MainWindow.ui
 
 DISTFILES +=
