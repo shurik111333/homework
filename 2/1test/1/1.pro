@@ -8,6 +8,5 @@ SOURCES += main.cpp
 
 HEADERS += \
     priorityqueue.h \
-    heap.h \
     emptyqueue.h \
     priorityqueuetest.h
