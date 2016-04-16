@@ -39,8 +39,6 @@ private:
 		 * @brief Recalculate size and height of treap.
 		 */
 		void update();
-		const T &min() const;
-		const T &max() const;
 
 		Treap(const T &value):
 		    value(value),
@@ -126,7 +124,6 @@ public:
 template <typename T>
 Set<T>::~Set()
 {
-	cout << "Remove set\n";
 	this->clear();
 }
 
@@ -228,18 +225,6 @@ void Set<T>::Treap::update()
 }
 
 template <typename T>
-const T &Set<T>::Treap::min() const
-{
-	return left == nullptr ? value : left->min();
-}
-
-template <typename T>
-const T &Set<T>::Treap::max() const
-{
-	return right == nullptr ? value : right->max();
-}
-
-template <typename T>
 int Set<T>::Treap::getPriority() const
 {
 	return priority;
@@ -274,7 +259,6 @@ typename Set<T>::Treap *Set<T>::Treap::merge(Treap *leftTreap, Treap *rightTreap
 		return rightTreap;
 	if (rightTreap == nullptr)
 		return leftTreap;
-	assert(leftTreap->max() < rightTreap->min());
 	Treap *result = nullptr;
 	if (leftTreap->getPriority() < rightTreap->getPriority())
 	{
@@ -323,7 +307,6 @@ typename Set<T>::SplitedTreap Set<T>::Treap::splitByNumber(Set::Treap *treap, in
 {
 	if (treap == nullptr)
 		return {nullptr, nullptr};
-	assert(number <= getSize(treap));
 	SplitedTreap result = {nullptr, nullptr};
 	if (number < getSize(treap->left) + 1)
 	{
