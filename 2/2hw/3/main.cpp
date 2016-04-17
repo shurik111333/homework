@@ -1,7 +1,8 @@
 #include <iostream>
+#include <QtTest/QtTest>
 #include "SortedSet.h"
 #include "ListArray.h"
-
+#include "SortedSetTest.h"
 using namespace std;
 
 /**
@@ -21,6 +22,9 @@ ListArray *getList(int size)
 
 int main()
 {
+	SortedSetTest test;
+	QTest::qExec(&test);
+
 	SortedSet set;
 	ListArray *list3 = getList(3);
 	set.add(list3);
