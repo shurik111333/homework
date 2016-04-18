@@ -1,4 +1,5 @@
 #include <cctype>
+#include <stdexcept>
 #include "tree.h"
 
 using namespace std;
@@ -7,9 +8,10 @@ Tree::Tree()
     :root(nullptr)
 {}
 
-Tree::Tree(FILE *file)
+Tree::Tree(const string &input)
 {
-	root = getNodeFromFile(file);
+	int i = 0;
+	root = getNode(input, i);
 }
 
 int Tree::calc() const
@@ -17,178 +19,97 @@ int Tree::calc() const
 	return root->calc();
 }
 
-void Tree::print(ostream &out) const
+string Tree::toStdString() const
 {
-	root->print(out);
+	return root->toStdString();
 }
 
-bool isSpace(char symbol)
+// private ------------------------------------------------
+
+void Tree::skipSpaces(const string &s, int &i)
 {
-	return (symbol == ' ' || symbol == '\t' || symbol == '\n');
+	while (s[i] == ' ')
+		i++;
 }
 
-void skipSpaces(FILE *file)
+int Tree::getNumber(const string &s, int &i)
 {
-	char c = getc(file);
-	while (!feof(file) && isSpace(c))
+	skipSpaces(s, i);
+	int res = 0;
+	bool negative = false;
+	if (s[i] == '-')
 	{
-		c = getc(file);
+		negative = true;
+		i++;
 	}
-	ungetc(c, file);
-}
-
-int getNumber(FILE *file)
-{
-	int result = 0;
-	char c = getc(file);
-	while (isdigit(c))
+	while (isdigit(s[i]))
 	{
-		result = result * 10 + c - '0';
-		c = getc(file);
+		res = res * 10 + s[i] - '0';
+		i++;
 	}
-	ungetc(c, file);
-	return result;
+	return negative ? -res : res;
 }
 
-Node *getNode(char c, Node *left, Node *right)
+Tree::Node *Tree::getNode(const string &s, int &i)
 {
-	switch (c)
+	skipSpaces(s, i);
+	Node *res = nullptr;
+	if (s[i] == '(')
 	{
-		case '+':
-			return new NodePlus(left, right);
-		case '-':
-			return new NodeMinus(left, right);
-		case '*':
-			return new NodeMultiply(left, right);
-		case '/':
-			return new NodeDivide(left, right);
-		default:
-			return nullptr;
-	}
-}
-
-Node *getNodeFromFile(FILE *file)
-{
-	skipSpaces(file);
-	Node *newNode = nullptr;
-	char c = getc(file);
-	if (c == '(')
-	{
-		skipSpaces(file);
-		char sign = getc(file);
-		skipSpaces(file);
-		Node *left = getNodeFromFile(file);
-		skipSpaces(file);
-		Node *right = getNodeFromFile(file);
-		newNode = getNode(sign, left, right);
-		skipSpaces(file);
-		getc(file);
+		skipSpaces(s, ++i);
+		res = new Operation(s[i]);
+		res->left = getNode(s, ++i);
+		res->right = getNode(s, i);
+		skipSpaces(s, i);
+		i++;
 	}
 	else
-	{
-		ungetc(c, file);
-		skipSpaces(file);
-		newNode = new NodeNumber(getNumber(file));
-	}
-	return newNode;
+		res = new Number(getNumber(s, i));
+	return res;
 }
 
-// Nodes ------------------------------------------------
+// Nodes ----------------------------------------------
 
-Node *getNodeFromFile(FILE *file);
-
-Node::Node()
-    :left(nullptr), right(nullptr)
-{}
-
-Node::Node(Node *left, Node *right):
-    left(left),
-    right(right)
-{}
-
-
-NodeNumber::NodeNumber(int value):
+Tree::Number::Number(int value):
     value(value)
 {}
 
-int NodeNumber::calc() const
+int Tree::Number::calc() const
 {
 	return value;
 }
 
-void NodeNumber::print(ostream &out) const
+string Tree::Number::toStdString() const
 {
-	out << value;
+	return to_string(value);
 }
 
-NodePlus::NodePlus(Node *left, Node *right):
-    Node(left, right)
+Tree::Operation::Operation(char sign):
+    sign(sign)
 {}
 
-int NodePlus::calc() const
+int Tree::Operation::calc() const
 {
-	return left->calc() + right->calc();
+	int num1 = left->calc();
+	int num2 = right->calc();
+	switch (sign)
+	{
+		case '+':
+			return num1 + num2;
+		case '-':
+			return num1 - num2;
+		case '*':
+			return num1 * num2;
+		case '/':
+			if (num2 == 0)
+				throw overflow_error("Divide by zero exception");
+			return num1 / num2;
+		default:
+			return 0;
+	}
 }
 
-void NodePlus::print(std::ostream &out) const
+string Tree::Operation::toStdString() const
 {
-	out << "(";
-	left->print(out);
-	out << " + ";
-	right->print(out);
-	out << ")";
-}
-
-NodeMinus::NodeMinus(Node *left, Node *right):
-    Node(left, right)
-{}
-
-int NodeMinus::calc() const
-{
-	return left->calc() - right->calc();
-}
-
-void NodeMinus::print(std::ostream &out) const
-{
-	out << "(";
-	left->print(out);
-	out << " - ";
-	right->print(out);
-	out << ")";
-}
-
-NodeMultiply::NodeMultiply(Node *left, Node *right):
-    Node(left, right)
-{}
-
-int NodeMultiply::calc() const
-{
-	return left->calc() * right->calc();
-}
-
-void NodeMultiply::print(std::ostream &out) const
-{
-	out << "(";
-	left->print(out);
-	out << " * ";
-	right->print(out);
-	out << ")";
-}
-
-NodeDivide::NodeDivide(Node *left, Node *right):
-    Node(left, right)
-{}
-
-int NodeDivide::calc() const
-{
-	return left->calc() / right->calc();
-}
-
-void NodeDivide::print(std::ostream &out) const
-{
-	out << "(";
-	left->print(out);
-	out << " / ";
-	right->print(out);
-	out << ")";
+	return "(" + left->toStdString() + " " + string(1, sign) + " " + right->toStdString() + ")";
 }

@@ -1,79 +1,56 @@
 #pragma once
 
 #include <cstdio>
-#include <ostream>
+#include <string>
 
-class Node
-{
-private:
-	Node *left;
-	Node *right;
-
-public:
-	Node();
-	Node(Node *left, Node *right);
-
-	virtual int calc() const = 0;
-	virtual void print(std::ostream &out) const = 0;
-};
+using namespace std;
 
 class Tree
 {
 public:
 	Tree();
-	Tree(FILE *file);
+	Tree(const string &input);
 
 	int calc() const;
-	void print(std::ostream &out) const;
+	string toStdString() const;
 
 private:
+	class Node
+	{
+	public:
+		Node *left = nullptr;
+		Node *right = nullptr;
+
+		virtual int calc() const = 0;
+		virtual string toStdString() const = 0;
+	};
+
+	class Number : public Node
+	{
+	private:
+		int value;
+
+	public:
+		Number(int value);
+
+		int calc() const;
+		string toStdString() const;
+	};
+
+	class Operation : public Node
+	{
+	private:
+		char sign;
+
+	public:
+		Operation(char sign);
+
+		int calc() const;
+		string toStdString() const;
+	};
+
+	static void skipSpaces(const string &s, int &i);
+	static int getNumber(const string &s, int &i);
+	static Node *getNode(const string &input, int &i);
 	Node *root;
-};
-
-class NodeNumber : public Node
-{
-private:
-	int value;
-
-public:
-	NodeNumber(int value);
-
-	int calc() const;
-	void print(std::ostream &out) const;
-};
-
-class NodePlus : public Node
-{
-public:
-	NodePlus(Node *left, Node *right);
-
-	int calc() const;
-	void print(std::ostream &out) const;
-};
-
-class NodeMinus : public Node
-{
-public:
-	NodeMinus(Node *left, Node *right);
-
-	int calc() const;
-	void print(std::ostream &out) const;
-};
-
-class NodeMultiply : public Node
-{
-public:
-	NodeMultiply(Node *left, Node *right);
-
-	int calc() const;
-	void print(std::ostream &out) const;
-};
-
-class NodeDivide : public Node
-{
-public:
-	NodeDivide(Node *left, Node *right);
-
-	int calc() const;
-	void print(std::ostream &out) const;
 };
