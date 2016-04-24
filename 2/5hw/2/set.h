@@ -82,6 +82,14 @@ private:
 
 	Treap *set;
 
+	/**
+	 * @brief Copy all values from current set to result with input predicate.
+	 *        Without predicate all values will be copied.
+	 * @param result
+	 * @param p Predicate, which return true for values, that must be copied.
+	 */
+	void copyTo(Set<T> &result, const function<bool (const T&)> &p = [] (const T&) -> bool {return true;}) const;
+
 public:
 	Set():
 	    set(nullptr)
@@ -110,13 +118,6 @@ public:
 	 * @param result
 	 */
 	void merge(Set<T> &set, Set<T> &result) const;
-	/**
-	 * @brief Copy all values from current set to result with input predicate.
-	 *        Without predicate all values will be copied.
-	 * @param result
-	 * @param p Predicate, which return true for values, that must be copied.
-	 */
-	void copyTo(Set<T> &result, const function<bool(const T&)> &p = [] (const T&) {return true;}) const;
 };
 
 // Set ------------------------------------------------------
@@ -187,7 +188,7 @@ void Set<T>::clear()
 template <typename T>
 void Set<T>::intersec(Set<T> &set, Set<T> &result) const
 {
-	copyTo(result, [&set] (const T &value) ->bool {return set.exist(value);});
+	copyTo(result, [&set] (const T &value) -> bool {return set.exist(value);});
 }
 
 template <typename T>
@@ -198,7 +199,7 @@ void Set<T>::merge(Set<T> &set, Set<T> &result) const
 }
 
 template <typename T>
-void Set<T>::copyTo(Set<T> &result, const function<bool (const T &)> &p) const
+void Set<T>::copyTo(Set<T> &result, const function<bool (const T&)> &p) const
 {
 	queue<Treap*> q;
 	q.push(this->set);
