@@ -35,27 +35,28 @@ private slots:
 
 	void testCreateVectorWithEqualCoordinates()
 	{
-		Vector<5> v1(1);
-		Vector<5> v2(7);
-		for (int i = 0; i < 0; i++)
+		for (int k = 0; k < 100; k++)
 		{
-			QCOMPARE(v1[i], 1);
-			QCOMPARE(v2[i], 7);
+			int x = rand();
+			Vector<5> v1(x);
+			for (int i = 0; i < 5; i++)
+			{
+				QCOMPARE(v1[i], x);
+			}
 		}
 	}
 
 	void testCreateVectorWithDifferentCoordinates()
 	{
-		int coords1[6];
-		int coords2[6];
-		fillCoordinates(coords1, 6);
-		fillCoordinates(coords2, 6);
-		Vector<6> v1(coords1);
-		Vector<6> v2(coords2);
-		for (int i = 0; i < 6; i++)
+		int coords[6];
+		for (int k = 0; k < 100; k++)
 		{
-			QCOMPARE(v1[i], coords1[i]);
-			QCOMPARE(v2[i], coords2[i]);
+			fillCoordinates(coords, 6);
+			Vector<6> v1(coords);
+			for (int i = 0; i < 6; i++)
+			{
+				QCOMPARE(v1[i], coords[i]);
+			}
 		}
 	}
 
