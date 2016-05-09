@@ -54,4 +54,15 @@ private slots:
 		QCOMPARE(ptr1.getCount(), ptr2.getCount());
 		QCOMPARE(ptr1.getCount(), 2);
 	}
+
+	void testCopyToPointerThatContainsPointer()
+	{
+		SharedPtr<int> ptr1(new int(10));
+		SharedPtr<int> ptr2(new int(6));
+		auto ptr3 = ptr2;
+		QCOMPARE(ptr2.getCount(), 2);
+		ptr3 = ptr1;
+		QCOMPARE(ptr2.getCount(), 1);
+		QCOMPARE(ptr1.getCount(), 2);
+	}
 };
