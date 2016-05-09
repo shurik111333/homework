@@ -60,6 +60,20 @@ private slots:
 		}
 	}
 
+	void testAtFunction()
+	{
+		int coords[6];
+		for (int k = 0; k < 100; k++)
+		{
+			fillCoordinates(coords, 6);
+			Vector<6> v1(coords);
+			for (int i = 0; i < 6; i++)
+			{
+				QCOMPARE(v1.at(i), coords[i]);
+			}
+		}
+	}
+
 	void testEqualOperator()
 	{
 		int coords1[6];
