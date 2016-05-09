@@ -22,7 +22,7 @@ public:
 	 */
 	T *getPointer() const;
 
-	void operator = (const SharedPtr<T> &ptr) const;
+	void operator = (const SharedPtr<T> &ptr);
 	T &operator * () const;
 
 private:
@@ -76,9 +76,11 @@ T *SharedPtr<T>::getPointer() const
 }
 
 template <typename T>
-void SharedPtr<T>::operator = (const SharedPtr<T> &ptr) const
+void SharedPtr<T>::operator = (const SharedPtr<T> &ptr)
 {
-	this(ptr);
+	delete this;
+	this->pointer = ptr.pointer;
+	this->pointer->count++;
 }
 
 template <typename T>
