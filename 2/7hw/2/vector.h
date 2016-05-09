@@ -19,7 +19,6 @@ public:
 	 */
 	Vector(const int *v);
 	Vector(const Vector<n> &v);
-	~Vector();
 
 	bool isNull() const noexcept;
 	/**
@@ -67,12 +66,6 @@ Vector<n>::Vector(const Vector<n> &v)
 {
 	for (int i = 0; i < n; i++)
 		vector[i] = v.at(i);
-}
-
-template <int n>
-Vector<n>::~Vector()
-{
-	delete[] vector;
 }
 
 template <int n>
