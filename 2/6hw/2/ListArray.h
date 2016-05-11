@@ -22,6 +22,10 @@ public:
 		NonexistentElementException(const char *msg):
 		    message(msg)
 		{}
+		~NonexistentElementException()
+		{
+			delete message;
+		}
 
 		const char *what() const noexcept
 		{

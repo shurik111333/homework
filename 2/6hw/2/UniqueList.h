@@ -21,6 +21,10 @@ public:
 		ElementAlreadyExistException(const char *msg):
 		    message(msg)
 		{}
+		~ElementAlreadyExistException()
+		{
+			delete message;
+		}
 
 		const char *what() const noexcept
 		{
