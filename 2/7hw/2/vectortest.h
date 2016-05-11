@@ -74,6 +74,17 @@ private slots:
 		}
 	}
 
+	void testOutOfRange()
+	{
+		int coords[6];
+		fillCoordinates(coords, 6);
+		Vector<6> v(coords);
+		QVERIFY_EXCEPTION_THROWN(v[-2], out_of_range);
+		QVERIFY_EXCEPTION_THROWN(v[10], out_of_range);
+		QVERIFY_EXCEPTION_THROWN(v.at(-1), out_of_range);
+		QVERIFY_EXCEPTION_THROWN(v.at(7), out_of_range);
+	}
+
 	void testEqualOperator()
 	{
 		int coords1[6];
