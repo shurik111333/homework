@@ -22,6 +22,11 @@ public:
 	}
 	~Bag();
 
+	/**
+	 * @brief insert Insert value to multiset
+	 * @param count Number copies of value, that will be insert.
+	 *        This parameter doesn't affect on complexity
+	 */
 	void insert(const T &value, int count = 1);
 	/**
 	 * @brief remove Remove all elements with input value
