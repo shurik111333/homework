@@ -47,6 +47,8 @@ private:
 	};
 
 	Pointer *pointer;
+
+	void removePointer();
 };
 
 template <typename T>
@@ -59,9 +61,7 @@ SharedPtr<T>::SharedPtr(const SharedPtr<T> &ptr):
 template <typename T>
 SharedPtr<T>::~SharedPtr()
 {
-	pointer->count--;
-	if (pointer->count == 0)
-		delete pointer;
+	removePointer();
 }
 
 template <typename T>
@@ -79,13 +79,21 @@ T *SharedPtr<T>::getPointer() const
 template <typename T>
 void SharedPtr<T>::operator = (const SharedPtr<T> &ptr)
 {
-	delete this;
-	this->pointer = ptr.pointer;
-	this->pointer->count++;
+	removePointer();
+	pointer = ptr.pointer;
+	pointer->count++;
 }
 
 template <typename T>
 T &SharedPtr<T>::operator * () const
 {
 	return *pointer->object;
+}
+
+template <typename T>
+void SharedPtr<T>::removePointer()
+{
+	pointer->count--;
+	if (pointer->count == 0)
+		delete pointer;
 }
