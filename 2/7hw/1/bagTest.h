@@ -73,7 +73,7 @@ private slots:
 		std::map<int, int> stdSet2;
 		fill(set1, stdSet1);
 		fill(set2, stdSet2);
-		set1.intersec(set2, set);
+		set = set1.intersect(set2);
 		for (auto x : stdSet1)
 		{
 			if (stdSet2.find(x.first) != stdSet2.end())
@@ -89,7 +89,7 @@ private slots:
 		std::map<int, int> stdSet2;
 		fill(set1, stdSet);
 		fill(set2, stdSet2);
-		set1.merge(set2, set);
+		set = set1.merge(set2);
 		for (auto x : stdSet2)
 			stdSet[x.first] += x.second;
 		compare();

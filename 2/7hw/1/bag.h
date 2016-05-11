@@ -48,15 +48,14 @@ public:
 	/**
 	 * @brief Intersec two sets.
 	 * @param set Set for intersec.
-	 * @param result Result of intersec will be in result. This calls clear() for result.
+	 * @return Return intersect of two sets
 	 */
-	void intersec(Bag<T> &set, Bag<T> &result) const;
+	Bag<T> &intersect(Bag<T> &set) const;
 	/**
 	 * @brief Merge two sets in result.
-	 * @param set
-	 * @param result
+	 * @return Return merge of two sets
 	 */
-	void merge(Bag<T> &set, Bag<T> &result) const;
+	Bag<T> &merge(Bag<T> &set) const;
 
 private:
 	/**
@@ -81,11 +80,6 @@ private:
 		Treap *left;
 		Treap *right;
 
-		/**
-		 * @brief Recalculate size and height of treap.
-		 */
-		void update();
-		//const int
 		Treap(const T &value, int count = 1):
 		    value(value),
 		    priority(rand()),
@@ -98,6 +92,10 @@ private:
 		~Treap()
 		{}
 
+		/**
+		 * @brief Recalculate size and height of treap.
+		 */
+		void update();
 		int getPriority() const;
 		static void removeTree(Treap *treap);
 		static int getHeight(Treap *treap);
@@ -215,27 +213,31 @@ void Bag<T>::clear()
 }
 
 template <typename T>
-void Bag<T>::intersec(Bag<T> &set, Bag<T> &result) const
+Bag<T> &Bag<T>::intersect(Bag<T> &set) const
 {
 	queue<Treap*> q;
 	q.push(this->set);
+	auto result = new Bag<T>();
 	while (!q.empty())
 	{
 		Treap *t = q.front();
 		q.pop();
 		if (t == nullptr)
 			continue;
-		result.insert(t->value, min(t->count, set.find(t->value)));
+		result->insert(t->value, min(t->count, set.find(t->value)));
 		q.push(t->left);
 		q.push(t->right);
 	}
+	return *result;
 }
 
 template <typename T>
-void Bag<T>::merge(Bag<T> &set, Bag<T> &result) const
+Bag<T> &Bag<T>::merge(Bag<T> &set) const
 {
-	copyTo(result);
-	set.copyTo(result);
+	auto result = new Bag<T>();
+	copyTo(*result);
+	set.copyTo(*result);
+	return *result;
 }
 
 template <typename T>
