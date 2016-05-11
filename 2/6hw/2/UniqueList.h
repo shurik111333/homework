@@ -4,6 +4,7 @@
 
 using namespace std;
 
+/// Implements list on array, which contains only different elements
 class UniqueList : public ListArray
 {
 public:
@@ -30,5 +31,9 @@ public:
 		const char *message;
 	};
 
+	/**
+	 * @brief insert Insert element in list
+	 * @param index Position for insert
+	 */
 	void insert(int value, int index) throw(ElementAlreadyExistException);
 };
