@@ -4,32 +4,28 @@
 
 using std::out_of_range;
 
+/// Implements n-dimensional vector
 template <int n>
 class Vector
 {
 public:
 	/**
 	 * @brief Create vector, in which all coordinates are equal value
-	 * @param value
 	 */
 	Vector(const int value = 0);
 	/**
 	 * @brief Copies first n elements from input array as coordinates
-	 * @param v
 	 */
 	Vector(const int *v);
 	Vector(const Vector<n> &v);
 
 	bool isNull() const noexcept;
 	/**
-	 * @brief at
-	 * @param i
 	 * @return Return i-th coordinate, i must be form 0 till n - 1
 	 */
 	int at(const int i) const throw(out_of_range);
 	/**
 	 * @brief operator []
-	 * @param i
 	 * @return Return link to i-th coordinate, i must be form 0 till n - 1
 	 */
 	int &operator [] (const int i) throw(out_of_range);
@@ -38,8 +34,6 @@ public:
 	Vector<n> operator + (const Vector<n> &v) const noexcept;
 	/**
 	 * @brief operator * Scalar product of two n-dimensional vectors
-	 * @param v
-	 * @return
 	 */
 	int operator * (const Vector<n> &v) const noexcept;
 
