@@ -49,7 +49,8 @@ private slots:
 	void testCopyOperator()
 	{
 		SharedPtr<int> ptr1(new int(11));
-		auto ptr2 = ptr1;
+		SharedPtr<int> ptr2;
+		ptr2 = ptr1;
 		QCOMPARE(*ptr1, *ptr2);
 		QCOMPARE(ptr1.getCount(), ptr2.getCount());
 		QCOMPARE(ptr1.getCount(), 2);
