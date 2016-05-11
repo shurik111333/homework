@@ -1,5 +1,6 @@
 #pragma once
 
+/// Contains pointer to object and remove object, when no SharedPtr points to object
 template <typename T>
 class SharedPtr
 {
