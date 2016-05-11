@@ -46,7 +46,7 @@ public:
 	int operator [](const int index) const throw (out_of_range);
 	int length() const;
 
-protected:
+private:
 	/// Current size of array
 	int size;
 	/// Number of elements in list
