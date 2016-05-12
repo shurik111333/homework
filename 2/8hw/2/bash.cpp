@@ -27,9 +27,10 @@ void Bash::getUpdate(QNetworkReply *reply)
 	//xml.clear();
 	//QTemporaryFile xmlFile;
 	qDebug() << QDir::tempPath() << "\n";
-	QTemporaryFile xmlFile();
+	QTemporaryFile xmlFile;
 
 	int x = xmlFile.write(reply->readAll());
+	qDebug() << x << "\n";
 	//delete xmlFile;
 	return;
 	//xml.setDevice(&xmlFile);
