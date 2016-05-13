@@ -16,18 +16,28 @@ public:
 	~MainWidget();
 
 signals:
-	void newPos();
+	/// Emits when index of current quote was changed
+	void newQuote();
 
 private:
 	Ui::MainWidget *ui;
 	Bash *bash;
-	QMap<QString, QList<QString> > *content = nullptr;
-	int currentPosition = 0;
+	/// Index of displayed quote
+	int currentQuote = 0;
+	/// Change index of current quote
+	void setQuote(int index);
 
-	void setPos(int pos);
-
-public slots:
-	void newContent(QMap<QString, QList<QString> > &content);
+private slots:
+	/// Reset interface to first quote
+	void reset();
+	/// Request new quotes
+	void refresh();
+	/// Update button state(enabled/disabled)
 	void updateButtons();
 	void updateContent();
+	void nextQuote();
+	void prevQuote();
+	void rateUp();
+	void rateDown();
+	void rateBayan();
 };

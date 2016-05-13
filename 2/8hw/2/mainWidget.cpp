@@ -9,11 +9,25 @@ MainWidget::MainWidget(QWidget *parent) :
 	ui->setupUi(this);
 
 	connect(bash, &Bash::newContent,
-	        this, &MainWidget::newContent);
-	connect(this, &MainWidget::newPos,
+	        this, &MainWidget::reset);
+	connect(this, &MainWidget::newQuote,
 	        this, &MainWidget::updateButtons);
-	connect(this, &MainWidget::newPos,
+	connect(this, &MainWidget::newQuote,
 	        this, &MainWidget::updateContent);
+
+	connect(ui->buttonNext, &QPushButton::pressed,
+	        this, &MainWidget::nextQuote);
+	connect(ui->buttonPrevious, &QPushButton::pressed,
+	        this, &MainWidget::prevQuote);
+	connect(ui->buttonUpdate, &QPushButton::pressed,
+	        bash, &Bash::update);
+
+	connect(ui->buttonRateUp, &QPushButton::pressed,
+	        this, &MainWidget::rateUp);
+	connect(ui->buttonRateDown, &QPushButton::pressed,
+	        this, &MainWidget::rateDown);
+	connect(ui->buttonRateBayan, &QPushButton::pressed,
+	        this, &MainWidget::rateBayan);
 
 	bash->update();
 }
@@ -23,32 +37,57 @@ MainWidget::~MainWidget()
 	delete ui;
 }
 
-void MainWidget::setPos(int pos)
+void MainWidget::setQuote(int index)
 {
-	currentPosition = pos;
-	emit newPos();
+	currentQuote = index;
+	if (index < 0 || index >= bash->getCount())
+		currentQuote = 0;
+	emit newQuote();
 }
 
-void MainWidget::newContent(QMap<QString, QList<QString> > &content)
+void MainWidget::nextQuote()
 {
-	this->content = &content;
-	setPos(0);
+	setQuote(currentQuote + 1);
+}
+
+void MainWidget::prevQuote()
+{
+	setQuote(currentQuote - 1);
+}
+
+void MainWidget::rateUp()
+{
+	bash->rateUp(currentQuote);
+}
+
+void MainWidget::rateDown()
+{
+	bash->rateDown(currentQuote);
+}
+
+void MainWidget::rateBayan()
+{
+	bash->rateBayan(currentQuote);
+}
+
+void MainWidget::reset()
+{
+	setQuote(0);
+}
+
+void MainWidget::refresh()
+{
+	bash->update();
 }
 
 void MainWidget::updateButtons()
 {
-	if (currentPosition == 0)
-		ui->buttonPrevious->setDisabled(true);
-	else
-		ui->buttonPrevious->setDisabled(false);
-
-	if (currentPosition == content->size() - 1)
-		ui->buttonNext->setDisabled(true);
-	else
-		ui->buttonNext->setDisabled(false);
+	ui->buttonPrevious->setDisabled(currentQuote == 0);
+	ui->buttonNext->setDisabled(currentQuote == bash->getCount() - 1);
 }
 
 void MainWidget::updateContent()
 {
-	ui->textEditContent->setText((*content)["description"][currentPosition]);
+	this->setWindowTitle("Quote #" + bash->getValue(currentQuote, "id"));
+	ui->textContent->setText(bash->getValue(currentQuote, "description"));
 }
