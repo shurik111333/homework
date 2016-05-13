@@ -1,5 +1,11 @@
 #pragma once
+
 #include <QWidget>
+#include <QGridLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QList>
 
 namespace Ui {
 	class MainWidget;
@@ -15,9 +21,16 @@ public:
 
 private:
 	Ui::MainWidget *ui;
+	QVBoxLayout *mainLayout;
+	QGridLayout *buttonsLayout;
+	QList<QList<QPushButton*>> buttons;
+	int size;
 	static const int minSize = 3;
 	static const int maxSize = 10;
 
-private slots:
 	void drawField();
+	void createButtons();
+
+private slots:
+	void newSize(int newSize);
 };
