@@ -18,4 +18,7 @@ public:
 private:
 	Ui::MainWidget *ui;
 	Server *server;
+
+private slots:
+	void sendMsg();
 };

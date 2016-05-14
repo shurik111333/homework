@@ -17,7 +17,8 @@ Server::Server(QObject *parent):
 	}
 	else
 		qDebug() << "Server listen at default port";*/
-	if (!tcpServer->listen(QHostAddress(QHostAddress::LocalHost)))
+
+	if (!tcpServer->listen(getIP()) && !tcpServer->listen(QHostAddress(QHostAddress::LocalHost)))
 		qDebug() << "Server cannot listen";
 	else
 	{
@@ -28,10 +29,10 @@ Server::Server(QObject *parent):
 		qDebug() << "Server listen at" << myIP.toString() << ":" << myPort;
 	}
 
-	tcpSocket = new QTcpSocket(this);
-	//tcpSocket->connectToHost(myIP, myPort);
+	/*tcpSocket = new QTcpSocket(this);
+	tcpSocket->connectToHost(myIP, myPort);
 	connect(tcpSocket, &QTcpSocket::readyRead,
-	        this, &Server::getMessage);
+	        this, &Server::getMessage);*/
 }
 
 QString Server::getMyIP() const
@@ -60,16 +61,20 @@ void Server::sendMessage(const QString msg)
 
 	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
-	out << (quint16)data.length() << msg.toUtf8();
+//	out << (quint16)data.length() << msg.toUtf8();
 
-	auto client = new QTcpSocket();
-	client->connectToHost(clientIP, clientPort);
+	out << (quint16)0 << msg;
+	out.device()->seek(0);
+	quint16 size = (quint16)(data.size() - sizeof(quint16));
+	out << size;
+//	auto client = new QTcpSocket();
+//	client->connectToHost(clientIP, clientPort);
 
-	connect(client, &QTcpSocket::disconnected,
-	        client, &QTcpSocket::deleteLater);
+//	connect(client, &QTcpSocket::disconnected,
+//	        client, &QTcpSocket::deleteLater);
 
-	client->write(data);
-	client->disconnectFromHost();
+	tcpSocket->write(data);
+	//tcpSocket->disconnectFromHost();
 
 	qDebug() << "Data was send:" << data;
 }
@@ -99,11 +104,8 @@ void Server::getMessage()
 	{
 		if (tcpSocket->bytesAvailable() < sizeof(quint16))
 			return;
-		else
-		{
-			in >> dataSize;
-			qDebug() << "Data size:" << dataSize;
-		}
+		in >> dataSize;
+		qDebug() << "Data size:" << dataSize;
 	}
 
 	if (tcpSocket->bytesAvailable() < dataSize)
@@ -112,21 +114,26 @@ void Server::getMessage()
 	qDebug() << "New message from"
 	         << clientIP.toString() + ":" + QString::number(clientPort);
 
-	char *data = new char[dataSize + 1];
-	tcpSocket->read(data, dataSize);
-	//data[dataSize] = '\0';
+//	char *data = new char[dataSize + 1];
+//	tcpSocket->read(data, dataSize);
+//	data[dataSize] = '\0';
+	QString data;
+	in >> data;
 	qDebug() << data;
-	emit newMessaage(QString(data));
-
+	emit newMessaage(data);
+	dataSize = 0;
 	if (tcpSocket->bytesAvailable() > 0)
 		getMessage();
 }
 
 void Server::newConnection()
 {
-	client = tcpServer->nextPendingConnection();
-	clientIP = client->peerAddress();
-	clientPort = client->peerPort();
+	tcpSocket = tcpServer->nextPendingConnection();
+	clientIP = tcpSocket->peerAddress();
+	clientPort = tcpSocket->peerPort();
+
+	connect(tcpSocket, &QTcpSocket::readyRead,
+	        this, &Server::getMessage);
 
 	qDebug() << "New connection from" << clientIP.toString() << ":" << QString::number(clientPort);
 
