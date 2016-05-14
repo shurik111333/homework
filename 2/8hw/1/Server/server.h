@@ -27,6 +27,7 @@ signals:
 	/// Emits when new message was received
 	void newMessaage(const QString msg);
 	void newClient();
+	void clientDisconnected();
 
 public slots:
 	void sendMessage(const QString msg);
@@ -42,8 +43,8 @@ private:
 	bool tryToListen(const QHostAddress &address);
 
 private slots:
-	void getMessage(const QString msg);
-	/// Emits when new client has been connected
+	//void getMessage(const QString msg);
+	/// Calls when new client has been connected. Emits newClient
 	void newConnection();
 	void requestMessage();
 	/// Set tcpCliaent as nullptr when its destryed

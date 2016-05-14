@@ -30,5 +30,6 @@ private slots:
 	void getMessage(const QString msg);
 	/// Calls after succes connect to server
 	void succesfullConnection();
+	void serverDisconnected();
 };
 

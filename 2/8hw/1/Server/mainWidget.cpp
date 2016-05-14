@@ -13,14 +13,17 @@ MainWidget::MainWidget(QWidget *parent) :
 	ui->lineIP->setText(server->getMyIP());
 	ui->linePort->setText(QString::number(server->getMyPort()));
 
+	connect(server, &Server::newClient,
+	        this, &MainWidget::newClient);
 	connect(server, &Server::newMessaage,
 	        this, &MainWidget::getMessage);
+	connect(server, &Server::clientDisconnected,
+	        this, &MainWidget::clientDisconnected);
+
 	connect(ui->buttonSend, &QPushButton::pressed,
 	        this, &MainWidget::sendMsg);
 	connect(ui->buttonSend, &QPushButton::pressed,
 	        ui->lineMessage, &QLineEdit::clear);
-	connect(server, &Server::newClient,
-	        this, &MainWidget::newClient);
 }
 
 MainWidget::~MainWidget()
@@ -55,4 +58,9 @@ void MainWidget::getMessage(const QString msg)
 void MainWidget::newClient()
 {
 	ui->textMessages->append("New client: " + getClientHost() + "\n");
+}
+
+void MainWidget::clientDisconnected()
+{
+	ui->textMessages->append("Client has been disconnected.");
 }

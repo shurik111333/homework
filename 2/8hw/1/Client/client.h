@@ -20,6 +20,7 @@ signals:
 	void newMessage(const QString msg);
 	/// Emits when connection has been established
 	void connected();
+	void serverDisconnected();
 
 public slots:
 	void connectToServer(const QString &host, quint16 port);
@@ -27,14 +28,11 @@ public slots:
 	void send(const QString &msg);
 
 private:
-	TcpMessenger *messenger;
+	TcpMessenger *messenger = nullptr;
 	QTcpSocket *tcpServer = nullptr;
 
 private slots:
-	/// Tries get message from socket
-	void getMessage(const QString msg);
 	/// Set pointer to socket as nullptr, when socket destroyed
 	void removeSocket();
 	void requestMessage();
-	void succesfullConnected();
 };

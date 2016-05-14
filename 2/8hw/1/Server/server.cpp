@@ -17,7 +17,7 @@ Server::Server(QObject *parent):
 
 	messenger = new TcpMessenger();
 	connect(messenger, &TcpMessenger::newMessage,
-	        this, &Server::getMessage);
+	        this, &Server::newMessaage);
 }
 
 Server::~Server()
@@ -78,11 +78,6 @@ bool Server::tryToListen(const QHostAddress &address)
 	return true;
 }
 
-void Server::getMessage(const QString msg)
-{
-	emit newMessaage(msg);
-}
-
 void Server::newConnection()
 {
 	tcpClient = tcpServer->nextPendingConnection();
@@ -90,6 +85,8 @@ void Server::newConnection()
 	connect(tcpClient, &QTcpSocket::readyRead,
 	        this, &Server::requestMessage);
 
+	connect(tcpClient, &QTcpSocket::disconnected,
+	        this, &Server::clientDisconnected);
 	connect(tcpClient, &QTcpSocket::disconnected,
 	        tcpClient, &QTcpSocket::deleteLater);
 	connect(tcpClient, &QTcpSocket::destroyed,

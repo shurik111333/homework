@@ -22,6 +22,8 @@ MainWidget::MainWidget(QWidget *parent) :
 	        this, &MainWidget::getMessage);
 	connect(client, &Client::connected,
 	        this, &MainWidget::succesfullConnection);
+	connect(client, &Client::serverDisconnected,
+	        this, &MainWidget::serverDisconnected);
 }
 
 MainWidget::~MainWidget()
@@ -61,4 +63,9 @@ void MainWidget::getMessage(const QString msg)
 void MainWidget::succesfullConnection()
 {
 	ui->textMessages->append("Connected to " + getServerHost() + "\n");
+}
+
+void MainWidget::serverDisconnected()
+{
+	ui->textMessages->append("Connection with server was lost.");
 }

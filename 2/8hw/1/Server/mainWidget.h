@@ -29,4 +29,5 @@ private slots:
 	void getMessage(const QString msg);
 	/// Calls, when new client has been connected
 	void newClient();
+	void clientDisconnected();
 };

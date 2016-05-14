@@ -5,14 +5,13 @@ Client::Client(QObject *parent):
     messenger(new TcpMessenger())
 {
 	connect(messenger, &TcpMessenger::newMessage,
-	        this, &Client::getMessage);
+	        this, &Client::newMessage);
 }
 
 Client::~Client()
 {
 	delete messenger;
-	if (tcpServer != nullptr)
-		tcpServer->disconnectFromHost();
+	delete tcpServer;
 }
 
 QString Client::getServerIP() const
@@ -36,21 +35,20 @@ void Client::connectToServer(const QString &host, quint16 port)
 	if (tcpServer != nullptr)
 		tcpServer->disconnectFromHost();
 	tcpServer = new QTcpSocket();
+
 	connect(tcpServer, &QTcpSocket::connected,
-	        this, &Client::succesfullConnected);
+	        this, &Client::connected);
+
 	tcpServer->connectToHost(QHostAddress(host), port);
 
 	connect(tcpServer, &QTcpSocket::readyRead,
 	        this, &Client::requestMessage);
 	connect(tcpServer, &QTcpSocket::disconnected,
+	        this, &Client::serverDisconnected);
+	connect(tcpServer, &QTcpSocket::disconnected,
 	        tcpServer, &QTcpSocket::deleteLater);
 	connect(tcpServer, &QTcpSocket::destroyed,
 	        this, &Client::removeSocket);
-}
-
-void Client::getMessage(const QString msg)
-{
-	emit newMessage(msg);
 }
 
 void Client::send(const QString &msg)
@@ -60,15 +58,11 @@ void Client::send(const QString &msg)
 
 void Client::removeSocket()
 {
+	qDebug() << "Remove socket";
 	tcpServer = nullptr;
 }
 
 void Client::requestMessage()
 {
 	messenger->get(tcpServer);
-}
-
-void Client::succesfullConnected()
-{
-	emit connected();
 }
