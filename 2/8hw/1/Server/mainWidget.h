@@ -19,6 +19,11 @@ private:
 	Ui::MainWidget *ui;
 	Server *server;
 
+	void addMessage(const QString &sender, const QString &msg);
+	QString getClientHost() const;
+
 private slots:
 	void sendMsg();
+	void getMessage(const QString msg);
+	void newClient();
 };

@@ -8,14 +8,20 @@ MainWidget::MainWidget(QWidget *parent) :
 	ui->setupUi(this);
 
 	this->setWindowTitle("Client");
+	ui->lineIP->setText("127.0.0.1");
+
 	client = new Client();
 
 	connect(ui->buttonConnect, &QPushButton::pressed,
 	        this, &MainWidget::connectToServer);
 	connect(ui->buttonSend, &QPushButton::pressed,
 	        this, &MainWidget::send);
+	connect(ui->buttonSend, &QPushButton::pressed,
+	        ui->lineMessage, &QLineEdit::clear);
 	connect(client, &Client::newMessage,
-	        ui->textMessages, &QTextEdit::setText);
+	        this, &MainWidget::getMessage);
+	connect(client, &Client::connected,
+	        this, &MainWidget::succesfullConnection);
 }
 
 MainWidget::~MainWidget()
@@ -23,12 +29,36 @@ MainWidget::~MainWidget()
 	delete ui;
 }
 
+void MainWidget::addMessage(const QString &sender, const QString &msg)
+{
+	ui->textMessages->append(sender);
+	ui->textMessages->append(msg + "\n");
+}
+
+QString MainWidget::getClientHost() const
+{
+	return client->getServerIP() + ":" + QString::number(client->getServerPort());
+}
+
 void MainWidget::send()
 {
-	client->send(ui->lineMessage->text());
+	QString msg = ui->lineMessage->text();
+	client->send(msg);
+	addMessage("You", msg);
 }
 
 void MainWidget::connectToServer()
 {
+	ui->textMessages->append("Connecting...");
 	client->connectToServer(ui->lineIP->text(), ui->linePort->text().toInt());
+}
+
+void MainWidget::getMessage(const QString msg)
+{
+	addMessage("Server | " + getClientHost(), msg);
+}
+
+void MainWidget::succesfullConnection()
+{
+	ui->textMessages->append("Connected to " + getClientHost() + "\n");
 }
