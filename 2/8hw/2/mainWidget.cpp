@@ -35,6 +35,7 @@ MainWidget::MainWidget(QWidget *parent) :
 MainWidget::~MainWidget()
 {
 	delete ui;
+	delete bash;
 }
 
 void MainWidget::setQuote(int index)
