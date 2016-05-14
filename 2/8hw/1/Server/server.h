@@ -38,4 +38,5 @@ private:
 
 private slots:
 	void getMessage();
+	void newConnection1();
 };

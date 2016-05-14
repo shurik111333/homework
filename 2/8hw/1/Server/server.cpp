@@ -24,12 +24,12 @@ Server::Server(QObject *parent):
 		myIP = tcpServer->serverAddress();
 		myPort = tcpServer->serverPort();
 		connect(tcpServer, &QTcpServer::newConnection,
-		        this, &Server::getClient);
+		        this, &Server::newConnection);
 		qDebug() << "Server listen at" << myIP.toString() << ":" << myPort;
 	}
 
 	tcpSocket = new QTcpSocket(this);
-	tcpSocket->connectToHost(myIP, myPort);
+	//tcpSocket->connectToHost(myIP, myPort);
 	connect(tcpSocket, &QTcpSocket::readyRead,
 	        this, &Server::getMessage);
 }
@@ -58,9 +58,9 @@ void Server::sendMessage(const QString msg)
 	qDebug() << "Last peer:"
 	         << clientIP.toString() + ":" + QString::number(clientPort);
 
-	QByteArray data = msg.toUtf8();
+	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
-	out << (quint16)data.length() << data;
+	out << (quint16)data.length() << msg.toUtf8();
 
 	auto client = new QTcpSocket();
 	client->connectToHost(clientIP, clientPort);
@@ -100,7 +100,10 @@ void Server::getMessage()
 		if (tcpSocket->bytesAvailable() < sizeof(quint16))
 			return;
 		else
+		{
 			in >> dataSize;
+			qDebug() << "Data size:" << dataSize;
+		}
 	}
 
 	if (tcpSocket->bytesAvailable() < dataSize)
@@ -111,15 +114,27 @@ void Server::getMessage()
 
 	char *data = new char[dataSize + 1];
 	tcpSocket->read(data, dataSize);
+	//data[dataSize] = '\0';
+	qDebug() << data;
 	emit newMessaage(QString(data));
 
 	if (tcpSocket->bytesAvailable() > 0)
 		getMessage();
 }
 
-void Server::getClient()
+void Server::newConnection()
 {
 	client = tcpServer->nextPendingConnection();
 	clientIP = client->peerAddress();
 	clientPort = client->peerPort();
+
+	qDebug() << "New connection from" << clientIP.toString() << ":" << QString::number(clientPort);
+
+	/*QString response = "OK";
+	QByteArray data;
+	QDataStream out(&data, QIODevice::WriteOnly);
+	quint16 size = response.length() + 1;
+	out << size << response.toUtf8() << '\0';
+	qDebug() << "Send" << size << "bytes:" << data;
+	client->write(data);*/
 }
