@@ -7,12 +7,15 @@ MainWidget::MainWidget(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	this->setWindowTitle("Client");
 	client = new Client();
 
 	connect(ui->buttonConnect, &QPushButton::pressed,
 	        this, &MainWidget::connectToServer);
 	connect(ui->buttonSend, &QPushButton::pressed,
 	        this, &MainWidget::send);
+	connect(client, &Client::newMessage,
+	        ui->textMessages, &QTextEdit::setText);
 }
 
 MainWidget::~MainWidget()
