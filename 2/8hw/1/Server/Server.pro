@@ -16,9 +16,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainWidget.cpp \
-    server.cpp
+    server.cpp \
+    ../TcpMessenger/tcpMessenger.cpp
 
 HEADERS  += mainWidget.h \
-    server.h
+    server.h \
+    ../TcpMessenger/tcpMessenger.h
 
 FORMS    += mainWidget.ui

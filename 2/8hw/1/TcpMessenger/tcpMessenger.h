@@ -14,12 +14,12 @@ public:
 	explicit TcpMessenger(QObject *parent = 0);
 
 	void send(QTcpSocket *tcp, const QString &msg) const;
-	void get(QTcpSocket *tcp);
 
 signals:
 	void newMessage(const QString msg);
 
 public slots:
+	void get(QTcpSocket *tcp);
 
 private:
 	quint16 dataSize = 0;

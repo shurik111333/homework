@@ -1,30 +1,74 @@
 #include "client.h"
 
 Client::Client(QObject *parent):
-    QObject(parent)
+    QObject(parent),
+    messenger(new TcpMessenger())
 {
+	connect(messenger, &TcpMessenger::newMessage,
+	        this, &Client::getMessage);
+}
 
+Client::~Client()
+{
+	delete messenger;
+	if (tcpServer != nullptr)
+		tcpServer->disconnectFromHost();
+}
+
+QString Client::getServerIP() const
+{
+	if (tcpServer == nullptr)
+		return "";
+	return tcpServer->peerAddress().toString();
+}
+
+quint16 Client::getServerPort() const
+{
+	if (tcpServer == nullptr)
+		return 0;
+	return tcpServer->peerPort();
 }
 
 void Client::connectToServer(const QString &host, quint16 port)
 {
-	if (server != nullptr)
-		server->disconnectFromHost();
 	qDebug() << "Connect to" << host << ":" << port;
-	server = new QTcpSocket();
-	server->connectToHost(QHostAddress(host), port);
-	connect(server, &QTcpSocket::readyRead,
-	        this, &Client::getMessage);
-	connect(server, &QTcpSocket::disconnected,
-	        server, &QTcpSocket::deleteLater);
+
+	if (tcpServer != nullptr)
+		tcpServer->disconnectFromHost();
+	tcpServer = new QTcpSocket();
+	connect(tcpServer, &QTcpSocket::connected,
+	        this, &Client::succesfullConnected);
+	tcpServer->connectToHost(QHostAddress(host), port);
+
+	connect(tcpServer, &QTcpSocket::readyRead,
+	        this, &Client::requestMessage);
+	connect(tcpServer, &QTcpSocket::disconnected,
+	        tcpServer, &QTcpSocket::deleteLater);
+	connect(tcpServer, &QTcpSocket::destroyed,
+	        this, &Client::removeSocket);
 }
 
-void Client::getMessage()
+void Client::getMessage(const QString msg)
 {
-
+	emit newMessage(msg);
 }
 
 void Client::send(const QString &msg)
 {
+	messenger->send(tcpServer, msg);
+}
 
+void Client::removeSocket()
+{
+	tcpServer = nullptr;
+}
+
+void Client::requestMessage()
+{
+	messenger->get(tcpServer);
+}
+
+void Client::succesfullConnected()
+{
+	emit connected();
 }
