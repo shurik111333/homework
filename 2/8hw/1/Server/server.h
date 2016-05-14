@@ -34,7 +34,7 @@ private:
 	quint16 clientPort = 0;
 	quint16 dataSize = 0;
 
-	QHostAddress getMyIP() const;
+	QHostAddress getIP() const;
 
 private slots:
 	void getMessage();

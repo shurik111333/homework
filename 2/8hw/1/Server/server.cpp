@@ -4,7 +4,7 @@ Server::Server(QObject *parent):
     QObject(parent)
 {
 	tcpServer = new QTcpServer(this);
-	myIP = getMyIP();
+	/*myIP = getIP();
 	if (!tcpServer->listen(myIP, myPort))
 	{
 		if (!tcpServer->listen(myIP))
@@ -16,9 +16,20 @@ Server::Server(QObject *parent):
 		}
 	}
 	else
-		qDebug() << "Server succesfully listen";
+		qDebug() << "Server listen at default port";*/
+	if (!tcpServer->listen(QHostAddress(QHostAddress::LocalHost)))
+		qDebug() << "Server cannot listen";
+	else
+	{
+		myIP = tcpServer->serverAddress();
+		myPort = tcpServer->serverPort();
+		connect(tcpServer, &QTcpServer::newConnection,
+		        this, &Server::getClient);
+		qDebug() << "Server listen at" << myIP.toString() << ":" << myPort;
+	}
 
 	tcpSocket = new QTcpSocket(this);
+	tcpSocket->connectToHost(myIP, myPort);
 	connect(tcpSocket, &QTcpSocket::readyRead,
 	        this, &Server::getMessage);
 }
@@ -52,8 +63,7 @@ void Server::sendMessage(const QString msg)
 	out << (quint16)data.length() << data;
 
 	auto client = new QTcpSocket();
-	client->setPeerAddress(clientIP);
-	client->setPeerPort(clientPort);
+	client->connectToHost(clientIP, clientPort);
 
 	connect(client, &QTcpSocket::disconnected,
 	        client, &QTcpSocket::deleteLater);
@@ -64,7 +74,7 @@ void Server::sendMessage(const QString msg)
 	qDebug() << "Data was send:" << data;
 }
 
-QHostAddress Server::getMyIP() const
+QHostAddress Server::getIP() const
 {
 	QString ip;
 	QList<QHostAddress> adresses = QNetworkInterface::allAddresses();
@@ -78,8 +88,8 @@ QHostAddress Server::getMyIP() const
 
 void Server::getMessage()
 {
-	clientIP = tcpSocket->peerAddress();
-	clientPort = tcpSocket->peerPort();
+//	clientIP = tcpSocket->peerAddress();
+//	clientPort = tcpSocket->peerPort();
 
 	qDebug() << "New data from"
 	         << clientIP.toString() + ":" + QString::number(clientPort);
@@ -105,4 +115,11 @@ void Server::getMessage()
 
 	if (tcpSocket->bytesAvailable() > 0)
 		getMessage();
+}
+
+void Server::getClient()
+{
+	client = tcpServer->nextPendingConnection();
+	clientIP = client->peerAddress();
+	clientPort = client->peerPort();
 }

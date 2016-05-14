@@ -9,6 +9,9 @@ MainWidget::MainWidget(QWidget *parent) :
 
 	this->setWindowTitle("Server");
 	server = new Server();
+
+	ui->lineIP->setText(server->getMyIP());
+	ui->linePort->setText(QString::number(server->getMyPort()));
 }
 
 MainWidget::~MainWidget()
