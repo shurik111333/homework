@@ -57,7 +57,6 @@ void Server::sendMessage(const QString msg)
 
 QHostAddress Server::getIP() const
 {
-	QString ip;
 	QList<QHostAddress> adresses = QNetworkInterface::allAddresses();
 	for (auto adress : adresses)
 	{

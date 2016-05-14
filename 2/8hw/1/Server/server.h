@@ -9,6 +9,7 @@
 #include <QList>
 #include "../TcpMessenger/tcpMessenger.h"
 
+/// Represents server, that waiting for client for communicate
 class Server : public QObject
 {
 	Q_OBJECT
@@ -23,6 +24,7 @@ public:
 	quint16 getClientPort() const;
 
 signals:
+	/// Emits when new message was received
 	void newMessaage(const QString msg);
 	void newClient();
 
@@ -33,19 +35,16 @@ private:
 	QTcpServer *tcpServer = nullptr;
 	QTcpSocket *tcpClient = nullptr;
 	TcpMessenger *messenger = nullptr;
-	quint16 myPort = 48999;
+	//quint16 myPort = 48999;
 
-//	QTcpSocket *client;
-//	QHostAddress myIP;
-//	QHostAddress clientIP;
-//	quint16 clientPort = 0;
-//	quint16 dataSize = 0;
-
+	/// Return IP ofthis PC
 	QHostAddress getIP() const;
 
 private slots:
 	void getMessage(const QString msg);
+	/// Emits when new client has been connected
 	void newConnection();
 	void requestMessage();
+	/// Set tcpCliaent as nullptr when its destryed
 	void removeClient();
 };
