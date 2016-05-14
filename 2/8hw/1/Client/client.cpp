@@ -11,58 +11,63 @@ Client::Client(QObject *parent):
 Client::~Client()
 {
 	delete messenger;
-	delete tcpServer;
+	delete socketServer;
 }
 
 QString Client::getServerIP() const
 {
-	if (tcpServer == nullptr)
+	if (socketServer == nullptr)
 		return "";
-	return tcpServer->peerAddress().toString();
+	return socketServer->peerAddress().toString();
 }
 
 quint16 Client::getServerPort() const
 {
-	if (tcpServer == nullptr)
+	if (socketServer == nullptr)
 		return 0;
-	return tcpServer->peerPort();
+	return socketServer->peerPort();
+}
+
+bool Client::isConnected() const
+{
+	return socketServer != nullptr;
 }
 
 void Client::connectToServer(const QString &host, quint16 port)
 {
 	qDebug() << "Connect to" << host << ":" << port;
 
-	if (tcpServer != nullptr)
-		tcpServer->disconnectFromHost();
-	tcpServer = new QTcpSocket();
+	if (socketServer != nullptr)
+		socketServer->disconnectFromHost();
+	socketServer = new QTcpSocket();
 
-	connect(tcpServer, &QTcpSocket::connected,
+	connect(socketServer, &QTcpSocket::connected,
 	        this, &Client::connected);
 
-	tcpServer->connectToHost(QHostAddress(host), port);
+	socketServer->connectToHost(QHostAddress(host), port);
 
-	connect(tcpServer, &QTcpSocket::readyRead,
+	connect(socketServer, &QTcpSocket::readyRead,
 	        this, &Client::requestMessage);
-	connect(tcpServer, &QTcpSocket::disconnected,
+	connect(socketServer, &QTcpSocket::disconnected,
 	        this, &Client::serverDisconnected);
-	connect(tcpServer, &QTcpSocket::disconnected,
-	        tcpServer, &QTcpSocket::deleteLater);
-	connect(tcpServer, &QTcpSocket::destroyed,
+	connect(socketServer, &QTcpSocket::disconnected,
+	        socketServer, &QTcpSocket::deleteLater);
+	connect(socketServer, &QTcpSocket::destroyed,
 	        this, &Client::removeSocket);
 }
 
 void Client::send(const QString &msg)
 {
-	messenger->send(tcpServer, msg);
+	messenger->send(socketServer, msg);
 }
 
 void Client::removeSocket()
 {
 	qDebug() << "Remove socket";
-	tcpServer = nullptr;
+	socketServer = nullptr;
 }
 
 void Client::requestMessage()
 {
-	messenger->get(tcpServer);
+	messenger->get(socketServer);
 }

@@ -14,6 +14,8 @@ public:
 
 	QString getServerIP() const;
 	quint16 getServerPort() const;
+	/// @return Return true if client connected with server
+	bool isConnected() const;
 
 signals:
 	/// Emits when new message was received
@@ -29,7 +31,7 @@ public slots:
 
 private:
 	TcpMessenger *messenger = nullptr;
-	QTcpSocket *tcpServer = nullptr;
+	QTcpSocket *socketServer = nullptr;
 
 private slots:
 	/// Set pointer to socket as nullptr, when socket destroyed

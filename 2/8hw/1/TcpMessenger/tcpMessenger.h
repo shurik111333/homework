@@ -14,7 +14,7 @@ class TcpMessenger : public QObject
 public:
 	explicit TcpMessenger(QObject *parent = 0);
 
-	void send(QTcpSocket *tcp, const QString &msg) const;
+	void send(QTcpSocket *tcpSocket, const QString &msg) const;
 
 signals:
 	/// Emits when all data will be get from socket

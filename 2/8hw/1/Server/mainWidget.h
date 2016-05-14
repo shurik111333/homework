@@ -21,13 +21,13 @@ private:
 
 	/// Add message to text box
 	void addMessage(const QString &sender, const QString &msg);
-	/// Return client host in format IP:port
+	/// @return Return client host in format IP:port
 	QString getClientHost() const;
 
 private slots:
 	void sendMsg();
 	void getMessage(const QString msg);
-	/// Calls, when new client has been connected
+	/// This calls, when new client has been connected
 	void newClient();
 	void clientDisconnected();
 };

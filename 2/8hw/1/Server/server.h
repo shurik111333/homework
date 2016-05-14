@@ -22,6 +22,8 @@ public:
 	quint16 getMyPort() const;
 	QString getClientIP() const;
 	quint16 getClientPort() const;
+	/// @return Return true if server connected with client
+	bool isConnected() const;
 
 signals:
 	/// Emits when new message was received
@@ -34,16 +36,14 @@ public slots:
 
 private:
 	QTcpServer *tcpServer = nullptr;
-	QTcpSocket *tcpClient = nullptr;
+	QTcpSocket *socketClient = nullptr;
 	TcpMessenger *messenger = nullptr;
-	//quint16 myPort = 48999;
 
-	/// Return IP ofthis PC
-	QHostAddress getIP() const;
+	/// @return Return false, if server cannot listen input address.
+	/// Otherwise, server start listening.
 	bool tryToListen(const QHostAddress &address);
 
 private slots:
-	//void getMessage(const QString msg);
 	/// Calls when new client has been connected. Emits newClient
 	void newConnection();
 	void requestMessage();

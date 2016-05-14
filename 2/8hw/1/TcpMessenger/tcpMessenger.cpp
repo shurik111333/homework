@@ -4,7 +4,7 @@ TcpMessenger::TcpMessenger(QObject *parent):
     QObject(parent)
 {}
 
-void TcpMessenger::send(QTcpSocket *tcp, const QString &msg) const
+void TcpMessenger::send(QTcpSocket *tcpSocket, const QString &msg) const
 {
 	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
@@ -12,7 +12,7 @@ void TcpMessenger::send(QTcpSocket *tcp, const QString &msg) const
 	out.device()->seek(0);
 	quint16 size = (quint16)(data.size() - sizeof(quint16));
 	out << size;
-	tcp->write(data);
+	tcpSocket->write(data);
 	qDebug() << "Send data. Size:" << size << ", data:" << data.toStdString().c_str();
 }
 

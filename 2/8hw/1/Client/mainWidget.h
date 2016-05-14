@@ -21,7 +21,7 @@ private:
 
 	/// Add message to text box
 	void addMessage(const QString &sender, const QString &msg);
-	/// Return server host in format IP:port
+	/// @return Return server host in format IP:port
 	QString getServerHost() const;
 
 private slots:

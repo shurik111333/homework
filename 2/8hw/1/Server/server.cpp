@@ -24,7 +24,7 @@ Server::~Server()
 {
 	delete messenger;
 	delete tcpServer;
-	delete tcpClient;
+	delete socketClient;
 }
 
 QString Server::getMyIP() const
@@ -39,32 +39,26 @@ quint16 Server::getMyPort() const
 
 QString Server::getClientIP() const
 {
-	if (tcpClient == nullptr)
+	if (socketClient == nullptr)
 		return "";
-	return tcpClient->peerAddress().toString();
+	return socketClient->peerAddress().toString();
 }
 
 quint16 Server::getClientPort() const
 {
-	if (tcpClient == nullptr)
+	if (socketClient == nullptr)
 		return 0;
-	return tcpClient->peerPort();
+	return socketClient->peerPort();
+}
+
+bool Server::isConnected() const
+{
+	return socketClient == nullptr;
 }
 
 void Server::sendMessage(const QString msg)
 {
-	messenger->send(tcpClient, msg);
-}
-
-QHostAddress Server::getIP() const
-{
-	QList<QHostAddress> adresses = QNetworkInterface::allAddresses();
-	for (auto adress : adresses)
-	{
-		if (adress.protocol() == QAbstractSocket::IPv4Protocol)
-			return adress;
-	}
-	return QHostAddress(QHostAddress::LocalHost);
+	messenger->send(socketClient, msg);
 }
 
 bool Server::tryToListen(const QHostAddress &address)
@@ -80,30 +74,30 @@ bool Server::tryToListen(const QHostAddress &address)
 
 void Server::newConnection()
 {
-	tcpClient = tcpServer->nextPendingConnection();
+	socketClient = tcpServer->nextPendingConnection();
 
-	connect(tcpClient, &QTcpSocket::readyRead,
+	connect(socketClient, &QTcpSocket::readyRead,
 	        this, &Server::requestMessage);
 
-	connect(tcpClient, &QTcpSocket::disconnected,
+	connect(socketClient, &QTcpSocket::disconnected,
 	        this, &Server::clientDisconnected);
-	connect(tcpClient, &QTcpSocket::disconnected,
-	        tcpClient, &QTcpSocket::deleteLater);
-	connect(tcpClient, &QTcpSocket::destroyed,
+	connect(socketClient, &QTcpSocket::disconnected,
+	        socketClient, &QTcpSocket::deleteLater);
+	connect(socketClient, &QTcpSocket::destroyed,
 	        this, &Server::removeClient);
 
 	emit newClient();
 
-	qDebug() << "New connection from" << tcpClient->peerAddress().toString()
-	         << ":" << QString::number(tcpClient->peerPort());
+	qDebug() << "New connection from" << socketClient->peerAddress().toString()
+	         << ":" << QString::number(socketClient->peerPort());
 }
 
 void Server::requestMessage()
 {
-	messenger->get(tcpClient);
+	messenger->get(socketClient);
 }
 
 void Server::removeClient()
 {
-	tcpClient = nullptr;
+	socketClient = nullptr;
 }
