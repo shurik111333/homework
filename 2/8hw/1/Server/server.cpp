@@ -4,15 +4,16 @@ Server::Server(QObject *parent):
     QObject(parent)
 {
 	tcpServer = new QTcpServer(this);
-	if (!tcpServer->listen(getIP()) && !tcpServer->listen(QHostAddress(QHostAddress::LocalHost)))
-		qDebug() << "Server cannot listen";
-	else
+
+	QList<QHostAddress> adresses = QNetworkInterface::allAddresses();
+	for (auto adress : adresses)
 	{
-		connect(tcpServer, &QTcpServer::newConnection,
-		        this, &Server::newConnection);
-		qDebug() << "Server listen at" << tcpServer->serverAddress().toString()
-		         << ":" << tcpServer->serverPort();
+		if (adress.protocol() == QAbstractSocket::IPv4Protocol)
+			if (tryToListen(adress))
+				break;
 	}
+	if (!tcpServer->isListening())
+		tryToListen(QHostAddress(QHostAddress::LocalHost));
 
 	messenger = new TcpMessenger();
 	connect(messenger, &TcpMessenger::newMessage,
@@ -64,6 +65,17 @@ QHostAddress Server::getIP() const
 			return adress;
 	}
 	return QHostAddress(QHostAddress::LocalHost);
+}
+
+bool Server::tryToListen(const QHostAddress &address)
+{
+	if (!tcpServer->listen(address))
+		return false;
+	connect(tcpServer, &QTcpServer::newConnection,
+	        this, &Server::newConnection);
+	qDebug() << "Server listen at" << tcpServer->serverAddress().toString()
+	         << ":" << tcpServer->serverPort();
+	return true;
 }
 
 void Server::getMessage(const QString msg)

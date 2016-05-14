@@ -39,6 +39,7 @@ private:
 
 	/// Return IP ofthis PC
 	QHostAddress getIP() const;
+	bool tryToListen(const QHostAddress &address);
 
 private slots:
 	void getMessage(const QString msg);

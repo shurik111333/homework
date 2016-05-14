@@ -35,7 +35,7 @@ void MainWidget::addMessage(const QString &sender, const QString &msg)
 	ui->textMessages->append(msg + "\n");
 }
 
-QString MainWidget::getClientHost() const
+QString MainWidget::getServerHost() const
 {
 	return client->getServerIP() + ":" + QString::number(client->getServerPort());
 }
@@ -55,10 +55,10 @@ void MainWidget::connectToServer()
 
 void MainWidget::getMessage(const QString msg)
 {
-	addMessage("Server | " + getClientHost(), msg);
+	addMessage("Server | " + getServerHost(), msg);
 }
 
 void MainWidget::succesfullConnection()
 {
-	ui->textMessages->append("Connected to " + getClientHost() + "\n");
+	ui->textMessages->append("Connected to " + getServerHost() + "\n");
 }
