@@ -119,6 +119,8 @@ void Server::getMessage()
 //	data[dataSize] = '\0';
 	QString data;
 	in >> data;
+//	for (; dataSize > 0; dataSize--)
+//		data.append();
 	qDebug() << data;
 	emit newMessaage(data);
 	dataSize = 0;

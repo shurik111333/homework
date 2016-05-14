@@ -1,12 +1,8 @@
 #pragma once
 
 #include <QtCore/QObject>
-#include <QDataStream>
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QNetworkInterface>
-#include <QtNetwork/QAbstractSocket>
 #include <QList>
+#include "../TcpMessenger/tcpMessenger.h"
 
 class Client : public QObject
 {
