@@ -79,6 +79,7 @@ void Bash::updateContent()
 			parseQuoteToMap();
 	}
 
+	xml.clear();
 	emit newContent();
 }
 
