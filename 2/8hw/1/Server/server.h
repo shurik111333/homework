@@ -15,15 +15,15 @@ class Server : public QObject
 	Q_OBJECT
 
 public:
-	explicit Server(QObject *parent = 0);
+	explicit Server(QObject *parent = 0) throw(QString);
 	~Server();
 
-	QString getMyIP() const;
-	quint16 getMyPort() const;
-	QString getClientIP() const;
-	quint16 getClientPort() const;
+	QString getMyIP() const noexcept;
+	quint16 getMyPort() const noexcept;
+	QString getClientIP() const noexcept;
+	quint16 getClientPort() const noexcept;
 	/// @return Return true if server connected with client
-	bool isConnected() const;
+	bool isConnected() const noexcept;
 
 signals:
 	/// Emits when new message was received
@@ -32,7 +32,7 @@ signals:
 	void clientDisconnected();
 
 public slots:
-	void sendMessage(const QString msg);
+	void sendMessage(const QString msg) const throw(QString);
 
 private:
 	QTcpServer *tcpServer = nullptr;
@@ -41,12 +41,12 @@ private:
 
 	/// @return Return false, if server cannot listen input address.
 	/// Otherwise, server start listening.
-	bool tryToListen(const QHostAddress &address);
+	bool tryToListen(const QHostAddress &address) const noexcept;
 
 private slots:
 	/// Calls when new client has been connected. Emits newClient
-	void newConnection();
-	void requestMessage();
+	void newConnection() noexcept;
+	void requestMessage() const throw(QString);
 	/// Set tcpCliaent as nullptr when its destryed
-	void removeClient();
+	void removeClient() noexcept;
 };

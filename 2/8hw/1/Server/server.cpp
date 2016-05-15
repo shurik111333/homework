@@ -1,6 +1,6 @@
 #include "server.h"
 
-Server::Server(QObject *parent):
+Server::Server(QObject *parent) throw(QString):
     QObject(parent)
 {
 	tcpServer = new QTcpServer(this);
@@ -13,7 +13,8 @@ Server::Server(QObject *parent):
 				break;
 	}
 	if (!tcpServer->isListening())
-		tryToListen(QHostAddress(QHostAddress::LocalHost));
+		//tryToListen(QHostAddress(QHostAddress::LocalHost));
+		throw QString("Cannot listen yor network devices. Please, check it and try again.");
 
 	messenger = new TcpMessenger();
 	connect(messenger, &TcpMessenger::newMessage,
@@ -27,41 +28,43 @@ Server::~Server()
 	delete socketClient;
 }
 
-QString Server::getMyIP() const
+QString Server::getMyIP() const noexcept
 {
 	return tcpServer->serverAddress().toString();
 }
 
-quint16 Server::getMyPort() const
+quint16 Server::getMyPort() const noexcept
 {
 	return tcpServer->serverPort();
 }
 
-QString Server::getClientIP() const
+QString Server::getClientIP() const noexcept
 {
-	if (socketClient == nullptr)
+	if (!isConnected())
 		return "";
 	return socketClient->peerAddress().toString();
 }
 
-quint16 Server::getClientPort() const
+quint16 Server::getClientPort() const noexcept
 {
-	if (socketClient == nullptr)
+	if (!isConnected())
 		return 0;
 	return socketClient->peerPort();
 }
 
-bool Server::isConnected() const
+bool Server::isConnected() const noexcept
 {
-	return socketClient == nullptr;
+	return socketClient != nullptr;
 }
 
-void Server::sendMessage(const QString msg)
+void Server::sendMessage(const QString msg) const throw(QString)
 {
+	if (!isConnected())
+		throw QString("Client did not connected.");
 	messenger->send(socketClient, msg);
 }
 
-bool Server::tryToListen(const QHostAddress &address)
+bool Server::tryToListen(const QHostAddress &address) const noexcept
 {
 	if (!tcpServer->listen(address))
 		return false;
@@ -72,8 +75,10 @@ bool Server::tryToListen(const QHostAddress &address)
 	return true;
 }
 
-void Server::newConnection()
+void Server::newConnection() noexcept
 {
+	if (!tcpServer->hasPendingConnections())
+		return;
 	socketClient = tcpServer->nextPendingConnection();
 
 	connect(socketClient, &QTcpSocket::readyRead,
@@ -92,12 +97,14 @@ void Server::newConnection()
 	         << ":" << QString::number(socketClient->peerPort());
 }
 
-void Server::requestMessage()
+void Server::requestMessage() const throw(QString)
 {
+	if (!isConnected())
+		throw QString("Client did not connected.");
 	messenger->get(socketClient);
 }
 
-void Server::removeClient()
+void Server::removeClient() noexcept
 {
 	socketClient = nullptr;
 }

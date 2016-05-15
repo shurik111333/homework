@@ -37,4 +37,5 @@ private slots:
 	/// Set pointer to socket as nullptr, when socket destroyed
 	void removeSocket();
 	void requestMessage();
+	void connectionError(const QAbstractSocket::SocketError error);
 };

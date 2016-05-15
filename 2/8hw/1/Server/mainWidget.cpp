@@ -46,9 +46,16 @@ QString MainWidget::getClientHost() const
 void MainWidget::sendMsg()
 {
 	QString msg = ui->lineMessage->text();
-	ui->lineMessage->clear();
-	server->sendMessage(msg);
-	addMessage("You", msg);
+	try
+	{
+		server->sendMessage(msg);
+		ui->lineMessage->clear();
+		addMessage("You", msg);
+	}
+	catch (QString &msg)
+	{
+		ui->textMessages->append(msg);
+	}
 }
 
 void MainWidget::getMessage(const QString msg)

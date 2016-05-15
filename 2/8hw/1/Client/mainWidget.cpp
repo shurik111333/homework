@@ -46,15 +46,32 @@ QString MainWidget::getServerHost() const
 void MainWidget::send()
 {
 	QString msg = ui->lineMessage->text();
-	ui->lineMessage->clear();
-	client->send(msg);
-	addMessage("You", msg);
+	try
+	{
+		client->send(msg);
+		ui->lineMessage->clear();
+		addMessage("You", msg);
+	}
+	catch (QString msg)
+	{
+		ui->textMessages->append(msg);
+	}
 }
 
 void MainWidget::connectToServer()
 {
-	ui->textMessages->append("Connecting...");
-	client->connectToServer(ui->lineIP->text(), ui->linePort->text().toInt());
+	this->setCursor(QCursor(Qt::CursorShape::WaitCursor));
+	//ui->textMessages->append("Connecting...");
+	try
+	{
+		client->connectToServer(ui->lineIP->text(), ui->linePort->text().toInt());
+		succesfullConnection();
+	}
+	catch (QString &msg)
+	{
+		ui->textMessages->append(msg);
+	}
+	this->setCursor(QCursor());
 }
 
 void MainWidget::getMessage(const QString msg)

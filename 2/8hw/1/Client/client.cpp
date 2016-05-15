@@ -16,21 +16,21 @@ Client::~Client()
 
 QString Client::getServerIP() const
 {
-	if (socketServer == nullptr)
+	if (!isConnected())
 		return "";
 	return socketServer->peerAddress().toString();
 }
 
 quint16 Client::getServerPort() const
 {
-	if (socketServer == nullptr)
+	if (!isConnected())
 		return 0;
 	return socketServer->peerPort();
 }
 
 bool Client::isConnected() const
 {
-	return socketServer != nullptr;
+	return socketServer != nullptr;// && socketServer->isValid();
 }
 
 void Client::connectToServer(const QString &host, quint16 port)
@@ -41,10 +41,14 @@ void Client::connectToServer(const QString &host, quint16 port)
 		socketServer->disconnectFromHost();
 	socketServer = new QTcpSocket();
 
-	connect(socketServer, &QTcpSocket::connected,
-	        this, &Client::connected);
+//	connect(socketServer, &QTcpSocket::connected,
+//	        this, &Client::connected);
+//	connect(socketServer, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),
+//	        this, &Client::connectionError);
 
 	socketServer->connectToHost(QHostAddress(host), port);
+	if (!socketServer->waitForConnected())
+		throw QString("Cannot connect to the server");
 
 	connect(socketServer, &QTcpSocket::readyRead,
 	        this, &Client::requestMessage);
@@ -58,6 +62,8 @@ void Client::connectToServer(const QString &host, quint16 port)
 
 void Client::send(const QString &msg)
 {
+	if (!isConnected())
+		throw QString("You did not connected to server");
 	messenger->send(socketServer, msg);
 }
 
@@ -69,5 +75,13 @@ void Client::removeSocket()
 
 void Client::requestMessage()
 {
+	if (!isConnected())
+		throw QString("You did not connected to server");
 	messenger->get(socketServer);
+}
+
+void Client::connectionError(const QAbstractSocket::SocketError error)
+{
+	//throw QString("Cannot connect to the server.");
+	delete socketServer;
 }

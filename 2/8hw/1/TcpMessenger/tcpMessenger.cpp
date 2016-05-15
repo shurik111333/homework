@@ -1,10 +1,10 @@
 #include "tcpMessenger.h"
 
-TcpMessenger::TcpMessenger(QObject *parent):
+TcpMessenger::TcpMessenger(QObject *parent) noexcept:
     QObject(parent)
 {}
 
-void TcpMessenger::send(QTcpSocket *tcpSocket, const QString &msg) const
+void TcpMessenger::send(QTcpSocket *tcpSocket, const QString &msg) const noexcept
 {
 	QByteArray data;
 	QDataStream out(&data, QIODevice::WriteOnly);
@@ -16,7 +16,7 @@ void TcpMessenger::send(QTcpSocket *tcpSocket, const QString &msg) const
 	qDebug() << "Send data. Size:" << size << ", data:" << data.toStdString().c_str();
 }
 
-void TcpMessenger::get(QTcpSocket *tcp)
+void TcpMessenger::get(QTcpSocket *tcp) noexcept
 {
 	qDebug() << "New data from"
 	         << tcp->peerAddress().toString() << ":"
