@@ -13,17 +13,17 @@ MainWidget::MainWidget(QWidget *parent) :
 	ui->lineIP->setText(server->getMyIP());
 	ui->linePort->setText(QString::number(server->getMyPort()));
 
+	connect(ui->buttonSend, &QPushButton::pressed,
+	        this, &MainWidget::sendMsg);
+	connect(ui->lineMessage, &QLineEdit::returnPressed,
+	        this, &MainWidget::sendMsg);
+
 	connect(server, &Server::newClient,
 	        this, &MainWidget::newClient);
 	connect(server, &Server::newMessaage,
 	        this, &MainWidget::getMessage);
 	connect(server, &Server::clientDisconnected,
 	        this, &MainWidget::clientDisconnected);
-
-	connect(ui->buttonSend, &QPushButton::pressed,
-	        this, &MainWidget::sendMsg);
-	connect(ui->buttonSend, &QPushButton::pressed,
-	        ui->lineMessage, &QLineEdit::clear);
 }
 
 MainWidget::~MainWidget()
@@ -46,6 +46,7 @@ QString MainWidget::getClientHost() const
 void MainWidget::sendMsg()
 {
 	QString msg = ui->lineMessage->text();
+	ui->lineMessage->clear();
 	server->sendMessage(msg);
 	addMessage("You", msg);
 }

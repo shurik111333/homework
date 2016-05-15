@@ -16,8 +16,9 @@ MainWidget::MainWidget(QWidget *parent) :
 	        this, &MainWidget::connectToServer);
 	connect(ui->buttonSend, &QPushButton::pressed,
 	        this, &MainWidget::send);
-	connect(ui->buttonSend, &QPushButton::pressed,
-	        ui->lineMessage, &QLineEdit::clear);
+	connect(ui->lineMessage, &QLineEdit::returnPressed,
+	        this, &MainWidget::send);
+
 	connect(client, &Client::newMessage,
 	        this, &MainWidget::getMessage);
 	connect(client, &Client::connected,
@@ -45,6 +46,7 @@ QString MainWidget::getServerHost() const
 void MainWidget::send()
 {
 	QString msg = ui->lineMessage->text();
+	ui->lineMessage->clear();
 	client->send(msg);
 	addMessage("You", msg);
 }
