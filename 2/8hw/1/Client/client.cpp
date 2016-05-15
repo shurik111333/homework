@@ -1,6 +1,6 @@
 #include "client.h"
 
-Client::Client(QObject *parent):
+Client::Client(QObject *parent) noexcept:
     QObject(parent),
     messenger(new TcpMessenger())
 {
@@ -14,38 +14,32 @@ Client::~Client()
 	delete socketServer;
 }
 
-QString Client::getServerIP() const
+QString Client::getServerIP() const noexcept
 {
 	if (!isConnected())
 		return "";
 	return socketServer->peerAddress().toString();
 }
 
-quint16 Client::getServerPort() const
+quint16 Client::getServerPort() const noexcept
 {
 	if (!isConnected())
 		return 0;
 	return socketServer->peerPort();
 }
 
-bool Client::isConnected() const
+bool Client::isConnected() const noexcept
 {
-	return socketServer != nullptr;// && socketServer->isValid();
+	return socketServer != nullptr;
 }
 
-void Client::connectToServer(const QString &host, quint16 port)
+void Client::connectToServer(const QString &host, quint16 port) throw(QString)
 {
 	qDebug() << "Connect to" << host << ":" << port;
 
 	if (socketServer != nullptr)
 		socketServer->disconnectFromHost();
 	socketServer = new QTcpSocket();
-
-//	connect(socketServer, &QTcpSocket::connected,
-//	        this, &Client::connected);
-//	connect(socketServer, static_cast<void (QTcpSocket::*)(QAbstractSocket::SocketError)>(&QTcpSocket::error),
-//	        this, &Client::connectionError);
-
 	socketServer->connectToHost(QHostAddress(host), port);
 	if (!socketServer->waitForConnected())
 		throw QString("Cannot connect to the server");
@@ -60,28 +54,22 @@ void Client::connectToServer(const QString &host, quint16 port)
 	        this, &Client::removeSocket);
 }
 
-void Client::send(const QString &msg)
+void Client::send(const QString &msg) throw(QString)
 {
 	if (!isConnected())
 		throw QString("You did not connected to server");
 	messenger->send(socketServer, msg);
 }
 
-void Client::removeSocket()
+void Client::removeSocket() noexcept
 {
 	qDebug() << "Remove socket";
 	socketServer = nullptr;
 }
 
-void Client::requestMessage()
+void Client::requestMessage() const throw(QString)
 {
 	if (!isConnected())
 		throw QString("You did not connected to server");
 	messenger->get(socketServer);
-}
-
-void Client::connectionError(const QAbstractSocket::SocketError error)
-{
-	//throw QString("Cannot connect to the server.");
-	delete socketServer;
 }

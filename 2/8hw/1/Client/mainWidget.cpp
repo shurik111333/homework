@@ -46,6 +46,8 @@ QString MainWidget::getServerHost() const
 void MainWidget::send()
 {
 	QString msg = ui->lineMessage->text();
+	if (msg == "")
+		return;
 	try
 	{
 		client->send(msg);
@@ -61,7 +63,6 @@ void MainWidget::send()
 void MainWidget::connectToServer()
 {
 	this->setCursor(QCursor(Qt::CursorShape::WaitCursor));
-	//ui->textMessages->append("Connecting...");
 	try
 	{
 		client->connectToServer(ui->lineIP->text(), ui->linePort->text().toInt());

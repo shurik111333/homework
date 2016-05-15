@@ -46,6 +46,8 @@ QString MainWidget::getClientHost() const
 void MainWidget::sendMsg()
 {
 	QString msg = ui->lineMessage->text();
+	if (msg == "")
+		return;
 	try
 	{
 		server->sendMessage(msg);

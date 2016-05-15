@@ -13,7 +13,6 @@ Server::Server(QObject *parent) throw(QString):
 				break;
 	}
 	if (!tcpServer->isListening())
-		//tryToListen(QHostAddress(QHostAddress::LocalHost));
 		throw QString("Cannot listen yor network devices. Please, check it and try again.");
 
 	messenger = new TcpMessenger();
