@@ -76,11 +76,6 @@ void MainWidget::reset()
 	setQuote(0);
 }
 
-void MainWidget::refresh()
-{
-	bash->update();
-}
-
 void MainWidget::updateButtons()
 {
 	ui->buttonPrevious->setDisabled(currentQuote == 0);

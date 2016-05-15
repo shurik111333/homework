@@ -48,7 +48,6 @@ private:
 	QUrl url;
 	QUrl urlRss;
 	QList<QMap<QString, QString>> content;
-	QTemporaryFile xmlFile;
 	QXmlStreamReader xml;
 
 	/// Parse next quote from xml

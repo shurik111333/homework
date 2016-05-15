@@ -30,8 +30,6 @@ private:
 private slots:
 	/// Reset interface to first quote
 	void reset();
-	/// Request new quotes
-	void refresh();
 	/// Update button state(enabled/disabled)
 	void updateButtons();
 	void updateContent();
