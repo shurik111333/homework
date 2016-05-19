@@ -14,3 +14,9 @@ int CellButton::y() const
 {
 	return cellY;
 }
+
+void CellButton::reset()
+{
+	setText("");
+	setEnabled(true);
+}

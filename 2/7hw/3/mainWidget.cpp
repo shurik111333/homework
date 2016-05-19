@@ -1,13 +1,13 @@
-#include <QLabel>
 #include <QDialogButtonBox>
 #include "mainWidget.h"
 #include "ui_mainWidget.h"
-#include <bits/stdc++.h>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MainWidget),
-    size(3)
+    //ui(new Ui::MainWidget),
+    game(new TicTacToe(this)),
+    buttonsMapper(new QSignalMapper(this)),
+    size(minSize)
 {
 	mainLayout = new QVBoxLayout(this);
 	buttonsLayout = new QGridLayout();
@@ -16,8 +16,10 @@ MainWidget::MainWidget(QWidget *parent) :
 	const auto buttonNewGame = new QPushButton("New game");
 	const auto labelSize = new QLabel("Size:");
 	boxFieldSize = new QSpinBox();
-	const auto labelToWin = new QLabel("Length of chain to win:");
+	const auto labelToWin = new QLabel("Chain to win:");
 	boxToWin = new QSpinBox();
+	const auto labelPlayer = new QLabel("Player");
+	labelPlayerSign = new QLabel(QString(game->getPlayer()));
 
 	boxFieldSize->setMinimum(minSize);
 	boxFieldSize->setMaximum(maxSize);
@@ -29,46 +31,49 @@ MainWidget::MainWidget(QWidget *parent) :
 	panelLayout->addWidget(boxFieldSize);
 	panelLayout->addWidget(labelToWin);
 	panelLayout->addWidget(boxToWin);
+	panelLayout->addWidget(labelPlayer);
+	panelLayout->addWidget(labelPlayerSign);
 	panelLayout->addStretch();
 
 	mainLayout->addLayout(panelLayout);
 	mainLayout->addLayout(buttonsLayout);
 
+	connect(buttonNewGame, &QPushButton::pressed,
+	        this, &MainWidget::startNewGame);
 	connect(boxFieldSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+	        this, &MainWidget::startNewGame);
+	connect(boxToWin, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
 	        this, &MainWidget::startNewGame);
 	connect(this, &MainWidget::newGame,
 	        this, &MainWidget::setMaxChainToWin);
+	connect(buttonsMapper, static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
+	        this, &MainWidget::step);
+	connect(this, &MainWidget::newGame,
+	        game, &TicTacToe::newGame);
+	connect(game, &TicTacToe::gameOver,
+	        this, &MainWidget::gameOver);
 	createButtons();
 	startNewGame();
 }
 
 MainWidget::~MainWidget()
 {
-	delete ui;
+	delete boxFieldSize;
+	delete boxToWin;
+	for (auto button : buttons)
+		delete button;
+	delete buttonsLayout;
+	delete mainLayout;
+	delete game;
 }
 
 void MainWidget::drawField()
 {
-//	for (int i = 0; i < size; i++)
-//	{
-//		for (int j = 0; j < size; j++)
-//		{
-//			auto button = new CellButton(i, j);
-//			buttonsLayout->addWidget(button, i, j);
-//			buttons.push_back(button);
-//		}
-//	}
 	for (auto button : buttons)
 	{
+		button->reset();
 		button->setVisible(button->x() < size && button->y() < size);
 	}
-}
-
-void MainWidget::removeField()
-{
-//	for (auto button : buttons)
-//		delete button;
-//	buttons.clear();
 }
 
 void MainWidget::createButtons()
@@ -81,8 +86,13 @@ void MainWidget::createButtons()
 			button->setVisible(false);
 			buttonsLayout->addWidget(button, i, j);
 			buttons.push_back(button);
+
+			buttonsMapper->setMapping(button, button);
+			connect(button, &CellButton::pressed,
+			        buttonsMapper, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
 		}
 	}
+	buttonsLayout->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void MainWidget::setNewSize()
@@ -92,7 +102,6 @@ void MainWidget::setNewSize()
 
 void MainWidget::startNewGame()
 {
-	removeField();
 	setNewSize();
 	drawField();
 	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
@@ -102,4 +111,18 @@ void MainWidget::startNewGame()
 void MainWidget::setMaxChainToWin(int size)
 {
 	boxToWin->setMaximum(size);
+}
+
+void MainWidget::gameOver(char winner)
+{
+	qDebug() << winner << " wins!\n";
+}
+
+void MainWidget::step(QWidget *widget)
+{
+	CellButton *button = static_cast<CellButton*>(widget);
+	button->setText(QString(game->getPlayer()));
+	button->setEnabled(false);
+	game->doStep(button->x(), button->y());
+	labelPlayerSign->setText(QString(game->getPlayer()));
 }

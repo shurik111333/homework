@@ -15,9 +15,11 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         mainWidget.cpp \
-    cellButton.cpp
+    cellButton.cpp \
+    ticTacToe.cpp
 
 HEADERS  += mainWidget.h \
-    cellButton.h
+    cellButton.h \
+    ticTacToe.h
 
 FORMS    += mainWidget.ui

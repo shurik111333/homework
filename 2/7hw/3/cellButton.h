@@ -10,6 +10,7 @@ public:
 
 	int x() const;
 	int y() const;
+	void reset();
 
 signals:
 	void mySignal();
