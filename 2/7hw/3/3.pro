@@ -14,8 +14,10 @@ TEMPLATE = app
 CONFIG += c++11
 
 SOURCES += main.cpp\
-        mainWidget.cpp
+        mainWidget.cpp \
+    cellButton.cpp
 
-HEADERS  += mainWidget.h
+HEADERS  += mainWidget.h \
+    cellButton.h
 
 FORMS    += mainWidget.ui

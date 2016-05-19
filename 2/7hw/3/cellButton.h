@@ -1,0 +1,20 @@
+#pragma once
+
+#include <QtCore/QObject>
+#include <QPushButton>
+
+class CellButton : public QPushButton
+{
+public:
+	CellButton(const int x, const int y);
+
+	int x() const;
+	int y() const;
+
+signals:
+	void mySignal();
+
+private:
+	int cellX;
+	int cellY;
+};

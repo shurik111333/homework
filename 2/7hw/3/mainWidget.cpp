@@ -1,31 +1,45 @@
-#include <QSpinBox>
+#include <QLabel>
+#include <QDialogButtonBox>
 #include "mainWidget.h"
 #include "ui_mainWidget.h"
+#include <bits/stdc++.h>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MainWidget),
     size(3)
 {
-	//ui->setupUi(this);
 	mainLayout = new QVBoxLayout(this);
 	buttonsLayout = new QGridLayout();
 	auto panelLayout = new QHBoxLayout();
 
 	const auto buttonNewGame = new QPushButton("New game");
-	const auto spinBoxFieldSize = new QSpinBox();
-	spinBoxFieldSize->setMaximum(maxSize);
-	spinBoxFieldSize->setMinimum(minSize);
+	const auto labelSize = new QLabel("Size:");
+	boxFieldSize = new QSpinBox();
+	const auto labelToWin = new QLabel("Length of chain to win:");
+	boxToWin = new QSpinBox();
+
+	boxFieldSize->setMinimum(minSize);
+	boxFieldSize->setMaximum(maxSize);
+	boxToWin->setMinimum(minSize);
+	boxToWin->setMaximum(boxFieldSize->value());
 
 	panelLayout->addWidget(buttonNewGame);
-	panelLayout->addWidget(spinBoxFieldSize);
+	panelLayout->addWidget(labelSize);
+	panelLayout->addWidget(boxFieldSize);
+	panelLayout->addWidget(labelToWin);
+	panelLayout->addWidget(boxToWin);
+	panelLayout->addStretch();
 
 	mainLayout->addLayout(panelLayout);
 	mainLayout->addLayout(buttonsLayout);
 
-	//	connect(spinBoxFieldSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
-	//	        this, &MainWidget::newSize);
-	drawField();
+	connect(boxFieldSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
+	        this, &MainWidget::startNewGame);
+	connect(this, &MainWidget::newGame,
+	        this, &MainWidget::setMaxChainToWin);
+	createButtons();
+	startNewGame();
 }
 
 MainWidget::~MainWidget()
@@ -35,36 +49,57 @@ MainWidget::~MainWidget()
 
 void MainWidget::drawField()
 {
-	//	for (int i = 0; i < maxSize; i++)
-	//		for (int j = 0; j < maxSize; j++)
-	//		{
-	//			buttons[i][j]->setVisible(i < size && j < size);
-	//		}
-	for (int i = 0; i < size; i++)
+//	for (int i = 0; i < size; i++)
+//	{
+//		for (int j = 0; j < size; j++)
+//		{
+//			auto button = new CellButton(i, j);
+//			buttonsLayout->addWidget(button, i, j);
+//			buttons.push_back(button);
+//		}
+//	}
+	for (auto button : buttons)
 	{
-		for (int j = 0; j < size; j++)
-		{
-			buttonsLayout->addWidget(new QPushButton(), i, j);
-		}
+		button->setVisible(button->x() < size && button->y() < size);
 	}
+}
+
+void MainWidget::removeField()
+{
+//	for (auto button : buttons)
+//		delete button;
+//	buttons.clear();
 }
 
 void MainWidget::createButtons()
 {
 	for (int i = 0; i < maxSize; i++)
 	{
-		buttons.push_back(QList<QPushButton*>());
 		for (int j = 0; j < maxSize; j++)
 		{
-			buttons[i].push_back(new QPushButton());
-			buttons[i][j]->setVisible(false);
-			buttonsLayout->addWidget(buttons[i][j], i + 1, j);
+			auto button = new CellButton(i, j);
+			button->setVisible(false);
+			buttonsLayout->addWidget(button, i, j);
+			buttons.push_back(button);
 		}
 	}
 }
 
-void MainWidget::newSize(int newSize)
+void MainWidget::setNewSize()
 {
-	size = newSize;
+	size = boxFieldSize->value();
+}
+
+void MainWidget::startNewGame()
+{
+	removeField();
+	setNewSize();
 	drawField();
+	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+	emit newGame(boxFieldSize->value(), boxToWin->value());
+}
+
+void MainWidget::setMaxChainToWin(int size)
+{
+	boxToWin->setMaximum(size);
 }
