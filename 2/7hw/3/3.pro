@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,6 +20,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainWidget.h \
     cellButton.h \
-    ticTacToe.h
+    ticTacToe.h \
+    ticTacToeTest.h
 
 FORMS    += mainWidget.ui
