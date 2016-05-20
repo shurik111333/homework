@@ -4,7 +4,7 @@
 #include "comparator.h"
 #include "bubbleSorter.h"
 
-/// Sorts list of objects with input comparator. Use algorithm bubble sort.
+/// Sorts list of objects with input comparator. Uses algorithm bubble sort.
 template <typename T>
 class BubbleSorter
 {
@@ -12,7 +12,7 @@ public:
 	BubbleSorter()
 	{}
 
-	/// @brief Sort elements in the list.
+	/// @brief Sorts elements in the list.
 	void sort(QList<T> &array, Comparator<T> *cmp) const;
 };
 
