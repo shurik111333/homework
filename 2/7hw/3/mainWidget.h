@@ -54,4 +54,5 @@ private slots:
 	void setMaxChainToWin(int size);
 	void gameOver(char winner);
 	void step(QWidget *widget);
+	void doStep(int x, int y, char player) const;
 };

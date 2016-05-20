@@ -18,7 +18,6 @@ MainWidget::MainWidget(QWidget *parent) :
 	const auto labelToWin = new QLabel("Chain to win:");
 	boxToWin = new QSpinBox();
 	const auto labelPlayer = new QLabel("Player");
-	labelPlayerSign = new QLabel(QString(game->getPlayer()));
 
 	boxFieldSize->setMinimum(minSize);
 	boxFieldSize->setMaximum(maxSize);
@@ -51,6 +50,8 @@ MainWidget::MainWidget(QWidget *parent) :
 	        game, &TicTacToe::newGame);
 	connect(game, &TicTacToe::gameOver,
 	        this, &MainWidget::gameOver);
+	connect(game, &TicTacToe::stepIsDone,
+	        this, &MainWidget::doStep);
 
 	winMsg = new QMessageBox(QMessageBox::Information, QString("Game over"), QString(),
 	                         QMessageBox::Ok);
@@ -88,6 +89,7 @@ void MainWidget::createButtons()
 		for (int j = 0; j < maxSize; j++)
 		{
 			auto button = new CellButton(i, j);
+			button->setText(" ");
 			button->setVisible(false);
 			buttonsLayout->addWidget(button, i, j);
 			buttons.push_back(button);
@@ -97,7 +99,7 @@ void MainWidget::createButtons()
 			        buttonsMapper, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
 		}
 	}
-	buttonsLayout->setSizeConstraint(QLayout::SetFixedSize);
+	//buttonsLayout->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void MainWidget::setNewSize()
@@ -110,6 +112,7 @@ void MainWidget::startNewGame()
 	setNewSize();
 	drawField();
 	mainLayout->setSizeConstraint(QLayout::SetFixedSize);
+	labelPlayerSign->setText(QString(game->getStartPlayer()));
 	emit newGame(boxFieldSize->value(), boxToWin->value());
 }
 
@@ -128,8 +131,13 @@ void MainWidget::gameOver(char winner)
 void MainWidget::step(QWidget *widget)
 {
 	CellButton *button = static_cast<CellButton*>(widget);
-	button->setText(QString(game->getPlayer()));
-	button->setEnabled(false);
 	game->doStep(button->x(), button->y());
 	labelPlayerSign->setText(QString(game->getPlayer()));
+}
+
+void MainWidget::doStep(int x, int y, char player) const
+{
+	CellButton *button = buttons[x * maxSize + y];
+	button->setText(QString(player));
+	button->setEnabled(false);
 }

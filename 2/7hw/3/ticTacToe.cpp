@@ -5,16 +5,25 @@ using std::cerr;
 
 TicTacToe::TicTacToe(QObject *parent):
     QObject(parent)
-{}
+{
+	connect(this, &TicTacToe::gameOver,
+	        this, &TicTacToe::endGame);
+}
 
 char TicTacToe::getPlayer() const
 {
 	return player[currentPlayer];
 }
 
+char TicTacToe::getStartPlayer() const
+{
+	return player[0];
+}
+
 void TicTacToe::newGame(int size, int winChain)
 {
 	isFirst = true;
+	isOver = false;
 	win = winChain;
 	this->size = size;
 	currentPlayer = 0;
@@ -23,11 +32,14 @@ void TicTacToe::newGame(int size, int winChain)
 
 void TicTacToe::doStep(int x, int y)
 {
+	if (isOver)
+		return;
 	if (isFirst)
 		createField();
 	lastX = x;
 	lastY = y;
 	field[x][y] = getPlayer();
+	emit stepIsDone(x, y, getPlayer());
 	checkWin();
 	currentPlayer = (currentPlayer + 1) % 2;
 }
@@ -72,4 +84,9 @@ void TicTacToe::checkChain(int dx, int dy) const
 bool TicTacToe::inField(int x, int y) const
 {
 	return (x >= 0 && x < size && y >= 0 && y < size);
+}
+
+void TicTacToe::endGame()
+{
+	isOver = true;
 }

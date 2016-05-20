@@ -10,9 +10,11 @@ public:
 	explicit TicTacToe(QObject *parent = 0);
 
 	char getPlayer() const;
+	char getStartPlayer() const;
 
 signals:
 	void gameOver(char winner) const;
+	void stepIsDone(int x, int y, char player) const;
 
 public slots:
 	void newGame(int size, int winChain);
@@ -28,9 +30,13 @@ private:
 	int lastX = 0;
 	int lastY = 0;
 	bool isFirst = true;
+	bool isOver = false;
 
 	void createField();
 	void checkWin() const;
 	void checkChain(int dx, int dy) const;
 	bool inField(int x, int y) const;
+
+private slots:
+	void endGame();
 };
