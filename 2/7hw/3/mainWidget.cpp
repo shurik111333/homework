@@ -36,25 +36,29 @@ MainWidget::MainWidget(QWidget *parent) :
 	mainLayout->addLayout(panelLayout);
 	mainLayout->addLayout(buttonsLayout);
 
+	winMsg = new QMessageBox(QMessageBox::Information, QString("Game over"), QString(),
+	                         QMessageBox::Ok);
+
 	connect(buttonNewGame, &QPushButton::pressed,
 	        this, &MainWidget::startNewGame);
 	connect(boxFieldSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
 	        this, &MainWidget::startNewGame);
 	connect(boxToWin, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged),
 	        this, &MainWidget::startNewGame);
+
 	connect(this, &MainWidget::newGame,
 	        this, &MainWidget::setMaxChainToWin);
-	connect(buttonsMapper, static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
-	        this, &MainWidget::step);
 	connect(this, &MainWidget::newGame,
 	        game, &TicTacToe::newGame);
+
+	connect(buttonsMapper, static_cast<void (QSignalMapper::*)(QWidget*)>(&QSignalMapper::mapped),
+	        this, &MainWidget::step);
+
 	connect(game, &TicTacToe::gameOver,
 	        this, &MainWidget::gameOver);
 	connect(game, &TicTacToe::stepIsDone,
 	        this, &MainWidget::doStep);
 
-	winMsg = new QMessageBox(QMessageBox::Information, QString("Game over"), QString(),
-	                         QMessageBox::Ok);
 	connect(winMsg, &QMessageBox::accepted, winMsg, &QMessageBox::close);
 
 	createButtons();
@@ -122,7 +126,6 @@ void MainWidget::setMaxChainToWin(int size)
 
 void MainWidget::gameOver(char winner)
 {
-	qDebug() << winner << " wins!\n";
 	winMsg->setText("Player " + QString(winner) + " wins!");
 	winMsg->show();
 }
