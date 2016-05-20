@@ -3,6 +3,7 @@
 #include <QtCore/QObject>
 #include <QPushButton>
 
+/// Button for a Tic Tac Toe game field
 class CellButton : public QPushButton
 {
 public:
@@ -10,12 +11,14 @@ public:
 
 	int x() const;
 	int y() const;
+	/// @brief Reset button to default state
 	void reset();
 
 signals:
 	void mySignal();
 
 private:
+	// Button's coordinates on field
 	int cellX;
 	int cellY;
 };

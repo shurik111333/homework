@@ -52,7 +52,10 @@ private slots:
 	void setNewSize();
 	void startNewGame();
 	void setMaxChainToWin(int size);
+	/// @brief Generates notification when game is over
 	void gameOver(char winner);
+	/// @brief Calls when user do a step
 	void step(QWidget *widget);
+	/// @brief Calls when step has confirmed and displays result
 	void doStep(int x, int y, char player) const;
 };
