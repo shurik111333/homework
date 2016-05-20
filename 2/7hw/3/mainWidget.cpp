@@ -3,7 +3,6 @@
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent),
-    //ui(new Ui::MainWidget),
     game(new TicTacToe(this)),
     buttonsMapper(new QSignalMapper(this)),
     size(minSize)
@@ -18,6 +17,7 @@ MainWidget::MainWidget(QWidget *parent) :
 	const auto labelToWin = new QLabel("Chain to win:");
 	boxToWin = new QSpinBox();
 	const auto labelPlayer = new QLabel("Player");
+	labelPlayerSign = new QLabel();
 
 	boxFieldSize->setMinimum(minSize);
 	boxFieldSize->setMaximum(maxSize);
@@ -89,7 +89,7 @@ void MainWidget::createButtons()
 		for (int j = 0; j < maxSize; j++)
 		{
 			auto button = new CellButton(i, j);
-			button->setText(" ");
+			button->setFixedSize(50, 50);
 			button->setVisible(false);
 			buttonsLayout->addWidget(button, i, j);
 			buttons.push_back(button);
@@ -99,7 +99,6 @@ void MainWidget::createButtons()
 			        buttonsMapper, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
 		}
 	}
-	//buttonsLayout->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void MainWidget::setNewSize()
