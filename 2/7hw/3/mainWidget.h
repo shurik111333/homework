@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDebug>
+#include <QMessageBox>
 #include <QtCore/QObject>
 #include <QLabel>
 #include <QWidget>
@@ -38,6 +39,7 @@ private:
 	QList<CellButton*> buttons;
 	TicTacToe *game;
 	QSignalMapper *buttonsMapper;
+	QMessageBox *winMsg;
 
 	int size;
 	static const int minSize = 3;

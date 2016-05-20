@@ -1,4 +1,3 @@
-#include <QDialogButtonBox>
 #include "mainWidget.h"
 #include "ui_mainWidget.h"
 
@@ -52,6 +51,11 @@ MainWidget::MainWidget(QWidget *parent) :
 	        game, &TicTacToe::newGame);
 	connect(game, &TicTacToe::gameOver,
 	        this, &MainWidget::gameOver);
+
+	winMsg = new QMessageBox(QMessageBox::Information, QString("Game over"), QString(),
+	                         QMessageBox::Ok);
+	connect(winMsg, &QMessageBox::accepted, winMsg, &QMessageBox::close);
+
 	createButtons();
 	startNewGame();
 }
@@ -65,6 +69,7 @@ MainWidget::~MainWidget()
 	delete buttonsLayout;
 	delete mainLayout;
 	delete game;
+	delete winMsg;
 }
 
 void MainWidget::drawField()
@@ -116,6 +121,8 @@ void MainWidget::setMaxChainToWin(int size)
 void MainWidget::gameOver(char winner)
 {
 	qDebug() << winner << " wins!\n";
+	winMsg->setText("Player " + QString(winner) + " wins!");
+	winMsg->show();
 }
 
 void MainWidget::step(QWidget *widget)
