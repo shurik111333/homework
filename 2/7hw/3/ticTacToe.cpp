@@ -22,7 +22,7 @@ char TicTacToe::getStartPlayer() const
 
 void TicTacToe::newGame(int size, int winChain)
 {
-	isFirst = true;
+	isStart = true;
 	isOver = false;
 	win = winChain;
 	this->size = size;
@@ -32,10 +32,10 @@ void TicTacToe::newGame(int size, int winChain)
 
 void TicTacToe::doStep(int x, int y)
 {
-	if (isOver)
-		return;
-	if (isFirst)
+	if (isStart)
 		createField();
+	if (isOver || field[x][y] != emptyCell)
+		return;
 	lastX = x;
 	lastY = y;
 	field[x][y] = getPlayer();
@@ -53,7 +53,7 @@ void TicTacToe::createField()
 		for (int j = 0; j < size; j++)
 			field[i].push_back(emptyCell);
 	}
-	isFirst = false;
+	isStart = false;
 }
 
 void TicTacToe::checkWin() const
