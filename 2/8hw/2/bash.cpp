@@ -20,7 +20,7 @@ Bash::~Bash()
 
 void Bash::update() const
 {
-	manager->get(QNetworkRequest(urlRss));
+    manager->get(QNetworkRequest(urlRss));
 }
 
 QString Bash::getValue(int index, const QString &field) const
@@ -69,7 +69,7 @@ void Bash::parseQuoteToMap()
 
 void Bash::updateContent()
 {
-	content.clear();
+    content.clear();
 	while (!xml.atEnd())
 	{
 		auto token = xml.readNext();
@@ -109,7 +109,7 @@ void Bash::sendPost(const QUrl &url, const QString &data) const
 
 void Bash::sendPost(const QUrl &url, const QByteArray &data) const
 {
-	auto request = QNetworkRequest(url);
+    auto request = QNetworkRequest(url);
 	request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
 	request.setHeader(QNetworkRequest::ContentLengthHeader, data.length());
 
@@ -130,5 +130,7 @@ void Bash::getResponse(QNetworkReply *reply)
 	}
 	if (reply->url() == urlRss)
 		getUpdate(reply);
+    reply->close();
+    reply->deleteLater();
 }
 
