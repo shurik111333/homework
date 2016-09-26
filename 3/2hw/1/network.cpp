@@ -4,13 +4,15 @@
 #include "oswindows.h"
 #include "osmac.h"
 #include "oslinux.h"
+#include "networkgeneratorcomplete.h"
 
 Network::Network(int count):
-    count(count)
+    count(count),
+    networkGenerator(new NetworkGeneratorComplete())
 {
 	srand(time(0));
 	computers.resize(count);
-	network.resize(count);
+	network = networkGenerator->generate(count);
 	for (int i = 0; i < count; i++)
 	{
 		int x = rand() % 3;
@@ -28,10 +30,6 @@ Network::Network(int count):
 				break;
 		}
 		computers[i] = Computer(os);
-
-		network[i].resize(count);
-		for (int j = 0; j < count; j++)
-			network[i][j] = (i != j);
 	}
 	computers[rand() % count].setInfected(true);
 	infectedCount = 1;

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "computer.h"
+#include "inetworkgenerator.h"
 
 using std::vector;
 
@@ -17,6 +18,7 @@ public:
 private:
 	int count = 0;
 	int infectedCount = 0;
+	INetworkGenerator *networkGenerator = nullptr;
 	vector<Computer> computers;
 	vector<vector<bool>> network;
 };

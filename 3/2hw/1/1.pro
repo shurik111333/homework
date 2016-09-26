@@ -5,7 +5,8 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     network.cpp \
-    computer.cpp
+    computer.cpp \
+    networkgeneratorcomplete.cpp
 
 HEADERS += \
     network.h \
@@ -13,4 +14,6 @@ HEADERS += \
     oswindows.h \
     oslinux.h \
     osmac.h \
-    computer.h
+    computer.h \
+    inetworkgenerator.h \
+    networkgeneratorcomplete.h
