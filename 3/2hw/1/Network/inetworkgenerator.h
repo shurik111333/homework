@@ -8,6 +8,8 @@ using std::vector;
 class INetworkGenerator
 {
 public:
+	virtual ~INetworkGenerator()
+	{}
 	/**
 	 * @brief generate Generates adjacency matrix
 	 * @param size Number of vertex

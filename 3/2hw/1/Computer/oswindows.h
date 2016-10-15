@@ -9,6 +9,11 @@ public:
 	    OS(40)
 	{}
 
+	virtual string getName() const
+	{
+		return "Windows";
+	}
+
 private:
 	static const int infectionChance = 40;
 };

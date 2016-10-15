@@ -1,19 +1,25 @@
 TEMPLATE = app
-CONFIG += console c++11
+CONFIG += qt console c++11
 CONFIG -= app_bundle
-CONFIG -= qt
+QT += testlib
 
 SOURCES += main.cpp \
-    network.cpp \
-    computer.cpp \
-    networkgeneratorcomplete.cpp
+    Computer/computer.cpp \
+    Network/network.cpp \
+    Network/networkgeneratorcomplete.cpp \
+    Virus/randomvirus.cpp \
+    Virus/testvirus.cpp
 
 HEADERS += \
-    network.h \
-    os.h \
-    oswindows.h \
-    oslinux.h \
-    osmac.h \
-    computer.h \
-    inetworkgenerator.h \
-    networkgeneratorcomplete.h
+    Computer/computer.h \
+    Computer/os.h \
+    Computer/oslinux.h \
+    Computer/osmac.h \
+    Computer/oswindows.h \
+    Network/inetworkgenerator.h \
+    Network/network.h \
+    Network/networkgeneratorcomplete.h \
+    Network/networktest.h \
+    Virus/ivirus.h \
+    Virus/randomvirus.h \
+    Virus/testvirus.h
