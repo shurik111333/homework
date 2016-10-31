@@ -19,7 +19,7 @@ public:
 
 	/// DO a next step of infection
 	void nextStep();
-	const vector<Computer*> &getComputers() const;
+	const vector<Computer*> getInfectedComputers() const;
 	/// Return number of infected computers
 	int getInfectedCount() const;
 	/// Print infection computers to out

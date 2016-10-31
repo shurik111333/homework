@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ivirus.h"
+#include "Virus/ivirus.h"
 
 //Virus for unit test. Always infect computer
 class TestVirus : public IVirus

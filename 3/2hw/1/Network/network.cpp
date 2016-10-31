@@ -29,27 +29,28 @@ Network::~Network()
 
 void Network::nextStep()
 {
-	for (int i = 0; i < count; i++)
+	auto comps = getInfectedComputers();
+	for (auto c : comps)
 	{
-		if (!computers[i]->isInfected())
-			continue;
-
 		for (int j = 0; j < count; j++)
 		{
-			if (!network[i][j] || computers[j]->isInfected())
+			if (!network[c->getId()][j] || computers[j]->isInfected())
 				continue;
 			if (virus->tryInfect(*computers[j]))
 			{
-				computers[j]->setInfected(true);
 				infectedCount++;
 			}
 		}
 	}
 }
 
-const vector<Computer*> &Network::getComputers() const
+const vector<Computer*> Network::getInfectedComputers() const
 {
-	return computers;
+	vector<Computer *> res;
+	for (auto c : computers)
+		if (c->isInfected())
+			res.push_back(c);
+	return res;
 }
 
 int Network::getInfectedCount() const

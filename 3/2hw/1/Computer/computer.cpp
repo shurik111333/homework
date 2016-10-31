@@ -25,7 +25,7 @@ bool Computer::isInfected() const
 	return infected;
 }
 
-int Computer::getId()
+int Computer::getId() const
 {
 	return id;
 }

@@ -9,7 +9,7 @@
 #include "Computer/osmac.h"
 #include "Virus/randomvirus.h"
 
-#include "Network/networktest.h"
+#include "Tests/networktest.h"
 
 using namespace std;
 
@@ -53,9 +53,12 @@ int main(int argc, char *argv[])
 	NetworkTest test;
 	QTest::qExec(&test);
 
-	cout << "Enter number of computers" << endl;
 	int n = 0;
-	cin >> n;
+	while (n <= 0)
+	{
+		cout << "Enter positive number of computers" << endl;
+		cin >> n;
+	}
 	auto computers = getComputers(n);
 	printComputers(*computers);
 

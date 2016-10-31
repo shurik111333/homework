@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += qt console c++11
+CONFIG += console c++11
 CONFIG -= app_bundle
 QT += testlib
 
@@ -8,7 +8,7 @@ SOURCES += main.cpp \
     Network/network.cpp \
     Network/networkgeneratorcomplete.cpp \
     Virus/randomvirus.cpp \
-    Virus/testvirus.cpp
+    Tests/testvirus.cpp
 
 HEADERS += \
     Computer/computer.h \
@@ -19,7 +19,8 @@ HEADERS += \
     Network/inetworkgenerator.h \
     Network/network.h \
     Network/networkgeneratorcomplete.h \
-    Network/networktest.h \
     Virus/ivirus.h \
     Virus/randomvirus.h \
-    Virus/testvirus.h
+    Tests/networktest.h \
+    Tests/testvirus.h \
+    Tests/testnetworkgenerator.h
