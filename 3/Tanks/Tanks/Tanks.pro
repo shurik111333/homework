@@ -13,6 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        Views/mainwindow.cpp
+        Views/mainwindow.cpp \
+    Controllers/landscapecontrollerfixed.cpp
 
-HEADERS  += Views/mainwindow.h
+HEADERS  += Views/mainwindow.h \
+    Controllers/landscapecontrollerfixed.h \
+    Controllers/ilandscapecontroller.h

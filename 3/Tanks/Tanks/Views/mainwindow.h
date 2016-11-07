@@ -20,5 +20,7 @@ public:
 private:
 	QVBoxLayout *mainLayout = nullptr;
 	QGraphicsScene scene;
-	QGraphicsView *view;
+	QGraphicsView *view = nullptr;
+
+	void drawLandscape(const QList<QPointF> &land);
 };
