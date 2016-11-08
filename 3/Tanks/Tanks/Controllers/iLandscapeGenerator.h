@@ -3,7 +3,7 @@
 #include <QList>
 #include <QPoint>
 
-class ILandscapeController
+class ILandscapeGenerator
 {
 public:
 	/**
@@ -14,6 +14,6 @@ public:
 	virtual QList<QPointF> getLandscape() const = 0;
 
 protected:
-	ILandscapeController()
+	ILandscapeGenerator()
 	{}
 };

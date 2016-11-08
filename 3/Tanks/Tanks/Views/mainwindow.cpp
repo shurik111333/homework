@@ -1,10 +1,11 @@
 #include "mainwindow.h"
-#include "Controllers/landscapecontrollerfixed.h"
+#include "Controllers/landscapeGeneratorFixed.h"
 #include <QHBoxLayout>
 #include <QPushButton>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent),
+      controller(new MainWindowController())
 {
 	mainLayout = new QVBoxLayout();
 	auto widget = new QWidget(this);
@@ -26,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 	view->scale(1, -1);
 	scene.setSceneRect(0, 0, 1000, 500);
 
-	drawLandscape(LandscapeControllerFixed::getInstance()->getLandscape());
+	drawLandscape(controller->getLandscape());
 
 	adjustSize();
 	setFixedSize(geometry().width(), geometry().height());

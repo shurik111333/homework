@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include "Controllers/mainwindowController.h"
 
 namespace Ui {
 	class MainWindow;
@@ -21,6 +22,7 @@ private:
 	QVBoxLayout *mainLayout = nullptr;
 	QGraphicsScene scene;
 	QGraphicsView *view = nullptr;
+	MainWindowController *controller = nullptr;
 
 	void drawLandscape(const QList<QPointF> &land);
 };
