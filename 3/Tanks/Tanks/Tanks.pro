@@ -17,7 +17,9 @@ SOURCES += main.cpp\
     Model/Landscape/landscapeGeneratorFixed.cpp \
     Model/Cannon/cannonSimple.cpp \
     Controllers/gameController.cpp \
-    Model/Player/localplayer.cpp
+    Model/Player/localplayer.cpp \
+    Model/Landscape/ilandscapegenerator.cpp \
+    Model/Cannon/icannon.cpp
 
 HEADERS  += Views/mainwindow.h \
     Model/Landscape/iLandscapeGenerator.h \

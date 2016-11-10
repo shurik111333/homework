@@ -7,5 +7,4 @@ class LocalPlayer : public IPlayer
 {
 public:
 	LocalPlayer(ICannon *cannon, const QString &name);
-
 };

@@ -5,15 +5,18 @@
 #include <algorithm>
 #include <QBrush>
 #include <ctime>
+#include <QDebug>
+
+QDEBUG_H
 
 GameController::GameController(QObject *parent)
     : QObject(parent),
       landscape(LandscapeGeneratorFixed::getInstance())
 {
-
+	qsrand(time(0));
 }
 
-QList<QPointF> GameController::getLandscape() const
+const QList<QPointF> &GameController::getLandscape() const
 {
 	return landscape->getLandscape();
 }
@@ -27,7 +30,29 @@ void GameController::startGame()
 	players.append(new LocalPlayer(createCannon(land[0].x(), land[1].x(), Qt::red), "Player1"));
 	players.append(new LocalPlayer(createCannon(land[land.length() - 2].x(),
 	                               land[land.length() - 1].x(), Qt::blue), "Player2"));
+	player = players.constBegin();
 	emit newGame();
+}
+
+void GameController::keyPress(Qt::Key key)
+{
+	ICannon *cannon = (*player)->getCannon();
+	switch (key)
+	{
+		case Qt::Key_D:
+			moveRight(cannon);
+			break;
+		case Qt::Key_A:
+			moveLeft(cannon);
+			break;
+		case Qt::Key_W:
+			cannon->moveGunUp();
+			break;
+		case Qt::Key_S:
+			cannon->moveGunDown();
+		default:
+			return;
+	}
 }
 
 const QVector<IPlayer *> &GameController::getPlayers() const
@@ -37,24 +62,36 @@ const QVector<IPlayer *> &GameController::getPlayers() const
 
 ICannon *GameController::createCannon(double x0, double x1, const QBrush &brush) const
 {
-	qsrand(time(0));
 	auto land = getLandscape();
-	x0 = std::max(land[0].x(), x0);
-	x1 = std::min(land[land.length() - 1].x(), x1);
+
+	double x = rand(std::max(land[0].x(), x0), std::min(land[land.length() - 1].x(), x1));
+
+	auto p = landscape->getPoint(x);
+	return new CannonSimple(p.x(), p.y(), brush);
+}
+
+void GameController::moveRight(ICannon *cannon) const
+{
+	moveCannon(cannon, step);
+}
+
+void GameController::moveLeft(ICannon *cannon) const
+{
+	moveCannon(cannon, -step);
+}
+
+void GameController::moveCannon(ICannon *cannon, double step) const
+{
+	qDebug() << "pos: " << cannon->pos();
+	QPointF pos = cannon->mapFromScene(cannon->pos());
+	qDebug() << "map from scene: " << pos;
+	double dx = cannon->boundingRect().center().x();
+	auto p = landscape->getPoint(cannon->pos().x() + dx + step);
+	cannon->setPos(p.x() - dx, p.y());
+}
+
+double GameController::rand(double x0, double x1) const
+{
 	double d = (double) qrand() / RAND_MAX;
-	double x = x0 + d * (x1 - x0);  //generate random x in [x0; x1]
-	QPointF left = land[0];
-	QPointF right;
-	for (auto p : land)
-	{
-		if (p.x() < x)
-			left = p;
-		else
-		{
-			right = p;
-			break;
-		}
-	}
-	double y = left.y() + (right.y() - left.y()) * ((x - left.x()) / (right.x() - left.x()));
-	return new CannonSimple(x, y, brush);
+	return x0 + d * (x1 - x0);
 }

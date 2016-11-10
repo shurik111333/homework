@@ -11,29 +11,39 @@ CannonSimple::CannonSimple(double x, double y, const QBrush &brush, double width
     gunh(5),
     brush(brush)
 {
-	body = QRectF(x - bodyw / 2, y, bodyw, bodyh);
-	gun = QRectF(body.left() + bodyw / 2, body.top() + bodyh - gunh / 2, gunw, gunh);
+	setPos(x, y); //it is need for matching cannon's and scene's coordinate systems
 }
 
 QRectF CannonSimple::boundingRect() const
 {
-	return QRectF(body.left(), body.top(), body.width(), body.height() + gun.width());
+	return QRectF(0, 0, bodyw, bodyh + gunw);
 }
 
 void CannonSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	QPen pen(Qt::black, 1);
 	painter->setPen(pen);
-	double dx = gun.left();
-	double dy = gun.top() + gun.height() / 2;
+
+	drawBody(painter);
+	drawGun(painter);
+}
+
+void CannonSimple::drawGun(QPainter *painter)
+{
+	QRectF gun(0, 0, gunw, gunh);
+	double dx = bodyw / 2 + gunh / 2;
+	double dy = bodyh - gunh / 2;
 	painter->translate(dx, dy);
-	painter->rotate(45);
-	painter->translate(-dx, -dy);
+	painter->rotate(gunAngle);
 	painter->fillRect(gun, brush);
 	painter->drawRect(gun);
-	painter->translate(dx, dy);
-	painter->rotate(-45);
+	painter->rotate(-gunAngle);
 	painter->translate(-dx, -dy);
+}
+
+void CannonSimple::drawBody(QPainter *painter)
+{
+	QRectF body(0, 0, bodyw, bodyh);
 	painter->fillRect(body, brush);
 	painter->drawRect(body);
 }

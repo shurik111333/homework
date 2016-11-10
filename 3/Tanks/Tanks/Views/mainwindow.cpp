@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QtAlgorithms>
+#include <QKeyEvent>
 
 QDEBUG_H
 
@@ -47,6 +48,11 @@ MainWindow::~MainWindow()
 	delete view;
 }
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+	controller->keyPress((Qt::Key)event->key());
+}
+
 void MainWindow::drawLandscape(const QList<QPointF> &land)
 {
 	for (int i = 1; i < land.length(); i++)
@@ -61,5 +67,7 @@ void MainWindow::newGame()
 	drawLandscape(controller->getLandscape());
 	auto players = controller->getPlayers();
 	for (auto p : players)
+	{
 		scene.addItem(p->getCannon());
+	}
 }

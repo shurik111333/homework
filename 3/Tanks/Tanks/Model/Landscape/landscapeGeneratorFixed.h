@@ -7,11 +7,15 @@ class LandscapeGeneratorFixed final : public ILandscapeGenerator
 {
 public:
 	static LandscapeGeneratorFixed *getInstance();
-	virtual QList<QPointF> getLandscape() const;
+	/**
+	 * @brief nextLandscape This method only calls getLandscape()
+	 * @return Landscape
+	 */
+	virtual const QList<QPointF> &nextLandscape();
+	virtual const QList<QPointF> &getLandscape() const;
 
 private:
 	static LandscapeGeneratorFixed *instance;
-	static QList<QPointF> landscape;
 
 	LandscapeGeneratorFixed();
 };

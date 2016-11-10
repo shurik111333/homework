@@ -6,6 +6,7 @@
 #include <QList>
 #include <QPoint>
 #include <QVector>
+#include <iterator>
 
 class GameController : public QObject
 {
@@ -13,13 +14,14 @@ class GameController : public QObject
 public:
 	explicit GameController(QObject *parent = 0);
 
-	QList<QPointF> getLandscape() const;
-
+	const QList<QPointF> &getLandscape() const;
 	const QVector<IPlayer *> &getPlayers() const;
 
 private:
 	ILandscapeGenerator *landscape = nullptr;
-	QVector<IPlayer*> players;
+	QVector<IPlayer *> players;
+	QVector<IPlayer *>::const_iterator player;
+	double step = 3;
 
 	/**
 	 * @brief createCannon Create cannon in random place on the input segment
@@ -28,10 +30,15 @@ private:
 	 * @return Cannon
 	 */
 	ICannon *createCannon(double x0, double x1, const QBrush &brush) const;
+	void moveRight(ICannon *cannon) const;
+	void moveLeft(ICannon *cannon) const;
+	void moveCannon(ICannon *cannon, double step) const;
+	double rand(double x0, double x1) const;
 
 signals:
 	void newGame();
 
 public slots:
 	void startGame();
+	void keyPress(Qt::Key key);
 };
