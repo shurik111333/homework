@@ -1,11 +1,17 @@
 #include "mainwindow.h"
-#include "Controllers/landscapeGeneratorFixed.h"
+#include "Model/Landscape/landscapeGeneratorFixed.h"
+#include "Model/Cannon/cannonSimple.h"
+#include <QGraphicsLineItem>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QDebug>
+#include <QtAlgorithms>
+
+QDEBUG_H
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      controller(new MainWindowController())
+      controller(new GameController())
 {
 	mainLayout = new QVBoxLayout();
 	auto widget = new QWidget(this);
@@ -21,16 +27,18 @@ MainWindow::MainWindow(QWidget *parent)
 	mainLayout->addLayout(headerLayout);
 	mainLayout->addWidget(view);
 
-	view->setFixedSize(1000, 500);
+	view->setFixedSize(1003, 503);
 	view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	view->scale(1, -1);
 	scene.setSceneRect(0, 0, 1000, 500);
 
-	drawLandscape(controller->getLandscape());
-
 	adjustSize();
 	setFixedSize(geometry().width(), geometry().height());
+
+	connect(controller, &GameController::newGame, this, &MainWindow::newGame);
+	connect(btNewGame, &QPushButton::clicked, controller, &GameController::startGame);
+	controller->startGame();
 }
 
 MainWindow::~MainWindow()
@@ -45,4 +53,13 @@ void MainWindow::drawLandscape(const QList<QPointF> &land)
 	{
 		scene.addLine(QLineF(land[i - 1], land[i]));
 	}
+}
+
+void MainWindow::newGame()
+{
+	qDeleteAll(scene.items());
+	drawLandscape(controller->getLandscape());
+	auto players = controller->getPlayers();
+	for (auto p : players)
+		scene.addItem(p->getCannon());
 }

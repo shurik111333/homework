@@ -6,6 +6,7 @@
 class ILandscapeGenerator
 {
 public:
+	virtual ~ILandscapeGenerator() {}
 	/**
 	 * @brief getLandscape Generate landscape of the map that represented by polygonal chain.
 	 * @return List of vertices of the polygonal chain.

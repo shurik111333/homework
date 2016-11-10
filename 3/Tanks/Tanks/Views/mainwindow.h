@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QGraphicsView>
 #include <QGraphicsScene>
-#include "Controllers/mainwindowController.h"
+#include "Controllers/gameController.h"
 
 namespace Ui {
 	class MainWindow;
@@ -22,7 +22,10 @@ private:
 	QVBoxLayout *mainLayout = nullptr;
 	QGraphicsScene scene;
 	QGraphicsView *view = nullptr;
-	MainWindowController *controller = nullptr;
+	GameController *controller = nullptr;
 
 	void drawLandscape(const QList<QPointF> &land);
+
+private slots:
+	void newGame();
 };
