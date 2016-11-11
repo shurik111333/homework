@@ -50,6 +50,8 @@ void GameController::keyPress(Qt::Key key)
 			break;
 		case Qt::Key_S:
 			cannon->moveGunDown();
+		case Qt::Key_Q:
+			shoot();
 		default:
 			return;
 	}
@@ -67,7 +69,9 @@ ICannon *GameController::createCannon(double x0, double x1, const QBrush &brush)
 	double x = rand(std::max(land[0].x(), x0), std::min(land[land.length() - 1].x(), x1));
 
 	auto p = landscape->getPoint(x);
-	return new CannonSimple(p.x(), p.y(), brush);
+	auto cannon = new CannonSimple(p.x(), p.y(), brush);
+	cannon->setTransformOriginPoint(cannon->boundingRect().center().x(), 0);
+	return cannon;
 }
 
 void GameController::moveRight(ICannon *cannon) const
@@ -82,12 +86,15 @@ void GameController::moveLeft(ICannon *cannon) const
 
 void GameController::moveCannon(ICannon *cannon, double step) const
 {
-	qDebug() << "pos: " << cannon->pos();
-	QPointF pos = cannon->mapFromScene(cannon->pos());
-	qDebug() << "map from scene: " << pos;
 	double dx = cannon->boundingRect().center().x();
-	auto p = landscape->getPoint(cannon->pos().x() + dx + step);
+	auto p = landscape->toLandscape(landscape->getPoint(cannon->pos().x() + dx + step));
 	cannon->setPos(p.x() - dx, p.y());
+	cannon->setRotation(landscape->getLandscapeAngle(p));
+}
+
+void GameController::shoot() const
+{
+
 }
 
 double GameController::rand(double x0, double x1) const

@@ -33,6 +33,7 @@ private:
 	void moveRight(ICannon *cannon) const;
 	void moveLeft(ICannon *cannon) const;
 	void moveCannon(ICannon *cannon, double step) const;
+	void shoot() const;
 	double rand(double x0, double x1) const;
 
 signals:

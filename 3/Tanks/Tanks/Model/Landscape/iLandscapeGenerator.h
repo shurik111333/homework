@@ -32,6 +32,31 @@ public:
 	 * @return Point on landscape
 	 */
 	virtual QPointF getPoint(double x) const;
+	/**
+	 * @return Point on the left border of the landscape
+	 */
+	virtual QPointF getLeftBorder() const;
+	/**
+	 * @return Point on the right border on the landscape
+	 */
+	virtual QPointF getRightBorder() const;
+	/**
+	 * @brief inLandscape Checks if x-coordinate stay in landscape
+	 * @param x
+	 * @return True, if x-coordinate stay in landscape
+	 */
+	virtual bool inLandscape(double x) const;
+	/**
+	 * @brief toLandscape Look at toLandscape(QPointF)
+	 */
+	virtual QPointF toLandscape(double x, double y) const;
+	/**
+	 * @brief toLandscape
+	 * @param p
+	 * @return
+	 */
+	virtual QPointF toLandscape(const QPointF &p) const;
+	virtual double getLandscapeAngle(const QPointF &p) const;
 
 protected:
 	QList<QPointF> landscape;
