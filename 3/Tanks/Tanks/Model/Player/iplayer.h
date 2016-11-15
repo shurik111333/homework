@@ -15,17 +15,25 @@ public:
 		return name;
 	}
 
-	virtual ITank *getCannon() const
+	virtual ITank *getTank() const
 	{
-		return cannon;
+		return tank;
+	}
+
+	virtual Qt::GlobalColor getColor() const
+	{
+		return color;
 	}
 
 protected:
-	explicit IPlayer(ITank *cannon, const QString &name = "Player", QObject *parent = 0) :
+	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
 	    QObject(parent),
-	    cannon(cannon)
+	    tank(tank),
+	    name(name),
+	    color(color)
 	{}
 
-	ITank *cannon = nullptr;
+	ITank *tank = nullptr;
 	QString name;
+	Qt::GlobalColor color;
 };

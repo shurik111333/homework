@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QtAlgorithms>
 #include <QKeyEvent>
+#include <QGraphicsTextItem>
+#include <QTransform>
 
 QDEBUG_H
 
@@ -39,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	connect(controller, &GameController::newGame, this, &MainWindow::newGame);
 	connect(btNewGame, &QPushButton::clicked, controller, &GameController::startGame);
+	connect(controller, &GameController::nextPlayer, this, &MainWindow::nextPlayer);
 	controller->startGame();
 }
 
@@ -63,11 +66,22 @@ void MainWindow::drawLandscape(const QList<QPointF> &land)
 
 void MainWindow::newGame()
 {
-	qDeleteAll(scene.items());
+	scene.clear();
 	drawLandscape(controller->getLandscape());
 	auto players = controller->getPlayers();
 	for (auto p : players)
 	{
-		scene.addItem(p->getCannon());
+		scene.addItem(p->getTank());
 	}
+}
+
+void MainWindow::nextPlayer(IPlayer *player)
+{
+	scene.removeItem(playerName);
+	delete playerName;
+	playerName = scene.addText(player->getName());
+	//playerName->setRotation(180);
+	//playerName->setTransform(QTransform(1, 0, -1, 0, 0 ,0));
+	playerName->setPos(100, 100);
+	playerName->setDefaultTextColor(player->getColor());
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Shell/ishell.h"
 #include <QGraphicsItem>
 
 class ITank : public QGraphicsItem
@@ -17,6 +18,7 @@ public:
 	 * @brief moveGunDown Decrease gun's angle by step
 	 */
 	virtual void moveGunDown();
+	virtual IShell *getShell() const = 0;
 
 protected:
 	double gunAngle = 45;

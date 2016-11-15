@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     Model/Landscape/ilandscapegenerator.cpp \
     Model/Shell/ishell.cpp \
     Model/Tank/iTank.cpp \
-    Model/Tank/tankSimple.cpp
+    Model/Tank/tankSimple.cpp \
+    Model/Shell/shellStandart.cpp
 
 HEADERS  += Views/mainwindow.h \
     Model/Landscape/iLandscapeGenerator.h \
@@ -30,4 +31,5 @@ HEADERS  += Views/mainwindow.h \
     Model/Player/localplayer.h \
     Model/Shell/ishell.h \
     Model/Tank/iTank.h \
-    Model/Tank/tankSimple.h
+    Model/Tank/tankSimple.h \
+    Model/Shell/shellStandart.h

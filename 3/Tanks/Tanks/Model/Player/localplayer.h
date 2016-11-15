@@ -6,5 +6,5 @@
 class LocalPlayer : public IPlayer
 {
 public:
-	LocalPlayer(ITank *cannon, const QString &name);
+	LocalPlayer(ITank *tank, Qt::GlobalColor color, const QString &name);
 };

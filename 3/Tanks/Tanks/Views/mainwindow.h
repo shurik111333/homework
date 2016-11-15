@@ -26,9 +26,11 @@ private:
 	QGraphicsScene scene;
 	QGraphicsView *view = nullptr;
 	GameController *controller = nullptr;
+	QGraphicsTextItem *playerName = nullptr;
 
 	void drawLandscape(const QList<QPointF> &land);
 
 private slots:
 	void newGame();
+	void nextPlayer(IPlayer *player);
 };
