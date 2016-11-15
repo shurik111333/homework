@@ -77,11 +77,11 @@ void MainWindow::newGame()
 
 void MainWindow::nextPlayer(IPlayer *player)
 {
-	scene.removeItem(playerName);
+	/*scene.removeItem(playerName);
 	delete playerName;
 	playerName = scene.addText(player->getName());
 	//playerName->setRotation(180);
 	//playerName->setTransform(QTransform(1, 0, -1, 0, 0 ,0));
 	playerName->setPos(100, 100);
-	playerName->setDefaultTextColor(player->getColor());
+	playerName->setDefaultTextColor(player->getColor());*/
 }

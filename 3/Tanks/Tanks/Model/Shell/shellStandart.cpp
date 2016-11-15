@@ -18,10 +18,13 @@ QRectF ShellStandart::boundingRect() const
 	QPointF rightBottom(width * qCos(ang), width * qSin(ang));
 	QPointF rightTop = rightBottom + leftTop;
 
-	double leftx = qMin(0.0, qMin(leftTop.x(), qMin(rightBottom.x(), rightTop.x())));
-	double lefty = qMin(0.0, qMin(leftTop.y(), qMin(rightBottom.y(), rightTop.y())));
-	//return QRectF(-width, -width, width * 2, width * 2);
-	return QRectF(leftx, lefty, width * 2, width * 2);
+	double leftx = qMin(0.0, qMin(leftTop.x(), qMin(rightBottom.x(), rightTop.x()))) - 1;
+	double lefty = qMin(0.0, qMin(leftTop.y(), qMin(rightBottom.y(), rightTop.y()))) - 1;
+
+	double w = qMax(0.0, qMax(leftTop.x(), qMax(rightBottom.x(), rightTop.x()))) - leftx + 2;
+	double h = qMax(0.0, qMax(leftTop.y(), qMax(rightBottom.y(), rightTop.y()))) - lefty + 2;
+
+	return QRectF(leftx, lefty, w, h);
 }
 
 void ShellStandart::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
