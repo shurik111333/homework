@@ -1,10 +1,10 @@
 #pragma once
 
 #include "iplayer.h"
-#include "../Cannon/icannon.h"
+#include "../Tank/iTank.h"
 
 class LocalPlayer : public IPlayer
 {
 public:
-	LocalPlayer(ICannon *cannon, const QString &name);
+	LocalPlayer(ITank *cannon, const QString &name);
 };

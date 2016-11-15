@@ -1,25 +1,25 @@
-#include "cannonSimple.h"
+#include "tankSimple.h"
 #include <QPen>
 #include <QPainter>
 
-const double CannonSimple::defaultWIdth = 30;
+const double TankSimple::defaultWIdth = 30;
 
-CannonSimple::CannonSimple(double x, double y, const QBrush &brush, double width) :
+TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
     bodyw(defaultWIdth),
     bodyh(defaultWIdth / 2),
     gunw(bodyw / 2),
     gunh(5),
     brush(brush)
 {
-	setPos(x, y); //it is need for matching cannon's and scene's coordinate systems
+	setPos(x, y); //it is needed for matching cannon's and scene's coordinate systems
 }
 
-QRectF CannonSimple::boundingRect() const
+QRectF TankSimple::boundingRect() const
 {
 	return QRectF(0, 0, bodyw, bodyh + gunw);
 }
 
-void CannonSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	QPen pen(Qt::black, 1);
 	painter->setPen(pen);
@@ -28,7 +28,7 @@ void CannonSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 	drawGun(painter);
 }
 
-void CannonSimple::drawGun(QPainter *painter)
+void TankSimple::drawGun(QPainter *painter)
 {
 	QRectF gun(0, 0, gunw, gunh);
 	double dx = bodyw / 2 + gunh / 2;
@@ -41,7 +41,7 @@ void CannonSimple::drawGun(QPainter *painter)
 	painter->translate(-dx, -dy);
 }
 
-void CannonSimple::drawBody(QPainter *painter)
+void TankSimple::drawBody(QPainter *painter)
 {
 	QRectF body(0, 0, bodyw, bodyh);
 	painter->fillRect(body, brush);

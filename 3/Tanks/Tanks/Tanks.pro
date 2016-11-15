@@ -15,17 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         Views/mainwindow.cpp \
     Model/Landscape/landscapeGeneratorFixed.cpp \
-    Model/Cannon/cannonSimple.cpp \
     Controllers/gameController.cpp \
     Model/Player/localplayer.cpp \
     Model/Landscape/ilandscapegenerator.cpp \
-    Model/Cannon/icannon.cpp
+    Model/Shell/ishell.cpp \
+    Model/Tank/iTank.cpp \
+    Model/Tank/tankSimple.cpp
 
 HEADERS  += Views/mainwindow.h \
     Model/Landscape/iLandscapeGenerator.h \
     Model/Landscape/landscapeGeneratorFixed.h \
-    Model/Cannon/icannon.h \
-    Model/Cannon/cannonSimple.h \
     Controllers/gameController.h \
     Model/Player/iplayer.h \
-    Model/Player/localplayer.h
+    Model/Player/localplayer.h \
+    Model/Shell/ishell.h \
+    Model/Tank/iTank.h \
+    Model/Tank/tankSimple.h

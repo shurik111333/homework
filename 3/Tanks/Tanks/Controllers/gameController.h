@@ -29,10 +29,10 @@ private:
 	 * @param x1 right x-coordinate
 	 * @return Cannon
 	 */
-	ICannon *createCannon(double x0, double x1, const QBrush &brush) const;
-	void moveRight(ICannon *cannon) const;
-	void moveLeft(ICannon *cannon) const;
-	void moveCannon(ICannon *cannon, double step) const;
+	ITank *createCannon(double x0, double x1, const QBrush &brush) const;
+	void moveRight(ITank *cannon) const;
+	void moveLeft(ITank *cannon) const;
+	void moveCannon(ITank *cannon, double step) const;
 	void shoot() const;
 	double rand(double x0, double x1) const;
 

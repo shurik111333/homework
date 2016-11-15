@@ -2,10 +2,10 @@
 
 #include <QGraphicsItem>
 
-class ICannon : public QGraphicsItem
+class ITank : public QGraphicsItem
 {
 public:
-	virtual ~ICannon() {}
+	virtual ~ITank() {}
 
 	virtual double getGunAngle() const;
 	virtual void setGunAngle(double angle);
@@ -22,6 +22,6 @@ protected:
 	double gunAngle = 45;
 	double gunStep = 3;
 
-	ICannon()
+	ITank()
 	{}
 };

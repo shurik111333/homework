@@ -1,10 +1,10 @@
 #pragma once
 
-#include "icannon.h"
+#include "iTank.h"
 #include <QDebug>
 #include <QBrush>
 
-class CannonSimple : public ICannon
+class TankSimple : public ITank
 {
 public:
 	/**
@@ -14,8 +14,8 @@ public:
 	 * @param brush Cannon's brush
 	 * @param width Width of cannon's body
 	 */
-	CannonSimple(double x, double y, const QBrush &brush, double width = defaultWIdth);
-	~CannonSimple()
+	TankSimple(double x, double y, const QBrush &brush, double width = defaultWIdth);
+	~TankSimple()
 	{
 	}
 

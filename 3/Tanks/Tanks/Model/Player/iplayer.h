@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model/Cannon/icannon.h"
+#include "Model/Tank/iTank.h"
 #include <QString>
 #include <QObject>
 
@@ -15,17 +15,17 @@ public:
 		return name;
 	}
 
-	virtual ICannon *getCannon() const
+	virtual ITank *getCannon() const
 	{
 		return cannon;
 	}
 
 protected:
-	explicit IPlayer(ICannon *cannon, const QString &name = "Player", QObject *parent = 0) :
+	explicit IPlayer(ITank *cannon, const QString &name = "Player", QObject *parent = 0) :
 	    QObject(parent),
 	    cannon(cannon)
 	{}
 
-	ICannon *cannon = nullptr;
+	ITank *cannon = nullptr;
 	QString name;
 };

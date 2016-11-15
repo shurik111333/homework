@@ -1,7 +1,7 @@
 #include "gameController.h"
 #include "Model/Landscape/landscapeGeneratorFixed.h"
 #include "Model/Player/localplayer.h"
-#include "Model/Cannon/cannonSimple.h"
+#include "Model/Tank/tankSimple.h"
 #include <algorithm>
 #include <QBrush>
 #include <ctime>
@@ -36,7 +36,7 @@ void GameController::startGame()
 
 void GameController::keyPress(Qt::Key key)
 {
-	ICannon *cannon = (*player)->getCannon();
+	ITank *cannon = (*player)->getCannon();
 	switch (key)
 	{
 		case Qt::Key_D:
@@ -62,29 +62,29 @@ const QVector<IPlayer *> &GameController::getPlayers() const
 	return players;
 }
 
-ICannon *GameController::createCannon(double x0, double x1, const QBrush &brush) const
+ITank *GameController::createCannon(double x0, double x1, const QBrush &brush) const
 {
 	auto land = getLandscape();
 
 	double x = rand(std::max(land[0].x(), x0), std::min(land[land.length() - 1].x(), x1));
 
 	auto p = landscape->getPoint(x);
-	auto cannon = new CannonSimple(p.x(), p.y(), brush);
+	auto cannon = new TankSimple(p.x(), p.y(), brush);
 	cannon->setTransformOriginPoint(cannon->boundingRect().center().x(), 0);
 	return cannon;
 }
 
-void GameController::moveRight(ICannon *cannon) const
+void GameController::moveRight(ITank *cannon) const
 {
 	moveCannon(cannon, step);
 }
 
-void GameController::moveLeft(ICannon *cannon) const
+void GameController::moveLeft(ITank *cannon) const
 {
 	moveCannon(cannon, -step);
 }
 
-void GameController::moveCannon(ICannon *cannon, double step) const
+void GameController::moveCannon(ITank *cannon, double step) const
 {
 	double dx = cannon->boundingRect().center().x();
 	auto p = landscape->toLandscape(landscape->getPoint(cannon->pos().x() + dx + step));

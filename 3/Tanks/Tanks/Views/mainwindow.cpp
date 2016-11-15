@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "Model/Landscape/landscapeGeneratorFixed.h"
-#include "Model/Cannon/cannonSimple.h"
+#include "Model/Tank/tankSimple.h"
 #include <QGraphicsLineItem>
 #include <QHBoxLayout>
 #include <QPushButton>
