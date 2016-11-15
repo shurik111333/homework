@@ -33,6 +33,7 @@ void GameController::startGame()
 	                               land[land.length() - 1].x(), Qt::blue), Qt::blue, "Player2"));
 	player = players.end();
 	player--;
+	state = State::waiting;
 	emit newGame();
 	setNextPlayer();
 }
