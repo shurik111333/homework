@@ -27,6 +27,9 @@ private:
 	QGraphicsView *view = nullptr;
 	GameController *controller = nullptr;
 	QGraphicsTextItem *playerName = nullptr;
+	QSize sceneSize = QSize(1000, 500);
+	QSize viewOffset = QSize(3, 3);
+	bool f = false;
 
 	void drawLandscape(const QList<QPointF> &land);
 

@@ -7,6 +7,9 @@
 #include <ctime>
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QPolygonF>
+#include <QVector>
+#include <QPoint>
 
 QDEBUG_H
 
@@ -14,7 +17,13 @@ GameController::GameController(QObject *parent)
     : QObject(parent),
       landscape(LandscapeGeneratorFixed::getInstance())
 {
-	qsrand(5);
+	qsrand(std::time(0));
+}
+
+GameController::~GameController()
+{
+	removeShell();
+	delete shellCursor;
 }
 
 const QList<QPointF> &GameController::getLandscape() const
@@ -24,61 +33,79 @@ const QList<QPointF> &GameController::getLandscape() const
 
 void GameController::startGame()
 {
+	removeShell();
+	removeShellCursor();
 	for (auto p : players)
 		delete p;
 	players.clear();
 	auto land = getLandscape();
-	players.append(new LocalPlayer(createCannon(land[0].x(), land[1].x(), Qt::red), Qt::red, "Player1"));
-	players.append(new LocalPlayer(createCannon(land[land.length() - 2].x(),
+	shellCursor = createShellCursor();
+	players.append(new LocalPlayer(createTank(land[0].x(), land[1].x(), Qt::red), Qt::red, "Player1"));
+	players.back()->getTank()->setDirection(ITank::Direction::right);
+	players.append(new LocalPlayer(createTank(land[land.length() - 2].x(),
 	                               land[land.length() - 1].x(), Qt::blue), Qt::blue, "Player2"));
-	player = players.end();
-	player--;
+	players.back()->getTank()->setDirection(ITank::Direction::left);
 	state = State::waiting;
 	emit newGame();
+	player = players.end();
+	player--;
 	setNextPlayer();
 }
 
 void GameController::keyPress(Qt::Key key)
 {
-	if (state == State::shooting)
+	if (state == State::shooting || state == State::notInGame)
 		return;
 	ITank *tank = (*player)->getTank();
 	switch (key)
 	{
 		case Qt::Key_D:
-			moveRight(tank);
+			tank->moveRight();
+			//moveRight(tank);
 			break;
 		case Qt::Key_A:
-			moveLeft(tank);
+			tank->moveLeft();
+			//moveLeft(tank);
 			break;
 		case Qt::Key_W:
 			tank->moveGunUp();
+			if (tank->getGunAngle() > maxGunAngle)
+				tank->setGunAngle(maxGunAngle);
 			break;
 		case Qt::Key_S:
 			tank->moveGunDown();
+			if (tank->getGunAngle() < minGunAngle)
+				tank->setGunAngle(minGunAngle);
 			break;
 		case Qt::Key_Q:
 			shoot();
+			break;
 		default:
 			return;
 	}
+	double ang = (int) tank->getDirection() * landscape->getLandscapeAngle(tank->baseCenter());
+	tank->setRotation(ang);
+	tank->setPos(landscape->getPoint(tank->baseCenter().x()) + tank->pos() - tank->baseCenter());
 }
 
-void GameController::updateShoot()
+void GameController::checkShell()
 {
-	time += 0.1;
-	shell->updatePos(time);
-	//if (!shell->scene()->sceneRect().contains(shell->pos()))
-	if (shell->pos().y() < 0)
+	if (!shellInScene())
 	{
-		disconnect(&shootTimer, &QTimer::timeout, this, &GameController::updateShoot);
-		shootTimer.stop();
-		shell->scene()->removeItem(shell);
-		delete shell;
+		disconnect(shell, &IShell::updatingPos, this, &GameController::checkShell);
+		removeShell();
+		removeShellCursor();
 		state = State::waiting;
 		setNextPlayer();
 		return;
 	}
+	if (!shell->scene()->sceneRect().contains(shell->pos()))
+	{
+		shellCursor->show();
+		shellCursor->setPos(shell->pos().x(), shell->scene()->sceneRect().bottom());
+		return;
+	}
+	shellCursor->hide();
 }
 
 const QVector<IPlayer *> &GameController::getPlayers() const
@@ -86,11 +113,11 @@ const QVector<IPlayer *> &GameController::getPlayers() const
 	return players;
 }
 
-ITank *GameController::createCannon(double x0, double x1, const QBrush &brush) const
+ITank *GameController::createTank(double x0, double x1, const QBrush &brush) const
 {
 	auto land = getLandscape();
 
-	double x = rand(std::max(land[0].x(), x0), std::min(land[land.length() - 1].x(), x1));
+	double x = rand(qMax(land[0].x(), x0), qMin(land[land.length() - 1].x(), x1));
 
 	auto p = landscape->getPoint(x);
 	auto tank = new TankSimple(p.x(), p.y(), brush);
@@ -119,13 +146,11 @@ void GameController::moveTank(ITank *tank, double step) const
 void GameController::shoot()
 {
 	state = State::shooting;
-	shootTimer.stop();
 	ITank *tank = (*player)->getTank();
-	shell = tank->getShell();
+	shell = tank->shoot();
 	tank->scene()->addItem(shell);
-	connect(&shootTimer, &QTimer::timeout, this, &GameController::updateShoot);
-	time = 0;
-	shootTimer.start(20);
+	tank->scene()->addItem(shellCursor);
+	connect(shell, &IShell::updatingPos, this, &GameController::checkShell);
 }
 
 void GameController::setNextPlayer()
@@ -134,6 +159,45 @@ void GameController::setNextPlayer()
 	if (player == players.end())
 		player = players.constBegin();
 	emit nextPlayer(*player);
+}
+
+bool GameController::shellInScene() const
+{
+	auto rect = shell->scene()->sceneRect();
+	auto p = shell->pos();
+	return p.y() >= rect.top() && p.x() >= rect.left() && p.x() <= rect.right();
+}
+
+bool GameController::shellOnLandscape() const
+{
+	return true;
+}
+
+void GameController::removeShell()
+{
+	if (shell == nullptr)
+		return;
+	shell->cancelShoot();
+	shell->scene()->removeItem(shell);
+	delete shell;
+	shell = nullptr;
+}
+
+void GameController::removeShellCursor()
+{
+	if (shellCursor == nullptr)
+		return;
+	shellCursor->hide();
+	shellCursor->scene()->removeItem(shellCursor);
+}
+
+QGraphicsPolygonItem *GameController::createShellCursor()
+{
+	QPointF ver(0, 0);
+	auto points = QVector<QPointF> { ver, ver - QPointF(10, 10), ver + QPointF(10, -10) };
+	auto res = new QGraphicsPolygonItem(QPolygonF(points));
+	res->hide();
+	return res;
 }
 
 double GameController::rand(double x0, double x1) const

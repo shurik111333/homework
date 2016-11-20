@@ -2,6 +2,10 @@
 #include "../Shell/shellStandart.h"
 #include <QPen>
 #include <QPainter>
+#include <QtMath>
+#include <QDebug>
+
+QDEBUG_H
 
 const double TankSimple::defaultWIdth = 30;
 
@@ -30,11 +34,22 @@ void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 	drawGun(painter);
 }
 
-IShell *TankSimple::getShell() const
+IShell *TankSimple::shoot() const
 {
 	double dx = bodyw / 2 + gunh / 2;
 	double dy = bodyh - gunh / 2;
-	return new ShellStandart(pos().x() + dx, pos().y() + dy, getGunAngle() + rotation(), 100);
+	double ang = getGunAngle() + rotation();
+	if (getDirection() == Direction::left)
+		ang = 180 - ang;
+	auto p = getGunCoordinates();
+	auto shell = new ShellStandart(p.x(), p.y(), ang, 100);
+	shell->shoot(1000);
+	return shell;
+}
+
+QPointF TankSimple::baseCenter() const
+{
+	return pos() + QPointF((int) getDirection() * bodyw / 2, 0);
 }
 
 void TankSimple::drawGun(QPainter *painter)
@@ -55,4 +70,13 @@ void TankSimple::drawBody(QPainter *painter)
 	QRectF body(0, 0, bodyw, bodyh);
 	painter->fillRect(body, brush);
 	painter->drawRect(body);
+}
+
+QPointF TankSimple::getGunCoordinates() const
+{
+	int dir = (int) getDirection();
+	QPointF res = QPointF(dir * (bodyw / 2 + gunh / 2), (bodyh - dir * gunh / 2));
+	double ang = qDegreesToRadians(dir * rotation());
+	return scenePos() + QPointF(res.x() * qCos(ang) - res.y() * qSin(ang),
+	                            res.x() * qSin(ang) + res.y() * qCos(ang));
 }

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "Model/Landscape/landscapeGeneratorFixed.h"
 #include "Model/Tank/tankSimple.h"
+#include "Model/Shell/shellStandart.h"
 #include <QGraphicsLineItem>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -9,6 +10,7 @@
 #include <QKeyEvent>
 #include <QGraphicsTextItem>
 #include <QTransform>
+#include <QSize>
 
 QDEBUG_H
 
@@ -30,14 +32,12 @@ MainWindow::MainWindow(QWidget *parent)
 	mainLayout->addLayout(headerLayout);
 	mainLayout->addWidget(view);
 
-	view->setFixedSize(1003, 503);
-	view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	view->setFixedSize(sceneSize + viewOffset);
 	view->scale(1, -1);
-	scene.setSceneRect(0, 0, 1000, 500);
+	scene.setSceneRect(QRect(QPoint(0, 0), sceneSize));
 
 	adjustSize();
-	setFixedSize(geometry().width(), geometry().height());
+	setFixedSize(geometry().size());
 
 	connect(controller, &GameController::newGame, this, &MainWindow::newGame);
 	connect(btNewGame, &QPushButton::clicked, controller, &GameController::startGame);

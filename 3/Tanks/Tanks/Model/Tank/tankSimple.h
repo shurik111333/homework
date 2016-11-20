@@ -24,7 +24,8 @@ public:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 	// ITank interface
-	virtual IShell *getShell() const override;
+	virtual IShell *shoot() const override;
+	virtual QPointF baseCenter() const override;
 
 private:
 	const static double defaultWIdth;
@@ -37,4 +38,5 @@ private:
 
 	void drawGun(QPainter *painter);
 	void drawBody(QPainter *painter);
+	QPointF getGunCoordinates() const;
 };

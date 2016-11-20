@@ -1,29 +1,53 @@
 #include "ishell.h"
 #include <QtMath>
+#include <QDebug>
+
+QDEBUG_H
+
+IShell::~IShell()
+{
+	disconnect(&timer, &QTimer::timeout, this, &IShell::updatePos);
+}
 
 QPointF IShell::getPoint(double time) const
 {
 	return QPointF(startX + time * speed * qCos(startAngle),
-	               startY + time * speed * qSin(startAngle) - 1.0 / 2 * g * time * time);
+	               startY + time * speed * qSin(startAngle) - g * time * time / 2);
 }
 
-void IShell::updatePos(double time)
+double IShell::getAngle(double time) const
 {
-	QPointF p1 = getPoint(time);
-	QPointF p2 = getPoint(time + 1e-7);
-	setPos(p1);
-	setRotation(qRadiansToDegrees(qAtan((p2.y() - p1.y()) / (p2.x() - p1.x()))));
+	double dx = speed * qCos(startAngle);
+	double dy = speed * qSin(startAngle) - g * time;
+	return qRadiansToDegrees(qAtan(dy / dx)) + (dx < 0 ? 180 : 0);
 }
 
-IShell::IShell(QObject *parent) :
-    QObject(parent)
-{}
+void IShell::updatePos()
+{
+	time += dt;
+	setPos(getPoint(time));
+	setRotation(getAngle(time));
+	emit updatingPos();
+}
 
-IShell::IShell(double x, double y, double angle, double speed, QObject *parent) :
+void IShell::shoot(double impuls)
+{
+	timer.stop();
+	time = 0;
+	speed = impuls / getWeight();
+	timer.start(1000 / fps);
+}
+
+void IShell::cancelShoot()
+{
+	timer.stop();
+}
+
+IShell::IShell(double x, double y, double angle, QObject *parent) :
     QObject(parent),
     startX(x),
     startY(y),
-    startAngle(qDegreesToRadians(angle)),
-    speed(speed),
-    g(9.8)
-{}
+    startAngle(qDegreesToRadians(angle))
+{
+	connect(&timer, &QTimer::timeout, this, &IShell::updatePos);
+}
