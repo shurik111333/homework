@@ -1,43 +1,43 @@
-#include "iTank.h"
+#include "abstractTank.h"
 #include "Model/Shell/shellStandart.h"
 #include <QTransform>
 #include <QtMath>
 
-double ITank::getGunAngle() const
+double AbstractTank::getGunAngle() const
 {
 	return gunAngle;
 }
 
-void ITank::setGunAngle(double angle)
+void AbstractTank::setGunAngle(double angle)
 {
 	gunAngle = angle;
 	update();
 }
 
-void ITank::moveGunUp()
+void AbstractTank::moveGunUp()
 {
 	gunAngle += gunStep;
 	update();
 }
 
-void ITank::moveGunDown()
+void AbstractTank::moveGunDown()
 {
 	gunAngle -= gunStep;
 	update();
 }
 
-ITank::Direction ITank::getDirection() const
+AbstractTank::Direction AbstractTank::getDirection() const
 {
 	return direction;
 }
 
-void ITank::setDirection(Direction value)
+void AbstractTank::setDirection(Direction value)
 {
 	if (value != direction)
 		changeDirection();
 }
 
-void ITank::changeDirection()
+void AbstractTank::changeDirection()
 {
 	direction = (Direction) (-(int) direction);
 	QTransform t;
@@ -47,17 +47,17 @@ void ITank::changeDirection()
 
 }
 
-void ITank::moveLeft()
+void AbstractTank::moveLeft()
 {
 	move(Direction::left);
 }
 
-void ITank::moveRight()
+void AbstractTank::moveRight()
 {
 	move(Direction::right);
 }
 
-void ITank::move(ITank::Direction dir)
+void AbstractTank::move(AbstractTank::Direction dir)
 {
 	if (dir != direction)
 		changeDirection();
@@ -65,7 +65,7 @@ void ITank::move(ITank::Direction dir)
 		move((int) direction * moveStep);
 }
 
-void ITank::move(double step)
+void AbstractTank::move(double step)
 {
 	double ang = qDegreesToRadians((int) direction * rotation());
 	setPos(pos() + QPointF(step * qCos(ang), step * qSin(ang)));

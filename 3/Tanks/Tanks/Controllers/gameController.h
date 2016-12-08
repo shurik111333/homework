@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Model/Player/iplayer.h"
-#include "Model/Shell/ishell.h"
+#include "Model/Shell/abstractShell.h"
 #include "Model/Landscape/iLandscapeGenerator.h"
 #include <QObject>
 #include <QList>
@@ -31,8 +31,8 @@ private:
 	ILandscapeGenerator *landscape = nullptr;
 	QVector<IPlayer *> players;
 	QVector<IPlayer *>::const_iterator player;
-	IShell *shell = nullptr;
-	QGraphicsPolygonItem *shellCursor = nullptr;
+	AbstractShell *shell = nullptr;
+	//QGraphicsPolygonItem *shellCursor = nullptr;
 	const double minGunAngle = 0;
 	const double maxGunAngle = 90;
 	double step = 3;
@@ -44,13 +44,13 @@ private:
 	 * @param x1 right x-coordinate
 	 * @return Cannon
 	 */
-	ITank *createTank(double x0, double x1, const QBrush &brush) const;
-	void moveRight(ITank *cannon) const;
-	void moveLeft(ITank *cannon) const;
-	void moveTank(ITank *cannon, double step) const;
+	AbstractTank *createTank(double x0, double x1, const QBrush &brush) const;
+	void moveRight(AbstractTank *cannon) const;
+	void moveLeft(AbstractTank *cannon) const;
+	void moveTank(AbstractTank *cannon, double step) const;
 	void shoot();
 	void setNextPlayer();
-	inline bool shellInScene() const;
+	inline bool shellInGame() const;
 	inline bool shellOnLandscape() const;
 	inline void removeShell();
 	inline void removeShellCursor();

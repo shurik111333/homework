@@ -2,23 +2,26 @@
 
 #include <QObject>
 #include <QGraphicsItem>
+#include <QGraphicsPolygonItem>
 #include <QTimer>
 
-class IShell : public QObject, public QGraphicsItem
+class AbstractShell : public QObject, public QGraphicsItem
 {
 	Q_OBJECT
 public:
-	virtual ~IShell();
+	virtual ~AbstractShell();
 	virtual QPointF getPoint(double time) const;
 	virtual double getAngle(double time) const;
 	virtual void shoot(double impuls);
 	virtual void cancelShoot();
+	virtual void showCursor();
+	virtual void hideCursor();
 
 signals:
 	void updatingPos();
 
 protected:
-	IShell(double x, double y, double angle, QObject *parent = 0);
+	AbstractShell(double x, double y, double angle, QObject *parent = 0);
 	virtual double getWeight() = 0;
 
 protected slots:
@@ -34,4 +37,7 @@ private:
 	int fps = 60;
 	double dt = 3.0 / fps;
 	QTimer timer;
+	QGraphicsPolygonItem *cursor = nullptr;
+
+	void createCursor();
 };

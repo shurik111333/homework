@@ -34,7 +34,7 @@ void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 	drawGun(painter);
 }
 
-IShell *TankSimple::shoot() const
+AbstractShell *TankSimple::shoot() const
 {
 	double dx = bodyw / 2 + gunh / 2;
 	double dy = bodyh - gunh / 2;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ishell.h"
+#include "abstractShell.h"
 
-class ShellStandart : public IShell
+class ShellStandart : public AbstractShell
 {
 public:
 	ShellStandart(double x, double y, double angle, double speed);
@@ -11,7 +11,7 @@ public:
 	virtual QRectF boundingRect() const override;
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-	// IShell interface
+	// AbstractShell interface
 protected:
 	virtual double getWeight() override;
 

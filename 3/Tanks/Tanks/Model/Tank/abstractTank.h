@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../Shell/ishell.h"
+#include "../Shell/abstractShell.h"
 #include <QGraphicsItem>
 
-class ITank : public QGraphicsItem
+class AbstractTank : public QGraphicsItem
 {
 public:
-	virtual ~ITank() {}
+	virtual ~AbstractTank() {}
 
 	virtual double getGunAngle() const;
 	virtual void setGunAngle(double angle);
@@ -18,7 +18,7 @@ public:
 	 * @brief moveGunDown Decrease gun's angle by step
 	 */
 	virtual void moveGunDown();
-	virtual IShell *shoot() const = 0;
+	virtual AbstractShell *shoot() const = 0;
 
 	enum class Direction
 	{
@@ -40,7 +40,7 @@ protected:
 	double gunStep = 2;
 	double moveStep = 3;
 
-	ITank()
+	AbstractTank()
 	{}
 
 	virtual void move(double step);

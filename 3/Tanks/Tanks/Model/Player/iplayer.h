@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model/Tank/iTank.h"
+#include "Model/Tank/abstractTank.h"
 #include <QString>
 #include <QObject>
 
@@ -15,7 +15,7 @@ public:
 		return name;
 	}
 
-	virtual ITank *getTank() const
+	virtual AbstractTank *getTank() const
 	{
 		return tank;
 	}
@@ -26,14 +26,14 @@ public:
 	}
 
 protected:
-	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
+	explicit IPlayer(AbstractTank *tank, Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
 	    QObject(parent),
 	    tank(tank),
 	    name(name),
 	    color(color)
 	{}
 
-	ITank *tank = nullptr;
+	AbstractTank *tank = nullptr;
 	QString name;
 	Qt::GlobalColor color;
 };

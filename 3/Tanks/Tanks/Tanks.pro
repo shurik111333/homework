@@ -18,10 +18,10 @@ SOURCES += main.cpp\
     Controllers/gameController.cpp \
     Model/Player/localplayer.cpp \
     Model/Landscape/ilandscapegenerator.cpp \
-    Model/Shell/ishell.cpp \
-    Model/Tank/iTank.cpp \
     Model/Tank/tankSimple.cpp \
-    Model/Shell/shellStandart.cpp
+    Model/Shell/shellStandart.cpp \
+    Model/Shell/abstractShell.cpp \
+    Model/Tank/abstractTank.cpp
 
 HEADERS  += Views/mainwindow.h \
     Model/Landscape/iLandscapeGenerator.h \
@@ -29,7 +29,7 @@ HEADERS  += Views/mainwindow.h \
     Controllers/gameController.h \
     Model/Player/iplayer.h \
     Model/Player/localplayer.h \
-    Model/Shell/ishell.h \
-    Model/Tank/iTank.h \
     Model/Tank/tankSimple.h \
-    Model/Shell/shellStandart.h
+    Model/Shell/shellStandart.h \
+    Model/Shell/abstractShell.h \
+    Model/Tank/abstractTank.h

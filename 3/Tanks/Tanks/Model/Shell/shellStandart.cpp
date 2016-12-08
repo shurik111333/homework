@@ -3,7 +3,7 @@
 #include <QtMath>
 
 ShellStandart::ShellStandart(double x, double y, double angle, double speed) :
-    IShell(x, y, angle),
+    AbstractShell(x, y, angle),
     width(10),
     heigth(3)
 {

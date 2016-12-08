@@ -1,10 +1,10 @@
 #pragma once
 
-#include "iTank.h"
+#include "abstractTank.h"
 #include <QDebug>
 #include <QBrush>
 
-class TankSimple : public ITank
+class TankSimple : public AbstractTank
 {
 public:
 	/**
@@ -24,7 +24,7 @@ public:
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 	// ITank interface
-	virtual IShell *shoot() const override;
+	virtual AbstractShell *shoot() const override;
 	virtual QPointF baseCenter() const override;
 
 private:

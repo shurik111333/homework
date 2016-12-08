@@ -23,7 +23,7 @@ GameController::GameController(QObject *parent)
 GameController::~GameController()
 {
 	removeShell();
-	delete shellCursor;
+	//delete shellCursor;
 }
 
 const QList<QPointF> &GameController::getLandscape() const
@@ -34,17 +34,17 @@ const QList<QPointF> &GameController::getLandscape() const
 void GameController::startGame()
 {
 	removeShell();
-	removeShellCursor();
+//	removeShellCursor();
 	for (auto p : players)
 		delete p;
 	players.clear();
 	auto land = getLandscape();
-	shellCursor = createShellCursor();
+	//shellCursor = createShellCursor();
 	players.append(new LocalPlayer(createTank(land[0].x(), land[1].x(), Qt::red), Qt::red, "Player1"));
-	players.back()->getTank()->setDirection(ITank::Direction::right);
+	players.back()->getTank()->setDirection(AbstractTank::Direction::right);
 	players.append(new LocalPlayer(createTank(land[land.length() - 2].x(),
 	                               land[land.length() - 1].x(), Qt::blue), Qt::blue, "Player2"));
-	players.back()->getTank()->setDirection(ITank::Direction::left);
+	players.back()->getTank()->setDirection(AbstractTank::Direction::left);
 	state = State::waiting;
 	emit newGame();
 	player = players.end();
@@ -56,7 +56,7 @@ void GameController::keyPress(Qt::Key key)
 {
 	if (state == State::shooting || state == State::notInGame)
 		return;
-	ITank *tank = (*player)->getTank();
+	AbstractTank *tank = (*player)->getTank();
 	switch (key)
 	{
 		case Qt::Key_D:
@@ -90,22 +90,20 @@ void GameController::keyPress(Qt::Key key)
 
 void GameController::checkShell()
 {
-	if (!shellInScene())
+	if (!shellInGame())
 	{
-		disconnect(shell, &IShell::updatingPos, this, &GameController::checkShell);
+		disconnect(shell, &AbstractShell::updatingPos, this, &GameController::checkShell);
 		removeShell();
-		removeShellCursor();
 		state = State::waiting;
 		setNextPlayer();
 		return;
 	}
 	if (!shell->scene()->sceneRect().contains(shell->pos()))
 	{
-		shellCursor->show();
-		shellCursor->setPos(shell->pos().x(), shell->scene()->sceneRect().bottom());
+		shell->showCursor();
 		return;
 	}
-	shellCursor->hide();
+	shell->hideCursor();
 }
 
 const QVector<IPlayer *> &GameController::getPlayers() const
@@ -113,7 +111,7 @@ const QVector<IPlayer *> &GameController::getPlayers() const
 	return players;
 }
 
-ITank *GameController::createTank(double x0, double x1, const QBrush &brush) const
+AbstractTank *GameController::createTank(double x0, double x1, const QBrush &brush) const
 {
 	auto land = getLandscape();
 
@@ -125,17 +123,17 @@ ITank *GameController::createTank(double x0, double x1, const QBrush &brush) con
 	return tank;
 }
 
-void GameController::moveRight(ITank *tank) const
+void GameController::moveRight(AbstractTank *tank) const
 {
 	moveTank(tank, step);
 }
 
-void GameController::moveLeft(ITank *tank) const
+void GameController::moveLeft(AbstractTank *tank) const
 {
 	moveTank(tank, -step);
 }
 
-void GameController::moveTank(ITank *tank, double step) const
+void GameController::moveTank(AbstractTank *tank, double step) const
 {
 	double dx = tank->boundingRect().center().x();
 	auto p = landscape->toLandscape(landscape->getPoint(tank->pos().x() + dx + step));
@@ -146,11 +144,10 @@ void GameController::moveTank(ITank *tank, double step) const
 void GameController::shoot()
 {
 	state = State::shooting;
-	ITank *tank = (*player)->getTank();
+	AbstractTank *tank = (*player)->getTank();
 	shell = tank->shoot();
 	tank->scene()->addItem(shell);
-	tank->scene()->addItem(shellCursor);
-	connect(shell, &IShell::updatingPos, this, &GameController::checkShell);
+	connect(shell, &AbstractShell::updatingPos, this, &GameController::checkShell);
 }
 
 void GameController::setNextPlayer()
@@ -161,7 +158,7 @@ void GameController::setNextPlayer()
 	emit nextPlayer(*player);
 }
 
-bool GameController::shellInScene() const
+bool GameController::shellInGame() const
 {
 	auto rect = shell->scene()->sceneRect();
 	auto p = shell->pos();
@@ -183,13 +180,13 @@ void GameController::removeShell()
 	shell = nullptr;
 }
 
-void GameController::removeShellCursor()
+/*void GameController::removeShellCursor()
 {
 	if (shellCursor == nullptr)
 		return;
 	shellCursor->hide();
 	shellCursor->scene()->removeItem(shellCursor);
-}
+}*/
 
 QGraphicsPolygonItem *GameController::createShellCursor()
 {
