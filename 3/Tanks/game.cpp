@@ -1,6 +1,7 @@
 #include "game.h"
 #include "settings.h"
 #include <QVector>
+#include <QGraphicsScene>
 #include <QDebug>
 
 QDEBUG_H
@@ -82,5 +83,41 @@ void Game::playerMoving()
 
 void Game::playerShooting(IShell *shell)
 {
-
+	state = GameState::shooting;
+	currentShell = shell;
+	connect(currentShell, &IShell::updatingPos, this, &Game::shellUpdate);
 }
+
+void Game::shellUpdate()
+{
+	if (!shellInGame())
+	{
+		disconnect(currentShell, &IShell::updatingPos, this, &Game::shellUpdate);
+		removeShell();
+		//setNextPlayer();
+		state = GameState::gameInProgress;
+		return;
+	}
+	if (!currentShell->scene()->sceneRect().contains(currentShell->pos()))
+	{
+		currentShell->showCursor();
+		return;
+	}
+	currentShell->hideCursor();
+}
+
+bool Game::shellInGame()
+{
+	auto rect = currentShell->scene()->sceneRect();
+	auto p = currentShell->pos();
+	return p.y() >= rect.top() && p.x() >= rect.left() && p.x() <= rect.right();
+}
+
+void Game::removeShell()
+{
+	currentShell->hideCursor();
+	currentShell->cancelShoot();
+	delete currentShell;
+	currentShell = nullptr;
+}
+

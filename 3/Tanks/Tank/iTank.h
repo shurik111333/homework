@@ -41,9 +41,7 @@ protected:
 	double moveStep = 3;
 
 	ITank()
-	{
-
-	}
+	{}
 
 	virtual void move(double step);
 };

@@ -26,5 +26,8 @@ void LocalPlayer::keyPressed(const QKeyEvent *key)
 			getTank()->moveGunDown();
 			emit moveAction();
 			break;
+		case Qt::Key_Enter:
+		case Qt::Key_Return:
+			emit shootAction(getTank()->shoot());
 	}
 }

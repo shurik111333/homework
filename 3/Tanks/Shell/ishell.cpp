@@ -1,5 +1,6 @@
 #include "ishell.h"
 #include <QtMath>
+#include <QGraphicsScene>
 #include <QDebug>
 
 QDEBUG_H
@@ -26,6 +27,7 @@ void IShell::updatePos()
 {
 	time += dt;
 	setPos(getPoint(time));
+	getCursor()->setPos(getPoint(time).x(), scene()->sceneRect().bottom());
 	setRotation(getAngle(time));
 	emit updatingPos();
 }

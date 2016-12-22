@@ -4,10 +4,11 @@
 #include <QPainter>
 #include <QtMath>
 #include <QDebug>
+#include <QGraphicsScene>
 
 QDEBUG_H
 
-const double TankSimple::defaultWIdth = 30;
+const double TankSimple::defaultWIdth = 20;
 
 TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
     scale(width / defaultWIdth),
@@ -23,7 +24,7 @@ TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
 
 QRectF TankSimple::boundingRect() const
 {
-	return QRectF(0, 0, bodyw, bodyh + gunw);
+	return QRectF(0, 0, bodyw/* + gunh / 2 + 1*/, bodyh + gunw);
 }
 
 void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -44,6 +45,7 @@ IShell *TankSimple::shoot() const
 		ang = 180 - ang;
 	auto p = getGunCoordinates();
 	auto shell = new ShellStandart(p.x(), p.y(), ang, 100);
+	scene()->addItem(shell);
 	shell->shoot(1000);
 	return shell;
 }

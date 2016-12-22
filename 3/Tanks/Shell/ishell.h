@@ -13,6 +13,8 @@ public:
 	virtual double getAngle(double time) const;
 	virtual void shoot(double impuls);
 	virtual void cancelShoot();
+	virtual void showCursor() = 0;
+	virtual void hideCursor() = 0;
 
 signals:
 	void updatingPos();
@@ -20,6 +22,7 @@ signals:
 protected:
 	IShell(double x, double y, double angle, QObject *parent = 0);
 	virtual double getWeight() = 0;
+	virtual QGraphicsItem *getCursor() const = 0;
 
 protected slots:
 	virtual void updatePos();

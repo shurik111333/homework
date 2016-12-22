@@ -26,16 +26,18 @@ private:
 	{
 		notInGame,
 		gameInProgress,
+		shooting,
 		endOfGame
 	};
 
 	static Game *_instance;
+	const double minGunAngle = 0;
+	const double maxGunAngle = 90;
 	GameState state = GameState::notInGame;
 	QVector<IPlayer *> players;
 	QVector<IPlayer *>::const_iterator currentPlayer;
-	const double minGunAngle = 0;
-	const double maxGunAngle = 90;
 	ILandscapeGenerator *landscape = nullptr;
+	IShell *currentShell = nullptr;
 
 	explicit Game(QObject *parent = 0);
 
@@ -47,4 +49,7 @@ private:
 private slots:
 	void playerMoving();
 	void playerShooting(IShell *shell);
+	void shellUpdate();
+	bool shellInGame();
+	void removeShell();
 };
