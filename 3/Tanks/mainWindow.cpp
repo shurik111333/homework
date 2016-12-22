@@ -1,5 +1,7 @@
 #include "mainWindow.h"
 #include "ui_mainWindow.h"
+#include "gameWindow.h"
+#include "settings.h"
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -30,7 +32,10 @@ void MainWindow::comingSoon() const
 
 void MainWindow::localGame() const
 {
-	comingSoon();
+	Settings::instance()->newLocalGame();
+	auto game = new GameWindow();
+	game->setAttribute(Qt::WA_DeleteOnClose);
+	game->show();
 }
 
 void MainWindow::netGame() const

@@ -13,8 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainWindow.cpp
+        mainWindow.cpp \
+    gameWindow.cpp \
+    settings.cpp \
+    Player/localplayer.cpp \
+    game.cpp
 
-HEADERS  += mainWindow.h
+HEADERS  += mainWindow.h \
+    gameWindow.h \
+    settings.h \
+    Player/iplayer.h \
+    Player/localplayer.h \
+    game.h
 
 FORMS    += mainWindow.ui
