@@ -26,8 +26,8 @@ MainWindow::~MainWindow()
 void MainWindow::comingSoon() const
 {
 	auto box = new QMessageBox(QMessageBox::Information, "", "Coming soon!", QMessageBox::Ok);
-	connect(box, &QMessageBox::accepted, box, &QMessageBox::deleteLater);
-	box->exec();
+	box->setAttribute(Qt::WA_DeleteOnClose);
+	box->show();
 }
 
 void MainWindow::localGame() const
