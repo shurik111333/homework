@@ -16,6 +16,14 @@ void Settings::newLocalGame()
 	opponent = new LocalPlayer(Qt::blue, "Player Blue");
 }
 
+QVector<IPlayer *> Settings::getPlayers() const
+{
+	QVector<IPlayer *> res;
+	res.push_back(player);
+	res.push_back(opponent);
+	return res;
+}
+
 Settings::Settings(QObject *parent) : QObject(parent)
 {
 	player = new LocalPlayer(Qt::red, "Plyaer Red");

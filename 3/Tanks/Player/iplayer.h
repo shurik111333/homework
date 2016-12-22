@@ -1,9 +1,8 @@
 #pragma once
 
+#include "../Tank/iTank.h"
 #include <QString>
 #include <QObject>
-
-class ITank;
 
 class IPlayer : public QObject
 {
@@ -27,8 +26,9 @@ public:
 	}
 
 protected:
-	explicit IPlayer(Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
+	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
 	    QObject(parent),
+	    tank(tank),
 	    name(name),
 	    color(color)
 	{}

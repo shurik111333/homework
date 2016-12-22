@@ -2,6 +2,7 @@
 
 #include "Player/iplayer.h"
 #include <QObject>
+#include <QVector>
 
 class Settings : public QObject
 {
@@ -10,6 +11,7 @@ public:
 	static Settings *instance();
 
 	void newLocalGame();
+	QVector<IPlayer *> getPlayers() const;
 signals:
 
 public slots:
