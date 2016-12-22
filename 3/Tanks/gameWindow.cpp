@@ -1,5 +1,9 @@
 #include "gameWindow.h"
+#include "settings.h"
+#include "game.h"
 #include <QPushButton>
+#include <QList>
+#include <QEvent>
 
 GameWindow::GameWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -24,9 +28,55 @@ GameWindow::GameWindow(QWidget *parent) :
 
 	adjustSize();
 	setFixedSize(geometry().size());
+
+	scene.installEventFilter(this);
+
+	connect(btNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
+	connect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
 }
 
 GameWindow::~GameWindow()
 {
+	//disconnect(btNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
+	disconnect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
 	delete widget;
+}
+
+void GameWindow::drawLandscape(const QList<QPointF> &land)
+{
+	for (int i = 1; i < land.length(); i++)
+	{
+		scene.addLine(QLineF(land[i - 1], land[i]));
+	}
+}
+
+void GameWindow::clearScene()
+{
+
+}
+
+void GameWindow::newGame(const QVector<IPlayer *> &players)
+{
+	if (scene.items().empty())
+	{
+		drawLandscape(Settings::instance()->getLandscape()->getLandscape());
+		for (auto player : players)
+		{
+			scene.addItem(player->getTank());
+		}
+	}
+}
+
+void GameWindow::newGameCLicked()
+{
+
+}
+
+bool GameWindow::eventFilter(QObject *watched, QEvent *event)
+{
+	if (watched != &scene)
+		return QMainWindow::eventFilter(watched, event);
+	if (event->type() != QEvent::KeyPress)
+		return false;
+	Game::instance()->keyPressed(static_cast<QKeyEvent *>(event));
 }

@@ -18,6 +18,7 @@ TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
     brush(brush)
 {
 	setPos(x, y); //it is needed for matching tank's and scene's coordinate systems
+	//setTransformOriginPoint(baseCenter().x(), 0);
 }
 
 QRectF TankSimple::boundingRect() const

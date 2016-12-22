@@ -44,7 +44,6 @@ void ITank::changeDirection()
 	t.scale((int) direction, 1);
 	setTransform(t);
 	moveBy(-(int) direction * boundingRect().size().width(), 0);
-
 }
 
 void ITank::moveLeft()

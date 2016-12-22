@@ -1,14 +1,19 @@
 #pragma once
 
 #include "../Tank/iTank.h"
+#include "../Shell/ishell.h"
 #include <QString>
 #include <QObject>
+#include <QKeyEvent>
 
 class IPlayer : public QObject
 {
 	Q_OBJECT
 public:
-	virtual ~IPlayer() {}
+	virtual ~IPlayer()
+	{
+		delete tank;
+	}
 
 	virtual QString getName() const
 	{
@@ -25,8 +30,14 @@ public:
 		return color;
 	}
 
+	virtual void keyPressed(const QKeyEvent *key) = 0;
+
+signals:
+	void moveAction();
+	void shootAction(IShell *shell);
+
 protected:
-	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name = "Player", QObject *parent = 0) :
+	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name, QObject *parent = 0) :
 	    QObject(parent),
 	    tank(tank),
 	    name(name),
