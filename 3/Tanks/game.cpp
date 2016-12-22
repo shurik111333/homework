@@ -2,6 +2,8 @@
 #include "settings.h"
 #include <QVector>
 #include <QGraphicsScene>
+#include <QtMath>
+#include <QGraphicsLineItem>
 #include <QDebug>
 
 QDEBUG_H
@@ -71,7 +73,8 @@ void Game::setUpPlayer(IPlayer *player)
 {
 	connect(player, &IPlayer::moveAction, this, &Game::playerMoving);
 	connect(player, &IPlayer::shootAction, this, &Game::playerShooting);
-	player->getTank()->setTransformOriginPoint(player->getTank()->baseCenter().x(), 0);
+	auto tank = player->getTank();
+	tank->setTransformOriginPoint(tank->base().width() / 2, 0);
 }
 
 void Game::playerMoving()
@@ -90,11 +93,12 @@ void Game::playerShooting(IShell *shell)
 
 void Game::shellUpdate()
 {
-	if (!shellInGame())
+
+	if (!shellInGame() || isShellCollides())
 	{
 		disconnect(currentShell, &IShell::updatingPos, this, &Game::shellUpdate);
 		removeShell();
-		//setNextPlayer();
+		nextPlayer();
 		state = GameState::gameInProgress;
 		return;
 	}
@@ -119,5 +123,31 @@ void Game::removeShell()
 	currentShell->cancelShoot();
 	delete currentShell;
 	currentShell = nullptr;
+}
+
+void Game::nextPlayer()
+{
+	currentPlayer++;
+	if (currentPlayer == players.end())
+		currentPlayer = players.constBegin();
+}
+
+bool Game::isShellCollides() const
+{
+	bool res = isShellCollidesLandscape();
+	for (IPlayer *player : players)
+	{
+		QGraphicsRectItem base(player->getTank()->base());
+		base.moveBy(player->getTank()->pos().x(), player->getTank()->y());
+		res |= currentShell->collidesWithItem(&base);
+	}
+	return res;
+}
+
+bool Game::isShellCollidesLandscape() const
+{
+	auto segment = landscape->getSegment(currentShell->pos().x());
+	QGraphicsLineItem line(QLineF(segment.first, segment.second));
+	return currentShell->collidesWithItem(&line);
 }
 

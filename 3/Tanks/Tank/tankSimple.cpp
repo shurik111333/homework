@@ -22,9 +22,13 @@ TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
 	//setTransformOriginPoint(baseCenter().x(), 0);
 }
 
+TankSimple::~TankSimple()
+{
+}
+
 QRectF TankSimple::boundingRect() const
 {
-	return QRectF(0, 0, bodyw/* + gunh / 2 + 1*/, bodyh + gunw);
+	return QRectF(0, 0, bodyw + gunh / 2 + 1, bodyh + gunw);
 }
 
 void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -43,7 +47,9 @@ IShell *TankSimple::shoot() const
 	double ang = getGunAngle() + rotation();
 	if (getDirection() == Direction::left)
 		ang = 180 - ang;
-	auto p = getGunCoordinates();
+	auto rang = qDegreesToRadians(ang);
+	auto p = QPointF(getGunCoordinates().x() + qCos(rang) * gunw,
+	                 getGunCoordinates().y() + qSin(rang) * gunw);
 	auto shell = new ShellStandart(p.x(), p.y(), ang, 100);
 	scene()->addItem(shell);
 	shell->shoot(1000);
@@ -53,6 +59,11 @@ IShell *TankSimple::shoot() const
 QPointF TankSimple::baseCenter() const
 {
 	return pos() + QPointF((int) getDirection() * bodyw / 2, 0);
+}
+
+QRectF TankSimple::base() const
+{
+	return QRectF(0, 0, bodyw, bodyh);
 }
 
 void TankSimple::drawGun(QPainter *painter)

@@ -15,7 +15,8 @@ ShellStandart::ShellStandart(double x, double y, double angle, double speed) :
 
 ShellStandart::~ShellStandart()
 {
-	scene()->removeItem(cursor);
+	if (cursor->scene() != nullptr)
+		scene()->removeItem(cursor);
 	scene()->removeItem(this);
 }
 

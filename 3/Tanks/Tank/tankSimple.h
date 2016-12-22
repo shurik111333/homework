@@ -15,9 +15,7 @@ public:
 	 * @param width Width of tank's body
 	 */
 	TankSimple(double x, double y, const QBrush &brush, double width = defaultWIdth);
-	~TankSimple()
-	{
-	}
+	~TankSimple();
 
 	// QGraphicsItem interface
 	virtual QRectF boundingRect() const override;
@@ -26,6 +24,7 @@ public:
 	// ITank interface
 	virtual IShell *shoot() const override;
 	virtual QPointF baseCenter() const override;
+	virtual QRectF base() const override;
 
 private:
 	const static double defaultWIdth;

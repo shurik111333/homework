@@ -45,11 +45,15 @@ private:
 	void checkGun(ITank *tank);
 	void mapTank(ITank *tank);
 	void setUpPlayer(IPlayer *player);
+	void removeShell();
+	void nextPlayer();
+	bool isShellCollides() const;
+	bool isShellCollidesLandscape() const;
 
 private slots:
 	void playerMoving();
 	void playerShooting(IShell *shell);
 	void shellUpdate();
 	bool shellInGame();
-	void removeShell();
+
 };

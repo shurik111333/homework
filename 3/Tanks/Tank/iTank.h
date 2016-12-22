@@ -26,6 +26,7 @@ public:
 		right = 1
 	};
 
+	virtual QRectF base() const = 0;
 	virtual QPointF baseCenter() const = 0;
 	virtual Direction getDirection() const;
 	virtual void setDirection(Direction value);
