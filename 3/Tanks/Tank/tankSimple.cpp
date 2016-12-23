@@ -66,9 +66,11 @@ QRectF TankSimple::base() const
 bool TankSimple::collidesWithShell(IShell *shell)
 {
 	QGraphicsRectItem base(this->base());
-	base.setScale((int) getDirection());
-	base.moveBy(pos().x(), y());
-	return base.collidesWithItem(shell);
+	base.moveBy(x(), y());
+	base.setRotation(rotation());
+	if (getDirection() == Direction::left)
+		base.moveBy(-this->base().width(), 0);
+	return base.collidesWithItem(shell, Qt::IntersectsItemBoundingRect);
 }
 
 void TankSimple::drawGun(QPainter *painter)
