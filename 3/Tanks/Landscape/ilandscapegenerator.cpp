@@ -1,23 +1,27 @@
 #include "iLandscapeGenerator.h"
 #include <QtMath>
+#include <QSet>
 
 QPair<QPointF, QPointF> ILandscapeGenerator::getSegment(double x) const
 {
-	QPointF left = landscape[0];
-	QPointF right;
-	for (auto p : landscape)
+	if (x <= landscape[0].x())
+		return { landscape[0], landscape[1] };
+	if (x > landscape.last().x())
+		return { landscape[landscape.size() - 2], landscape.last() };
+	int l = 0;
+	int r = landscape.size() - 1;
+	while (r - l > 1)
 	{
-		right = p;
-		if (p.x() < x)
-		{
-			left = p;
-			continue;
-		}
-		break;
+		int m = (l + r) / 2;
+		if (x <= landscape[m].x())
+			r = m;
+		else
+			l = m;
 	}
-	if (left == right)
-		right = landscape[1];
-	return { left, right };
+	if (x <= landscape[r].x())
+		return { landscape[l], landscape[l + 1] };
+	else
+		return { landscape[r], landscape[r + 1] };
 }
 
 QPointF ILandscapeGenerator::getPoint(double x) const
