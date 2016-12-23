@@ -3,6 +3,8 @@
 #include "game.h"
 #include <QPushButton>
 #include <QMessageBox>
+#include <QLabel>
+#include <QLineEdit>
 #include <QList>
 #include <QEvent>
 
@@ -15,10 +17,8 @@ GameWindow::GameWindow(QWidget *parent) :
 	setCentralWidget(widget);
 
 	buttonNewGame = new QPushButton("New game");
-	labelWinner = new QLabel();
-	auto headerLayout = new QHBoxLayout();
+	headerLayout = new QHBoxLayout();
 	headerLayout->addWidget(buttonNewGame);
-	headerLayout->addWidget(labelWinner);
 	headerLayout->addStretch();
 
 	view = new QGraphicsView(&scene);
@@ -46,6 +46,27 @@ GameWindow::~GameWindow()
 	disconnect(Game::instance(), &Game::endOfGame, this, &GameWindow::endOfGame);
 	Game::instance()->releaseTanks();
 	delete widget;
+}
+
+void GameWindow::localGame()
+{
+	// ignore
+}
+
+void GameWindow::serverGame(const QHostAddress &address, quint16 port)
+{
+	buttonNewGame->setEnabled(false);
+	headerLayout->addWidget(new QLabel("IP"));
+	headerLayout->addWidget(new QLineEdit(address.toString()));
+	headerLayout->addWidget(new QLabel("Port"));
+	headerLayout->addWidget(new QLineEdit(QString::number(port)));
+	connect(Settings::instance(), &Settings::clientConnected, this, &GameWindow::clientConnected);
+}
+
+void GameWindow::clientGame()
+{
+	buttonNewGame->setVisible(false);
+	Game::instance()->startNewGame();
 }
 
 void GameWindow::drawLandscape(const QVector<QPointF> &land)
@@ -77,7 +98,13 @@ void GameWindow::newGame(const QVector<IPlayer *> &players)
 
 QString GameWindow::getWinnerMessage(IPlayer *winner)
 {
-	return "Game over. " + winner->getName() + " wins!";
+	return "Game over. " + winner->getName() + " win!";
+}
+
+void GameWindow::clientConnected()
+{
+	buttonNewGame->setEnabled(true);
+	Game::instance()->startNewGame();
 }
 
 bool GameWindow::eventFilter(QObject *watched, QEvent *event)

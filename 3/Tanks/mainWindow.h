@@ -21,7 +21,7 @@ private:
 
 private slots:
 	void localGame();
-	void netServerGame() const;
-	void connectToGame() const;
+	void netServerGame();
+	void connectToGame();
 	void onGameWindowClose();
 };

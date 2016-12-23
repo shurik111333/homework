@@ -41,11 +41,16 @@ void Game::startNewGame()
 	Settings::instance()->resetPlayers();
 	players = Settings::instance()->getPlayers();
 	landscape = Settings::instance()->getLandscape();
-	for (auto player : players)
+
+	for (auto p : players)
 	{
-		setUpPlayer(player);
+		setUpPlayer(p);
 	}
+
 	currentPlayer = players.constBegin();
+	connect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
+	connect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+
 	emit newGame(players);
 	emit newStep(*currentPlayer);
 	state = GameState::gameInProgress;
@@ -58,11 +63,8 @@ Game::Game(QObject *parent) : QObject(parent)
 
 void Game::clearLastGame()
 {
-	for (auto player : players)
-	{
-		disconnect(player, &IPlayer::moveAction, this, &Game::playerMoving);
-		disconnect(player, &IPlayer::shootAction, this, &Game::playerShooting);
-	}
+	disconnect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
+	disconnect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
 }
 
 void Game::checkGun(ITank *tank)
@@ -98,13 +100,11 @@ void Game::mapTank(ITank *tank, const QPointF &point)
 
 void Game::setUpPlayer(IPlayer *player)
 {
-	connect(player, &IPlayer::moveAction, this, &Game::playerMoving);
-	connect(player, &IPlayer::shootAction, this, &Game::playerShooting);
 	auto tank = player->getTank();
 	tank->setTransformOriginPoint(tank->base().width() / 2, 0);
 }
 
-void Game::playerMoving()
+void Game::playerMoving(Action action)
 {
 	auto tank = (*currentPlayer)->getTank();
 	checkGun(tank);
@@ -156,7 +156,13 @@ void Game::removeShell()
 
 void Game::nextPlayer()
 {
+	disconnect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
+	disconnect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+
 	setNextPlayer();
+
+	connect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
+	connect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
 	emit newStep(*currentPlayer);
 }
 

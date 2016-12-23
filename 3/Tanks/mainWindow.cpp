@@ -40,14 +40,27 @@ void MainWindow::localGame()
 	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
 }
 
-void MainWindow::netServerGame() const
+void MainWindow::netServerGame()
 {
-	comingSoon();
+	Settings::instance()->newServerGame();
+	auto game = new GameWindow();
+	game->setAttribute(Qt::WA_DeleteOnClose);
+	game->serverGame(Settings::instance()->getIP(), Settings::instance()->getPort());
+	game->show();
+	setEnabled(false);
+	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
 }
 
-void MainWindow::connectToGame() const
+void MainWindow::connectToGame()
 {
-	comingSoon();
+	Settings::instance()->newClientGame(QHostAddress(ui->lineIP->text()),
+	                                    ui->linePort->text().toInt());
+	auto game = new GameWindow();
+	game->setAttribute(Qt::WA_DeleteOnClose);
+	game->clientGame();
+	game->show();
+	setEnabled(false);
+	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
 }
 
 void MainWindow::onGameWindowClose()

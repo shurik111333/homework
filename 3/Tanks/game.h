@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Player/iplayer.h"
 #include "Shell/ishell.h"
+#include "Player/iplayer.h"
 #include "Tank/iTank.h"
 #include "Landscape/iLandscapeGenerator.h"
+#include "action.h"
 #include <QObject>
 #include <QVector>
 #include <QKeyEvent>
@@ -23,6 +24,7 @@ public:
 	 * @brief releaseTanks Removes tanks from the graphic scene.
 	 */
 	void releaseTanks();
+
 signals:
 	void newGame(const QVector<IPlayer *> &players);
 	void newStep(const IPlayer *player);
@@ -88,7 +90,7 @@ private:
 	IPlayer *getWinner();
 
 private slots:
-	void playerMoving();
+	void playerMoving(Action action);
 	void playerShooting(IShell *shell);
 	void shellUpdate();
 	bool shellInGame();

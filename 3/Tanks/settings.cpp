@@ -1,5 +1,7 @@
 #include "settings.h"
 #include "Player/localplayer.h"
+#include "Player/networkplayer.h"
+#include "Player/localplayerproxy.h"
 #include "Landscape/landscapeGeneratorFixed.h"
 
 Settings *Settings::_instance = nullptr;
@@ -18,6 +20,40 @@ void Settings::newLocalGame()
 	player = new LocalPlayer(Qt::red, "Plyaer Red");
 	opponent = new LocalPlayer(Qt::blue, "Player Blue");
 	resetPlayers();
+}
+
+void Settings::newServerGame()
+{
+	clear();
+
+	server = new Server();
+
+	auto pl = new LocalPlayerProxy(Qt::red, "You");
+	auto op = new NetworkPlayer(Qt::blue, "Opponent");
+
+	connect(server, &Server::newClient, pl, &LocalPlayerProxy::setSocket);
+	connect(server, &Server::newClient, op, &NetworkPlayer::setSocket);
+	connect(server, &Server::newClient, this, &Settings::clientConnected);
+
+	player = pl;
+	opponent = op;
+}
+
+void Settings::newClientGame(const QHostAddress &address, quint16 port)
+{
+	clear();
+
+	auto socket = new QTcpSocket();
+	socket->connectToHost(address, port);
+
+	auto pl = new NetworkPlayer(Qt::blue, "Opponent");
+	auto op = new LocalPlayerProxy(Qt::red, "You");
+
+	pl->setSocket(socket);
+	op->setSocket(socket);
+
+	player = pl;
+	opponent = op;
 }
 
 QVector<IPlayer *> Settings::getPlayers() const
@@ -44,6 +80,16 @@ void Settings::resetPlayers()
 	opponent->getTank()->setPos(landscape->getRightBorder());
 }
 
+QHostAddress Settings::getIP() const
+{
+	return server->getMyIP();
+}
+
+quint16 Settings::getPort() const
+{
+	return server->getMyPort();
+}
+
 Settings::Settings(QObject *parent) : QObject(parent)
 {
 	landscape = LandscapeGeneratorFixed::getInstance();
@@ -51,6 +97,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
 void Settings::clear()
 {
+	delete server;
 	delete player;
 	delete opponent;
 }

@@ -2,6 +2,7 @@
 
 #include "../Tank/iTank.h"
 #include "../Shell/ishell.h"
+#include "../action.h"
 #include <QString>
 #include <QObject>
 #include <QKeyEvent>
@@ -37,7 +38,7 @@ public:
 	virtual void keyPressed(const QKeyEvent *key) = 0;
 
 signals:
-	void moveAction();
+	void moveAction(Action action);
 	void shootAction(IShell *shell);
 
 protected:
