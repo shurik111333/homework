@@ -30,12 +30,14 @@ void MainWindow::comingSoon() const
 	box->show();
 }
 
-void MainWindow::localGame() const
+void MainWindow::localGame()
 {
 	Settings::instance()->newLocalGame();
 	auto game = new GameWindow();
 	game->setAttribute(Qt::WA_DeleteOnClose);
 	game->show();
+	setEnabled(false);
+	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
 }
 
 void MainWindow::netGame() const
@@ -46,4 +48,9 @@ void MainWindow::netGame() const
 void MainWindow::createMap() const
 {
 	comingSoon();
+}
+
+void MainWindow::onGameWindowClose()
+{
+	setEnabled(true);
 }

@@ -20,7 +20,8 @@ private:
 	void comingSoon() const;
 
 private slots:
-	void localGame() const;
+	void localGame();
 	void netGame() const;
 	void createMap() const;
+	void onGameWindowClose();
 };
