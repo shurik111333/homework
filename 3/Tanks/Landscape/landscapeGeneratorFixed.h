@@ -11,8 +11,8 @@ public:
 	 * @brief nextLandscape This method only calls getLandscape()
 	 * @return Landscape
 	 */
-	virtual const QList<QPointF> &nextLandscape();
-	virtual const QList<QPointF> &getLandscape() const;
+	virtual const QVector<QPointF> &nextLandscape();
+	virtual const QVector<QPointF> &getLandscape() const;
 
 private:
 	static LandscapeGeneratorFixed *instance;

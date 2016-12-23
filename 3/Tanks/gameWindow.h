@@ -33,7 +33,7 @@ private:
 	QSize viewOffset = QSize(3, 3);
 	bool f = false;
 
-	void drawLandscape(const QList<QPointF> &land);
+	void drawLandscape(const QVector<QPointF> &land);
 
 private slots:
 	void newGame(const QVector<IPlayer *> &players);

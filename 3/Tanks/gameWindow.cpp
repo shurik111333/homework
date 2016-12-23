@@ -43,7 +43,7 @@ GameWindow::~GameWindow()
 	delete widget;
 }
 
-void GameWindow::drawLandscape(const QList<QPointF> &land)
+void GameWindow::drawLandscape(const QVector<QPointF> &land)
 {
 	for (int i = 1; i < land.length(); i++)
 	{
@@ -70,4 +70,5 @@ bool GameWindow::eventFilter(QObject *watched, QEvent *event)
 	if (event->type() != QEvent::KeyPress)
 		return false;
 	Game::instance()->keyPressed(static_cast<QKeyEvent *>(event));
+	return true;
 }

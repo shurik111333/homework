@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QList>
+#include <QVector>
 #include <QPoint>
 #include <QPair>
 
@@ -12,13 +12,13 @@ public:
 	 * @brief nextLandscape Generate new landscape
 	 * @return New landscape
 	 */
-	virtual const QList<QPointF> &nextLandscape() = 0;
+	virtual const QVector<QPointF> &nextLandscape() = 0;
 	/**
 	 * @brief getLandscape Generate landscape of the map that represented by polygonal chain.
 	 * @return List of vertices of the polygonal chain.
 	 * First vertex located at the left border of the map, last - at the right border.
 	 */
-	virtual const QList<QPointF> &getLandscape() const = 0;
+	virtual const QVector<QPointF> &getLandscape() const = 0;
 	/**
 	 * @brief getSegment Find segment of landscape, that contains point with input x-coordinate.
 	 * @param x x-coordinate of point
@@ -59,7 +59,7 @@ public:
 	virtual double getLandscapeAngle(const QPointF &p) const;
 
 protected:
-	QList<QPointF> landscape;
+	QVector<QPointF> landscape;
 
 	ILandscapeGenerator()
 	{}

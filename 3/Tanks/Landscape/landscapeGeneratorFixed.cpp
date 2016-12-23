@@ -7,12 +7,12 @@ LandscapeGeneratorFixed *LandscapeGeneratorFixed::getInstance()
 	return instance != nullptr ? instance : instance = new LandscapeGeneratorFixed();
 }
 
-const QList<QPointF> &LandscapeGeneratorFixed::nextLandscape()
+const QVector<QPointF> &LandscapeGeneratorFixed::nextLandscape()
 {
 	return getLandscape();
 }
 
-const QList<QPointF> &LandscapeGeneratorFixed::getLandscape() const
+const QVector<QPointF> &LandscapeGeneratorFixed::getLandscape() const
 {
 	return landscape;
 }
