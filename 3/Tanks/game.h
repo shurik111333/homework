@@ -15,6 +15,7 @@ public:
 	static Game *instance();
 
 	void keyPressed(QKeyEvent *key);
+	void releaseTanks();
 signals:
 	void newGame(const QVector<IPlayer *> &players);
 	void newStep(const IPlayer *player);

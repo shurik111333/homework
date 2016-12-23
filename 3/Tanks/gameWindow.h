@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QPushButton>
 #include <QVector>
 
 namespace Ui {
@@ -27,16 +28,15 @@ private:
 	QGraphicsScene scene;
 	QGraphicsView *view = nullptr;
 	QGraphicsTextItem *playerName = nullptr;
+	QPushButton *buttonNewGame = nullptr;
 	QSize sceneSize = QSize(1000, 500);
 	QSize viewOffset = QSize(3, 3);
 	bool f = false;
 
 	void drawLandscape(const QList<QPointF> &land);
-	void clearScene();
 
 private slots:
 	void newGame(const QVector<IPlayer *> &players);
-	void newGameCLicked();
 
 	// QObject interface
 public:

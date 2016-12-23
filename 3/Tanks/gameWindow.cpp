@@ -13,9 +13,9 @@ GameWindow::GameWindow(QWidget *parent) :
 	widget->setLayout(mainLayout);
 	setCentralWidget(widget);
 
-	auto btNewGame = new QPushButton("New game");
+	buttonNewGame = new QPushButton("New game");
 	auto headerLayout = new QHBoxLayout();
-	headerLayout->addWidget(btNewGame);
+	headerLayout->addWidget(buttonNewGame);
 	headerLayout->addStretch();
 
 	view = new QGraphicsView(&scene);
@@ -31,14 +31,15 @@ GameWindow::GameWindow(QWidget *parent) :
 
 	scene.installEventFilter(this);
 
-	connect(btNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
+	connect(buttonNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
 	connect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
 }
 
 GameWindow::~GameWindow()
 {
-	//disconnect(btNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
+	disconnect(buttonNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
 	disconnect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
+	Game::instance()->releaseTanks();
 	delete widget;
 }
 
@@ -48,11 +49,6 @@ void GameWindow::drawLandscape(const QList<QPointF> &land)
 	{
 		scene.addLine(QLineF(land[i - 1], land[i]));
 	}
-}
-
-void GameWindow::clearScene()
-{
-
 }
 
 void GameWindow::newGame(const QVector<IPlayer *> &players)
@@ -65,11 +61,6 @@ void GameWindow::newGame(const QVector<IPlayer *> &players)
 			scene.addItem(player->getTank());
 		}
 	}
-}
-
-void GameWindow::newGameCLicked()
-{
-
 }
 
 bool GameWindow::eventFilter(QObject *watched, QEvent *event)

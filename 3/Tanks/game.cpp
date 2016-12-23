@@ -24,6 +24,18 @@ void Game::keyPressed(QKeyEvent *key)
 	(*currentPlayer)->keyPressed(key);
 }
 
+void Game::releaseTanks()
+{
+	for (IPlayer *player : players)
+	{
+		auto scene = player->getTank()->scene();
+		if (scene != nullptr)
+		{
+			scene->removeItem(player->getTank());
+		}
+	}
+}
+
 void Game::startNewGame()
 {
 	Settings::instance()->resetPlayers();
