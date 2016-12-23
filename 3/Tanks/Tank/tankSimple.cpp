@@ -19,7 +19,6 @@ TankSimple::TankSimple(double x, double y, const QBrush &brush, double width) :
     brush(brush)
 {
 	setPos(x, y); //it is needed for matching tank's and scene's coordinate systems
-	//setTransformOriginPoint(baseCenter().x(), 0);
 }
 
 TankSimple::~TankSimple()
@@ -36,8 +35,8 @@ void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 	QPen pen(Qt::black, 1);
 	painter->setPen(pen);
 
-	drawBody(painter);
 	drawGun(painter);
+	drawBody(painter);
 }
 
 IShell *TankSimple::shoot() const

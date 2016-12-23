@@ -75,10 +75,25 @@ void Game::checkGun(ITank *tank)
 
 void Game::mapTank(ITank *tank)
 {
-	double ang = (int) tank->getDirection() * landscape->getLandscapeAngle(tank->baseCenter());
+	if (tank->baseCenter().x() < landscape->getLeftBorder().x())
+	{
+		mapTank(tank, landscape->getLeftBorder());
+		return;
+	}
+	if (tank->baseCenter().x() > landscape->getRightBorder().x())
+	{
+		mapTank(tank, landscape->getRightBorder());
+		return;
+	}
+	mapTank(tank, tank->baseCenter());
+}
+
+void Game::mapTank(ITank *tank, const QPointF &point)
+{
+	double ang = (int) tank->getDirection() * landscape->getLandscapeAngle(point);
 
 	tank->setRotation(ang);
-	tank->setPos(landscape->getPoint(tank->baseCenter().x()) + tank->pos() - tank->baseCenter());
+	tank->setPos(landscape->getPoint(point.x()) + tank->pos() - tank->baseCenter());
 }
 
 void Game::setUpPlayer(IPlayer *player)

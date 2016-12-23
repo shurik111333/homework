@@ -43,7 +43,7 @@ void ITank::changeDirection()
 	QTransform t;
 	t.scale((int) direction, 1);
 	setTransform(t);
-	moveBy(-(int) direction * boundingRect().size().width(), 0);
+	moveBy(-(int) direction * base().width(), 0);
 }
 
 void ITank::moveLeft()

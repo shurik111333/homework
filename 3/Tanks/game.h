@@ -45,6 +45,7 @@ private:
 	void clearLastGame();
 	void checkGun(ITank *tank);
 	void mapTank(ITank *tank);
+	void mapTank(ITank *tank, const QPointF &point);
 	void setUpPlayer(IPlayer *player);
 	void removeShell();
 	void nextPlayer();
