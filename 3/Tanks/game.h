@@ -50,7 +50,7 @@ private:
 	explicit Game(QObject *parent = 0);
 
 	/**
-	 * @brief clearLastGame Clean up before new game.
+	 * @brief clearLastGame Clean up after game.
 	 */
 	void clearLastGame();
 	/**
@@ -80,6 +80,9 @@ private:
 	 * @return True, if shell colliding with landscape.
 	 */
 	bool isShellCollidesLandscape() const;
+	bool isShellCollidesPlayers() const;
+	void endStep();
+	void endGame();
 
 private slots:
 	void playerMoving();

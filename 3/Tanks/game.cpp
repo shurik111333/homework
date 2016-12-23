@@ -120,12 +120,14 @@ void Game::playerShooting(IShell *shell)
 
 void Game::shellUpdate()
 {
-
-	if (!shellInGame() || isShellCollides())
+	if (isShellCollidesPlayers())
 	{
-		disconnect(currentShell, &IShell::updatingPos, this, &Game::shellUpdate);
-		removeShell();
-		nextPlayer();
+		endGame();
+		return;
+	}
+	if (!shellInGame() || isShellCollidesLandscape())
+	{
+		endStep();
 		state = GameState::gameInProgress;
 		return;
 	}
@@ -157,18 +159,12 @@ void Game::nextPlayer()
 	currentPlayer++;
 	if (currentPlayer == players.end())
 		currentPlayer = players.constBegin();
+	emit newStep(*currentPlayer);
 }
 
 bool Game::isShellCollides() const
 {
-	bool res = isShellCollidesLandscape();
-	for (IPlayer *player : players)
-	{
-		QGraphicsRectItem base(player->getTank()->base());
-		base.moveBy(player->getTank()->pos().x(), player->getTank()->y());
-		res |= currentShell->collidesWithItem(&base);
-	}
-	return res;
+	return isShellCollidesLandscape() || isShellCollidesPlayers();
 }
 
 bool Game::isShellCollidesLandscape() const
@@ -178,3 +174,29 @@ bool Game::isShellCollidesLandscape() const
 	return currentShell->collidesWithItem(&line);
 }
 
+bool Game::isShellCollidesPlayers() const
+{
+	bool res = false;
+	for (IPlayer *player : players)
+	{
+		QGraphicsRectItem base(player->getTank()->base());
+		base.setScale((int) player->getTank()->getDirection());
+		base.moveBy(player->getTank()->pos().x(), player->getTank()->y());
+		res |= currentShell->collidesWithItem(&base);
+	}
+	return res;
+}
+
+void Game::endStep()
+{
+	disconnect(currentShell, &IShell::updatingPos, this, &Game::shellUpdate);
+	removeShell();
+	nextPlayer();
+}
+
+void Game::endGame()
+{
+	endStep();
+	state = GameState::endOfGame;
+	clearLastGame();
+}
