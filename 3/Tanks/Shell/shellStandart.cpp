@@ -3,7 +3,7 @@
 #include <QtMath>
 #include <QGraphicsScene>
 
-ShellStandart::ShellStandart(double x, double y, double angle, double speed) :
+ShellStandart::ShellStandart(double x, double y, double angle) :
     IShell(x, y, angle),
     width(10),
     heigth(3)

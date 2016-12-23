@@ -11,15 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	connect(ui->buttonLocalGame, &QPushButton::clicked, this, &MainWindow::localGame);
-	connect(ui->buttonNetGame, &QPushButton::clicked, this, &MainWindow::netGame);
-	connect(ui->buttonCreateMap, &QPushButton::clicked, this, &MainWindow::createMap);
+	connect(ui->buttonServerNetGame, &QPushButton::clicked, this, &MainWindow::netServerGame);
+	connect(ui->buttonConnect, &QPushButton::clicked, this, &MainWindow::connectToGame);
 }
 
 MainWindow::~MainWindow()
 {
 	disconnect(ui->buttonLocalGame, &QPushButton::clicked, this, &MainWindow::localGame);
-	disconnect(ui->buttonNetGame, &QPushButton::clicked, this, &MainWindow::netGame);
-	disconnect(ui->buttonCreateMap, &QPushButton::clicked, this, &MainWindow::createMap);
+	disconnect(ui->buttonServerNetGame, &QPushButton::clicked, this, &MainWindow::netServerGame);
+	disconnect(ui->buttonConnect, &QPushButton::clicked, this, &MainWindow::connectToGame);
 	delete ui;
 }
 
@@ -40,12 +40,12 @@ void MainWindow::localGame()
 	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
 }
 
-void MainWindow::netGame() const
+void MainWindow::netServerGame() const
 {
 	comingSoon();
 }
 
-void MainWindow::createMap() const
+void MainWindow::connectToGame() const
 {
 	comingSoon();
 }

@@ -29,23 +29,9 @@
      </spacer>
     </item>
     <item row="1" column="1">
-     <widget class="QPushButton" name="buttonNetGame">
+     <widget class="QPushButton" name="buttonServerNetGame">
       <property name="text">
-       <string>Network game</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="buttonLocalGame">
-      <property name="text">
-       <string>Local game</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="buttonCreateMap">
-      <property name="text">
-       <string>Create map</string>
+       <string>Create network game</string>
       </property>
      </widget>
     </item>
@@ -61,6 +47,20 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="buttonLocalGame">
+      <property name="text">
+       <string>Local game</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="buttonConnect">
+      <property name="text">
+       <string>Connect to server</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

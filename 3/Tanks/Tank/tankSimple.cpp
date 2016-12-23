@@ -41,15 +41,13 @@ void TankSimple::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 IShell *TankSimple::shoot() const
 {
-	double dx = bodyw / 2 + gunh / 2;
-	double dy = bodyh - gunh / 2;
 	double ang = getGunAngle() + rotation();
 	if (getDirection() == Direction::left)
 		ang = 180 - ang;
 	auto rang = qDegreesToRadians(ang);
 	auto p = QPointF(getGunCoordinates().x() + qCos(rang) * gunw,
 	                 getGunCoordinates().y() + qSin(rang) * gunw);
-	auto shell = new ShellStandart(p.x(), p.y(), ang, 100);
+	auto shell = new ShellStandart(p.x(), p.y(), ang);
 	scene()->addItem(shell);
 	shell->shoot(1000);
 	return shell;

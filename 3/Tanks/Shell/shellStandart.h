@@ -6,7 +6,7 @@
 class ShellStandart : public IShell
 {
 public:
-	ShellStandart(double x, double y, double angle, double speed);
+	ShellStandart(double x, double y, double angle);
 	~ShellStandart();
 
 	// QGraphicsItem interface
