@@ -2,6 +2,7 @@
 #include "settings.h"
 #include "game.h"
 #include <QPushButton>
+#include <QMessageBox>
 #include <QList>
 #include <QEvent>
 
@@ -57,7 +58,9 @@ void GameWindow::drawLandscape(const QVector<QPointF> &land)
 
 void GameWindow::endOfGame(IPlayer *winner)
 {
-	labelWinner->setText("Game over. " + winner->getName() + " win!");
+	auto box = new QMessageBox(QMessageBox::Information, "", getWinnerMessage(winner), QMessageBox::Ok);
+	box->setAttribute(Qt::WA_DeleteOnClose);
+	box->show();
 }
 
 void GameWindow::newGame(const QVector<IPlayer *> &players)
@@ -70,6 +73,11 @@ void GameWindow::newGame(const QVector<IPlayer *> &players)
 			scene.addItem(player->getTank());
 		}
 	}
+}
+
+QString GameWindow::getWinnerMessage(IPlayer *winner)
+{
+	return "Game over. " + winner->getName() + " wins!";
 }
 
 bool GameWindow::eventFilter(QObject *watched, QEvent *event)

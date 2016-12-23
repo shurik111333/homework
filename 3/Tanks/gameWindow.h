@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QVector>
 #include <QLabel>
+#include <QString>
 
 namespace Ui {
 	class GameWindow;
@@ -38,9 +39,10 @@ private:
 	void drawLandscape(const QVector<QPointF> &land);
 	void endOfGame(IPlayer *winner);
 
+
 private slots:
 	void newGame(const QVector<IPlayer *> &players);
-
+	QString getWinnerMessage(IPlayer *winner);
 	// QObject interface
 public:
 	virtual bool eventFilter(QObject *watched, QEvent *event) override;
