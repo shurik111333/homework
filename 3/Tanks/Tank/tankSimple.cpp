@@ -63,6 +63,14 @@ QRectF TankSimple::base() const
 	return QRectF(0, 0, bodyw, bodyh);
 }
 
+bool TankSimple::collidesWithShell(IShell *shell)
+{
+	QGraphicsRectItem base(this->base());
+	base.setScale((int) getDirection());
+	base.moveBy(pos().x(), y());
+	return base.collidesWithItem(shell);
+}
+
 void TankSimple::drawGun(QPainter *painter)
 {
 	QRectF gun(0, 0, gunw, gunh);

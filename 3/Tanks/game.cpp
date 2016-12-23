@@ -156,10 +156,15 @@ void Game::removeShell()
 
 void Game::nextPlayer()
 {
+	setNextPlayer();
+	emit newStep(*currentPlayer);
+}
+
+void Game::setNextPlayer()
+{
 	currentPlayer++;
 	if (currentPlayer == players.end())
 		currentPlayer = players.constBegin();
-	emit newStep(*currentPlayer);
 }
 
 bool Game::isShellCollides() const
@@ -179,10 +184,7 @@ bool Game::isShellCollidesPlayers() const
 	bool res = false;
 	for (IPlayer *player : players)
 	{
-		QGraphicsRectItem base(player->getTank()->base());
-		base.setScale((int) player->getTank()->getDirection());
-		base.moveBy(player->getTank()->pos().x(), player->getTank()->y());
-		res |= currentShell->collidesWithItem(&base);
+		res |= player->getTank()->collidesWithShell(currentShell);
 	}
 	return res;
 }
@@ -196,7 +198,18 @@ void Game::endStep()
 
 void Game::endGame()
 {
+	auto winner = getWinner();
 	endStep();
 	state = GameState::endOfGame;
 	clearLastGame();
+	emit endOfGame(winner);
+}
+
+IPlayer *Game::getWinner()
+{
+	if ((*currentPlayer)->getTank()->collidesWithShell(currentShell))
+	{
+		setNextPlayer();
+	}
+	return *currentPlayer;
 }

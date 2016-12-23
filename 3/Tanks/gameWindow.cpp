@@ -14,8 +14,10 @@ GameWindow::GameWindow(QWidget *parent) :
 	setCentralWidget(widget);
 
 	buttonNewGame = new QPushButton("New game");
+	labelWinner = new QLabel();
 	auto headerLayout = new QHBoxLayout();
 	headerLayout->addWidget(buttonNewGame);
+	headerLayout->addWidget(labelWinner);
 	headerLayout->addStretch();
 
 	view = new QGraphicsView(&scene);
@@ -33,12 +35,14 @@ GameWindow::GameWindow(QWidget *parent) :
 
 	connect(buttonNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
 	connect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
+	connect(Game::instance(), &Game::endOfGame, this, &GameWindow::endOfGame);
 }
 
 GameWindow::~GameWindow()
 {
 	disconnect(buttonNewGame, &QPushButton::clicked, Game::instance(), &Game::startNewGame);
 	disconnect(Game::instance(), &Game::newGame, this, &GameWindow::newGame);
+	disconnect(Game::instance(), &Game::endOfGame, this, &GameWindow::endOfGame);
 	Game::instance()->releaseTanks();
 	delete widget;
 }
@@ -49,6 +53,11 @@ void GameWindow::drawLandscape(const QVector<QPointF> &land)
 	{
 		scene.addLine(QLineF(land[i - 1], land[i]));
 	}
+}
+
+void GameWindow::endOfGame(IPlayer *winner)
+{
+	labelWinner->setText("Game over. " + winner->getName() + " win!");
 }
 
 void GameWindow::newGame(const QVector<IPlayer *> &players)

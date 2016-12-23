@@ -56,6 +56,7 @@ public:
 	 * @param dir Direction to move
 	 */
 	virtual void move(Direction dir);
+	virtual bool collidesWithShell(IShell *shell) = 0;
 
 protected:
 	Direction direction = Direction::right;

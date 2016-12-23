@@ -26,6 +26,7 @@ public:
 signals:
 	void newGame(const QVector<IPlayer *> &players);
 	void newStep(const IPlayer *player);
+	void endOfGame(IPlayer *winner);
 
 public slots:
 	void startNewGame();
@@ -74,6 +75,7 @@ private:
 	 * @brief nextPlayer Set up next player.
 	 */
 	void nextPlayer();
+	void setNextPlayer();
 	bool isShellCollides() const;
 	/**
 	 * @brief isShellCollidesLandscape
@@ -83,6 +85,7 @@ private:
 	bool isShellCollidesPlayers() const;
 	void endStep();
 	void endGame();
+	IPlayer *getWinner();
 
 private slots:
 	void playerMoving();

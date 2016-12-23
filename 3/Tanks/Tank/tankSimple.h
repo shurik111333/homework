@@ -25,6 +25,7 @@ public:
 	virtual IShell *shoot() const override;
 	virtual QPointF baseCenter() const override;
 	virtual QRectF base() const override;
+	bool collidesWithShell(IShell *shell);
 
 private:
 	const static double defaultWIdth;

@@ -9,6 +9,7 @@
 #include <QGraphicsScene>
 #include <QPushButton>
 #include <QVector>
+#include <QLabel>
 
 namespace Ui {
 	class GameWindow;
@@ -29,11 +30,13 @@ private:
 	QGraphicsView *view = nullptr;
 	QGraphicsTextItem *playerName = nullptr;
 	QPushButton *buttonNewGame = nullptr;
+	QLabel *labelWinner = nullptr;
 	QSize sceneSize = QSize(1000, 500);
 	QSize viewOffset = QSize(3, 3);
 	bool f = false;
 
 	void drawLandscape(const QVector<QPointF> &land);
+	void endOfGame(IPlayer *winner);
 
 private slots:
 	void newGame(const QVector<IPlayer *> &players);
