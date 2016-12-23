@@ -11,9 +11,15 @@ class Settings : public QObject
 public:
 	static Settings *instance();
 
+	/**
+	 * @brief newLocalGame Creates players for new local game.
+	 */
 	void newLocalGame();
 	QVector<IPlayer *> getPlayers() const;
 	ILandscapeGenerator *getLandscape() const;
+	/**
+	 * @brief resetPlayers Reset players to it initial state.
+	 */
 	void resetPlayers();
 
 signals:
@@ -27,6 +33,13 @@ private:
 
 	explicit Settings(QObject *parent = 0);
 
+	/**
+	 * @brief clear Removes players.
+	 */
 	void clear();
+	/**
+	 * @brief resetTank Reset tank to it initial state.
+	 * @param tank
+	 */
 	void resetTank(ITank *tank);
 };

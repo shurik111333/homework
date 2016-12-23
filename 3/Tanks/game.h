@@ -14,7 +14,14 @@ class Game : public QObject
 public:
 	static Game *instance();
 
+	/**
+	 * @brief keyPressed Process user key pressing
+	 * @param key
+	 */
 	void keyPressed(QKeyEvent *key);
+	/**
+	 * @brief releaseTanks Removes tanks from the graphic scene.
+	 */
 	void releaseTanks();
 signals:
 	void newGame(const QVector<IPlayer *> &players);
@@ -42,14 +49,36 @@ private:
 
 	explicit Game(QObject *parent = 0);
 
+	/**
+	 * @brief clearLastGame Clean up before new game.
+	 */
 	void clearLastGame();
+	/**
+	 * @brief checkGun Checks that tank's gun has correct angle.
+	 * @param tank
+	 */
 	void checkGun(ITank *tank);
+	/**
+	 * @brief mapTank Mapping tank to the landscape according to it coordinates.
+	 * @param tank
+	 */
 	void mapTank(ITank *tank);
 	void mapTank(ITank *tank, const QPointF &point);
+	/**
+	 * @brief setUpPlayer Configuring player for game.
+	 * @param player
+	 */
 	void setUpPlayer(IPlayer *player);
 	void removeShell();
+	/**
+	 * @brief nextPlayer Set up next player.
+	 */
 	void nextPlayer();
 	bool isShellCollides() const;
+	/**
+	 * @brief isShellCollidesLandscape
+	 * @return True, if shell colliding with landscape.
+	 */
 	bool isShellCollidesLandscape() const;
 
 private slots:

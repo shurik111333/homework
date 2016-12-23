@@ -30,6 +30,10 @@ public:
 		return color;
 	}
 
+	/**
+	 * @brief keyPressed Process user key pressing.
+	 * @param key
+	 */
 	virtual void keyPressed(const QKeyEvent *key) = 0;
 
 signals:

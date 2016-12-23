@@ -9,10 +9,27 @@ class IShell : public QObject, public QGraphicsItem
 	Q_OBJECT
 public:
 	virtual ~IShell();
+	/**
+	 * @brief getPoint Calculate shell's coordinates in passed moment of time
+	 * @param time
+	 * @return Point of the shell in passed moment of time
+	 */
 	virtual QPointF getPoint(double time) const;
+	/**
+	 * @return Angle of the shell in passed moment of time
+	 */
 	virtual double getAngle(double time) const;
+	/**
+	 * @brief shoot Shoots with passed impuls
+	 */
 	virtual void shoot(double impuls);
+	/**
+	 * @brief cancelShoot Terminates shot
+	 */
 	virtual void cancelShoot();
+	/**
+	 * @brief showCursor Show cursor on the scene that moving for shell by x-coordinate
+	 */
 	virtual void showCursor() = 0;
 	virtual void hideCursor() = 0;
 
@@ -25,6 +42,9 @@ protected:
 	virtual QGraphicsItem *getCursor() const = 0;
 
 protected slots:
+	/**
+	 * @brief updatePos Updating shell's coordinates according to time
+	 */
 	virtual void updatePos();
 
 private:
