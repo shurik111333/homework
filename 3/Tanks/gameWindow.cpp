@@ -76,6 +76,12 @@ void GameWindow::clientGame()
 	Game::instance()->startNewGame();
 }
 
+void GameWindow::closeEvent(QCloseEvent *event)
+{
+	emit closing();
+	QMainWindow::closeEvent(event);
+}
+
 void GameWindow::drawLandscape(const QVector<QPointF> &land)
 {
 	for (int i = 1; i < land.length(); i++)

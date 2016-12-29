@@ -1,7 +1,7 @@
 #include "shellExplosive.h"
 #include <QPainter>
 #include <QGraphicsPolygonItem>
-#include <QGraphicsSCene>
+#include <QGraphicsScene>
 #include <QDebug>
 
 QDEBUG_H

@@ -31,6 +31,13 @@ public:
 	void serverGame(const QHostAddress &address, quint16 port);
 	void clientGame();
 
+signals:
+	void closing();
+
+	// QWidget interface
+protected:
+	virtual void closeEvent(QCloseEvent *event) override;
+
 private:
 	QWidget *widget = nullptr;
 	QVBoxLayout *mainLayout = nullptr;
