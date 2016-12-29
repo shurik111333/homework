@@ -15,6 +15,7 @@ public:
 
 	// IShell interface
 	virtual double getExplosiveRadius() override;
+	virtual void explode() override;
 
 protected:
 	virtual double getWeight() override;

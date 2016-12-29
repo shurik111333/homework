@@ -45,11 +45,6 @@ void IShell::cancelShoot()
 	timer.stop();
 }
 
-IShell *IShell::create(double x, double y, double ang, IShell::Type type)
-{
-	return nullptr;
-}
-
 IShell::IShell(double x, double y, double angle, QObject *parent) :
     QObject(parent),
     startX(x),

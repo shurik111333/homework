@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     Player/localplayerproxy.cpp \
     Shell/shellExplosive.cpp \
     Shell/ShellType/standart.cpp \
-    Shell/ShellType/explosive.cpp
+    Shell/ShellType/explosive.cpp \
+    Shell/Explosion/explosion.cpp
 
 HEADERS  += mainWindow.h \
     gameWindow.h \
@@ -52,6 +53,12 @@ HEADERS  += mainWindow.h \
     Shell/shellExplosive.h \
     Shell/ShellType/ishelltype.h \
     Shell/ShellType/standart.h \
-    Shell/ShellType/explosive.h
+    Shell/ShellType/explosive.h \
+    Shell/Explosion/explosion.h
 
 FORMS    += mainWindow.ui
+
+RESOURCES += \
+    Resources/sprites.qrc
+
+DISTFILES +=

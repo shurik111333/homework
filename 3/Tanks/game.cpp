@@ -124,11 +124,15 @@ void Game::shellUpdate()
 		endGame();
 		return;
 	}
-	if (isShellCollidesLandscape() && isShellHitsPlayers())
+	if (isShellCollidesLandscape())
 	{
-		getHitedPlayer()->getTank()->setHealthPoints(0);
-		endGame();
-		return;
+		currentShell->explode();
+		if (isShellHitsPlayers())
+		{
+			getHitedPlayer()->getTank()->setHealthPoints(0);
+			endGame();
+			return;
+		}
 	}
 	if (!shellInGame() || isShellCollidesLandscape())
 	{

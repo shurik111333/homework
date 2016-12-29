@@ -16,6 +16,7 @@ public:
 	virtual void showCursor() override;
 	virtual void hideCursor() override;
 	virtual double getExplosiveRadius() override;
+	virtual void explode() override;
 
 protected:
 	virtual double getWeight() override;

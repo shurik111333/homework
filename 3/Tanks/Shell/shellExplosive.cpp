@@ -1,4 +1,5 @@
 #include "shellExplosive.h"
+#include "Explosion/explosion.h"
 #include <QPainter>
 #include <QGraphicsPolygonItem>
 #include <QGraphicsScene>
@@ -51,6 +52,11 @@ void ShellExplosive::hideCursor()
 double ShellExplosive::getExplosiveRadius()
 {
 	return explosiveRadius;
+}
+
+void ShellExplosive::explode()
+{
+	scene()->addItem(new Explosion(boundingRect().center() + pos()));
 }
 
 double ShellExplosive::getWeight()

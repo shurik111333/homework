@@ -36,6 +36,11 @@ double ShellStandart::getExplosiveRadius()
 	return 0;
 }
 
+void ShellStandart::explode()
+{
+	// ignore
+}
+
 double ShellStandart::getWeight()
 {
 	return weight;
