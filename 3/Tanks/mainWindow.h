@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gameWindow.h"
 #include <QMainWindow>
 
 namespace Ui {
@@ -18,10 +19,10 @@ private:
 	Ui::MainWindow *ui;
 
 	void comingSoon() const;
+	void showGameWindow(GameWindow *window);
 
 private slots:
 	void localGame();
-	void netServerGame() const;
-	void connectToGame() const;
-	void onGameWindowClose();
+	void netServerGame();
+	void connectToGame();
 };

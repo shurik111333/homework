@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../Shell/ishell.h"
+#include "../Shell/ShellType/ishelltype.h"
+#include "../Shell/ShellType/standart.h"
 #include <QGraphicsItem>
 
 class ITank : public QGraphicsItem
@@ -57,9 +59,18 @@ public:
 	 */
 	virtual void move(Direction dir);
 	virtual bool collidesWithShell(IShell *shell) = 0;
+	virtual bool hitsByShell(IShell *shell) = 0;
+	virtual void setShell(IShellType *type);
+	virtual IShellType *getShell() const;
+	virtual int getHealthPoints() const;
+	virtual void hit(int damage);
+	virtual void setHealthPoints(int newHp);
+	virtual bool isDestroyed() const;
 
 protected:
 	Direction direction = Direction::right;
+	IShellType *shellType = Standart::instance();
+	int hp = 100;
 	double gunAngle = 45;
 	double gunStep = 2;
 	double moveStep = 3;

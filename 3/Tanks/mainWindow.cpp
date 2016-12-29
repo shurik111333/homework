@@ -1,6 +1,5 @@
 #include "mainWindow.h"
 #include "ui_mainWindow.h"
-#include "gameWindow.h"
 #include "settings.h"
 #include <QMessageBox>
 
@@ -30,27 +29,34 @@ void MainWindow::comingSoon() const
 	box->show();
 }
 
+void MainWindow::showGameWindow(GameWindow *window)
+{
+	window->setAttribute(Qt::WA_DeleteOnClose);
+	window->show();
+	hide();
+	connect(window, &GameWindow::closing, this, &MainWindow::show);
+}
+
 void MainWindow::localGame()
 {
 	Settings::instance()->newLocalGame();
 	auto game = new GameWindow();
-	game->setAttribute(Qt::WA_DeleteOnClose);
-	game->show();
-	setEnabled(false);
-	connect(game, &GameWindow::destroyed, this, &MainWindow::onGameWindowClose);
+	showGameWindow(game);
 }
 
-void MainWindow::netServerGame() const
+void MainWindow::netServerGame()
 {
-	comingSoon();
+	Settings::instance()->newServerGame();
+	auto game = new GameWindow();
+	game->serverGame(Settings::instance()->getIP(), Settings::instance()->getPort());
+	showGameWindow(game);
 }
 
-void MainWindow::connectToGame() const
+void MainWindow::connectToGame()
 {
-	comingSoon();
-}
-
-void MainWindow::onGameWindowClose()
-{
-	setEnabled(true);
+	Settings::instance()->newClientGame(QHostAddress(ui->lineIP->text()),
+	                                    ui->linePort->text().toInt());
+	auto game = new GameWindow();
+	game->clientGame();
+	showGameWindow(game);
 }

@@ -51,5 +51,7 @@ IShell::IShell(double x, double y, double angle, QObject *parent) :
     startY(y),
     startAngle(qDegreesToRadians(angle))
 {
+	setPos(x, y);
+	setRotation(angle);
 	connect(&timer, &QTimer::timeout, this, &IShell::updatePos);
 }

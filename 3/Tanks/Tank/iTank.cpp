@@ -2,6 +2,9 @@
 #include "../Shell/shellStandart.h"
 #include <QTransform>
 #include <QtMath>
+#include <algorithm>
+
+using std::max;
 
 double ITank::getGunAngle() const
 {
@@ -62,6 +65,36 @@ void ITank::move(ITank::Direction dir)
 		changeDirection();
 	else
 		move((int) direction * moveStep);
+}
+
+void ITank::setShell(IShellType *type)
+{
+	shellType = type;
+}
+
+IShellType *ITank::getShell() const
+{
+	return shellType;
+}
+
+int ITank::getHealthPoints() const
+{
+	return hp;
+}
+
+void ITank::hit(int damage)
+{
+	hp = max(0, hp - damage);
+}
+
+void ITank::setHealthPoints(int newHp)
+{
+	hp = newHp;
+}
+
+bool ITank::isDestroyed() const
+{
+	return hp == 0;
 }
 
 void ITank::move(double step)

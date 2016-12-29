@@ -32,6 +32,14 @@ public:
 	 */
 	virtual void showCursor() = 0;
 	virtual void hideCursor() = 0;
+	virtual double getExplosiveRadius() = 0;
+	virtual void explode() = 0;
+
+	enum class Type
+	{
+		simple,
+		explosive
+	};
 
 signals:
 	void updatingPos();
