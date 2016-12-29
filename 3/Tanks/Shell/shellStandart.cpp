@@ -8,8 +8,6 @@ ShellStandart::ShellStandart(double x, double y, double angle) :
     width(10),
     heigth(3)
 {
-	setPos(x, y);
-	setRotation(angle);
 	createCursor();
 }
 
@@ -31,6 +29,11 @@ void ShellStandart::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 	painter->setPen(pen);
 
 	painter->fillRect(0, 0, width, heigth, Qt::black);
+}
+
+double ShellStandart::getExplosiveRadius()
+{
+	return 0;
 }
 
 double ShellStandart::getWeight()

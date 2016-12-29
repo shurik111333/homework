@@ -1,5 +1,6 @@
 #include "tankSimple.h"
 #include "../Shell/shellStandart.h"
+#include "../Shell/shellExplosive.h"
 #include <QPen>
 #include <QPainter>
 #include <QtMath>
@@ -47,7 +48,9 @@ IShell *TankSimple::shoot() const
 	auto rang = qDegreesToRadians(ang);
 	auto p = QPointF(getGunCoordinates().x() + qCos(rang) * gunw,
 	                 getGunCoordinates().y() + qSin(rang) * gunw);
-	auto shell = new ShellStandart(p.x(), p.y(), ang);
+
+	IShell *shell = shellType->create(p.x(), p.y(), ang);
+
 	scene()->addItem(shell);
 	shell->shoot(1000);
 	return shell;
@@ -70,7 +73,26 @@ bool TankSimple::collidesWithShell(IShell *shell)
 	base.setRotation(rotation());
 	if (getDirection() == Direction::left)
 		base.moveBy(-this->base().width(), 0);
-	return base.collidesWithItem(shell, Qt::IntersectsItemBoundingRect);
+	return base.collidesWithItem(shell, Qt::IntersectsItemShape);
+}
+
+bool TankSimple::hitsByShell(IShell *shell)
+{
+	QGraphicsRectItem base(this->base());
+	base.moveBy(x(), y());
+	base.setRotation(rotation());
+	if (getDirection() == Direction::left)
+		base.moveBy(-this->base().width(), 0);
+	qDebug() << "base:" << base.pos() << base.boundingRect();
+
+	qDebug() << "shell:" << shell->pos() << shell->boundingRect();
+	auto c = shell->boundingRect().center() + shell->pos();
+	auto r = shell->getExplosiveRadius();
+	QGraphicsEllipseItem explosion(0, 0, 2 * r, 2 * r);
+	explosion.moveBy(c.x() - r, c.y() - r);
+	qDebug() << "explosion:" << explosion.pos() << explosion.boundingRect();
+
+	return base.collidesWithItem(&explosion, Qt::IntersectsItemShape);
 }
 
 void TankSimple::drawGun(QPainter *painter)

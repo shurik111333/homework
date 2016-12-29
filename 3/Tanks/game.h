@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Shell/ishell.h"
+#include "Shell/ShellType/ishelltype.h"
 #include "Player/iplayer.h"
 #include "Tank/iTank.h"
 #include "Landscape/iLandscapeGenerator.h"
@@ -29,6 +30,7 @@ signals:
 	void newGame(const QVector<IPlayer *> &players);
 	void newStep(const IPlayer *player);
 	void endOfGame(IPlayer *winner);
+	void newShell(IShellType *type);
 
 public slots:
 	void startNewGame();
@@ -85,9 +87,14 @@ private:
 	 */
 	bool isShellCollidesLandscape() const;
 	bool isShellCollidesPlayers() const;
+	IPlayer *getCollidedPlayer() const;
+	bool isShellHitsPlayers() const;
+	IPlayer *getHitedPlayer() const;
 	void endStep();
 	void endGame();
 	IPlayer *getWinner();
+	void connectToPlayer(IPlayer *player);
+	void disconnectFromPlayer(IPlayer *player);
 
 private slots:
 	void playerMoving(Action action);

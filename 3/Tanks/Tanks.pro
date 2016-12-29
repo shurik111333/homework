@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     Player/networkplayer.cpp \
     TcpMessenger/tcpMessenger.cpp \
     Server/server.cpp \
-    Player/localplayerproxy.cpp
+    Player/localplayerproxy.cpp \
+    Shell/shellExplosive.cpp \
+    Shell/ShellType/standart.cpp \
+    Shell/ShellType/explosive.cpp
 
 HEADERS  += mainWindow.h \
     gameWindow.h \
@@ -45,6 +48,10 @@ HEADERS  += mainWindow.h \
     TcpMessenger/tcpMessenger.h \
     Server/server.h \
     Player/localplayerproxy.h \
-    action.h
+    action.h \
+    Shell/shellExplosive.h \
+    Shell/ShellType/ishelltype.h \
+    Shell/ShellType/standart.h \
+    Shell/ShellType/explosive.h
 
 FORMS    += mainWindow.ui

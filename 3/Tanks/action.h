@@ -6,5 +6,7 @@ enum class Action
 	moveRight,
 	gunUp,
 	gunDown,
-	shoot
+	shoot,
+	setSimpleShell,
+	setExplosiveShell
 };

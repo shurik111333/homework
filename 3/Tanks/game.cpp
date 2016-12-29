@@ -48,8 +48,7 @@ void Game::startNewGame()
 	}
 
 	currentPlayer = players.constBegin();
-	connect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
-	connect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+	connectToPlayer(*currentPlayer);
 
 	emit newGame(players);
 	emit newStep(*currentPlayer);
@@ -63,8 +62,7 @@ Game::Game(QObject *parent) : QObject(parent)
 
 void Game::clearLastGame()
 {
-	disconnect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
-	disconnect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+	disconnectFromPlayer(*currentPlayer);
 }
 
 void Game::checkGun(ITank *tank)
@@ -122,6 +120,13 @@ void Game::shellUpdate()
 {
 	if (isShellCollidesPlayers())
 	{
+		getCollidedPlayer()->getTank()->setHealthPoints(0);
+		endGame();
+		return;
+	}
+	if (isShellCollidesLandscape() && isShellHitsPlayers())
+	{
+		getHitedPlayer()->getTank()->setHealthPoints(0);
 		endGame();
 		return;
 	}
@@ -156,13 +161,11 @@ void Game::removeShell()
 
 void Game::nextPlayer()
 {
-	disconnect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
-	disconnect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+	disconnectFromPlayer(*currentPlayer);
 
 	setNextPlayer();
 
-	connect(*currentPlayer, &IPlayer::moveAction, this, &Game::playerMoving);
-	connect(*currentPlayer, &IPlayer::shootAction, this, &Game::playerShooting);
+	connectToPlayer(*currentPlayer);
 	emit newStep(*currentPlayer);
 }
 
@@ -182,15 +185,43 @@ bool Game::isShellCollidesLandscape() const
 {
 	auto segment = landscape->getSegment(currentShell->pos().x());
 	QGraphicsLineItem line(QLineF(segment.first, segment.second));
-	return currentShell->collidesWithItem(&line);
+	return currentShell->collidesWithItem(&line, Qt::IntersectsItemShape);
 }
 
 bool Game::isShellCollidesPlayers() const
 {
-	bool res = false;
+	return getCollidedPlayer() != nullptr;
+}
+
+IPlayer *Game::getCollidedPlayer() const
+{
+	IPlayer *res = nullptr;
 	for (IPlayer *player : players)
 	{
-		res |= player->getTank()->collidesWithShell(currentShell);
+		if (player->getTank()->collidesWithShell(currentShell))
+		{
+			res = player;
+			break;
+		}
+	}
+	return res;
+}
+
+bool Game::isShellHitsPlayers() const
+{
+	return getHitedPlayer() != nullptr;
+}
+
+IPlayer *Game::getHitedPlayer() const
+{
+	IPlayer *res = nullptr;
+	for (IPlayer *player : players)
+	{
+		if (player->getTank()->hitsByShell(currentShell))
+		{
+			res = player;
+			break;
+		}
 	}
 	return res;
 }
@@ -204,18 +235,32 @@ void Game::endStep()
 
 void Game::endGame()
 {
-	auto winner = getWinner();
 	endStep();
 	state = GameState::endOfGame;
 	clearLastGame();
-	emit endOfGame(winner);
+	emit endOfGame(getWinner());
 }
 
 IPlayer *Game::getWinner()
 {
-	if ((*currentPlayer)->getTank()->collidesWithShell(currentShell))
+	for (IPlayer *p : players)
 	{
-		setNextPlayer();
+		if (!p->getTank()->isDestroyed())
+			return p;
 	}
-	return *currentPlayer;
+	return nullptr;
+}
+
+void Game::connectToPlayer(IPlayer *player)
+{
+	connect(player, &IPlayer::moveAction, this, &Game::playerMoving);
+	connect(player, &IPlayer::shootAction, this, &Game::playerShooting);
+	connect(player, &IPlayer::setNewShell, this, &Game::newShell);
+}
+
+void Game::disconnectFromPlayer(IPlayer *player)
+{
+	disconnect(player, &IPlayer::moveAction, this, &Game::playerMoving);
+	disconnect(player, &IPlayer::shootAction, this, &Game::playerShooting);
+	disconnect(player, &IPlayer::setNewShell, this, &Game::newShell);
 }

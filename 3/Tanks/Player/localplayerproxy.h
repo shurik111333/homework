@@ -2,6 +2,7 @@
 
 #include "iplayer.h"
 #include "localplayer.h"
+#include "Shell/ShellType/ishelltype.h"
 #include <QtNetwork/QTcpSocket>
 
 class LocalPlayerProxy : public IPlayer
@@ -24,4 +25,5 @@ private:
 private slots:
 	void action(Action action);
 	void shoot();
+	void newShell(IShellType *type);
 };

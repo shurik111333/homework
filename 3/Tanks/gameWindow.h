@@ -3,6 +3,7 @@
 #include "Player/iplayer.h"
 #include "Tank/iTank.h"
 #include "Landscape/iLandscapeGenerator.h"
+#include "Shell/ShellType/ishelltype.h"
 #include <QMainWindow>
 #include <QVBoxLayout>
 #include <QGraphicsView>
@@ -40,6 +41,8 @@ private:
 	QLabel *labelAddress = nullptr;
 	QHBoxLayout *headerLayout = nullptr;
 	QLineEdit *address = nullptr;
+	QLabel *shellLabel = nullptr;
+	QString shellTitle;
 	QSize sceneSize = QSize(1000, 500);
 	QSize viewOffset = QSize(3, 3);
 	bool f = false;
@@ -52,6 +55,8 @@ private slots:
 	void newGame(const QVector<IPlayer *> &players);
 	QString getWinnerMessage(IPlayer *winner);
 	void clientConnected();
+	void newStep(const IPlayer *player);
+	void newShell(IShellType *type);
 
 	// QObject interface
 public:

@@ -1,6 +1,8 @@
 #include "networkplayer.h"
 #include "Tank/tankSimple.h"
 #include "../TcpMessenger/tcpMessenger.h"
+#include "../Shell/ShellType/standart.h"
+#include "../Shell/ShellType/explosive.h"
 
 NetworkPlayer::NetworkPlayer(Qt::GlobalColor color, const QString &name) :
     IPlayer(new TankSimple(0, 0, color), color, name)
@@ -35,6 +37,7 @@ void NetworkPlayer::newCommandReady()
 
 void NetworkPlayer::newCommand(int command)
 {
+	IShellType *type = nullptr;
 	switch ((Action) command)
 	{
 		case Action::moveRight:
@@ -55,5 +58,16 @@ void NetworkPlayer::newCommand(int command)
 			break;
 		case Action::shoot:
 			emit shootAction(getTank()->shoot());
+			break;
+		case Action::setSimpleShell:
+			type = Standart::instance();
+			getTank()->setShell(type);
+			emit setNewShell(type);
+			break;
+		case Action::setExplosiveShell:
+			type = Explosive::instance();
+			getTank()->setShell(type);
+			emit setNewShell(type);
+			break;
 	}
 }

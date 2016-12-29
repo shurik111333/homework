@@ -98,12 +98,16 @@ Settings::Settings(QObject *parent) : QObject(parent)
 void Settings::clear()
 {
 	delete server;
+	server = nullptr;
 	delete player;
+	player = nullptr;
 	delete opponent;
+	opponent = nullptr;
 }
 
 void Settings::resetTank(ITank *tank)
 {
 	tank->setRotation(0);
 	tank->setGunAngle(45);
+	tank->setHealthPoints(100);
 }

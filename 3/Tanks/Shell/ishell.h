@@ -32,6 +32,15 @@ public:
 	 */
 	virtual void showCursor() = 0;
 	virtual void hideCursor() = 0;
+	virtual double getExplosiveRadius() = 0;
+
+	enum class Type
+	{
+		simple,
+		explosive
+	};
+
+	static IShell *create(double x, double y, double ang, Type type);
 
 signals:
 	void updatingPos();

@@ -40,6 +40,7 @@ public:
 signals:
 	void moveAction(Action action);
 	void shootAction(IShell *shell);
+	void setNewShell(IShellType *type);
 
 protected:
 	explicit IPlayer(ITank *tank, Qt::GlobalColor color, const QString &name, QObject *parent = 0) :

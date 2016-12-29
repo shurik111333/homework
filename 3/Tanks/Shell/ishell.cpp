@@ -45,11 +45,18 @@ void IShell::cancelShoot()
 	timer.stop();
 }
 
+IShell *IShell::create(double x, double y, double ang, IShell::Type type)
+{
+	return nullptr;
+}
+
 IShell::IShell(double x, double y, double angle, QObject *parent) :
     QObject(parent),
     startX(x),
     startY(y),
     startAngle(qDegreesToRadians(angle))
 {
+	setPos(x, y);
+	setRotation(angle);
 	connect(&timer, &QTimer::timeout, this, &IShell::updatePos);
 }
