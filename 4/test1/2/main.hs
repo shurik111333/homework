@@ -1,0 +1,1 @@
+gen n = [1..n] >>= \k -> [replicate k k ++ [(k + 1)..n]]
