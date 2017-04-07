@@ -1,1 +1,2 @@
-supermap l lf = l >>= \x -> [f x | f <- lf]
+supermap :: [a] -> (a -> [b]) -> [b]
+supermap = (>>=)
